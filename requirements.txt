@@ -5,4 +5,5 @@ scikit-learn
 joblib
 gunicorn
 dnspython
+requests
 python-dotenv
