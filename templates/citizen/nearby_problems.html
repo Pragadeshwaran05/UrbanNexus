@@ -1,0 +1,2245 @@
+{% extends "base.html" %}
+
+{% block title %}
+Nearby Problems | UrbanNexus
+{% endblock %}
+
+
+{% block extra_css %}
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/citizen-dashboard.css') }}">
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/nearby-problems.css') }}">
+
+<!-- Leaflet -->
+<link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="nearby-page">
+
+    <!-- =====================================================
+         TOP BAR
+         ===================================================== -->
+
+    <div class="nearby-topbar">
+
+        <a href="{{ url_for('citizen_dashboard') }}"
+           class="back-link">
+            ← Back to Dashboard
+        </a>
+
+        <div class="nearby-user">
+
+            <div class="nearby-user-info">
+
+                <strong>Citizen</strong>
+                <span>Resident</span>
+
+            </div>
+
+            <div class="nearby-avatar">
+                P
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         PAGE HEADER
+         ===================================================== -->
+
+    <section class="nearby-header">
+
+        <div>
+
+            <span class="eyebrow">
+                COMMUNITY VIEW
+            </span>
+
+            <h1>
+                Nearby Problems
+            </h1>
+
+            <p>
+                Explore urban problems reported around your area
+                and understand their current impact.
+            </p>
+
+        </div>
+
+
+        <!-- REAL LOCATION -->
+
+        <div class="location-status">
+
+            <span class="location-icon">
+                📍
+            </span>
+
+            <div>
+
+                <strong id="locationTitle">
+                    Detecting Location
+                </strong>
+
+                <span id="locationAddress">
+                    Please allow location access.
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FILTER BAR
+         ===================================================== -->
+
+    <section class="filter-card">
+
+        <div class="search-box">
+
+            <span class="search-icon">
+                ⌕
+            </span>
+
+            <input
+                type="text"
+                id="problemSearch"
+                placeholder="Search nearby problems..."
+            >
+
+        </div>
+
+
+        <div class="filter-group">
+
+            <label for="categoryFilter">
+                Category
+            </label>
+
+            <select id="categoryFilter">
+
+                <option value="all">
+                    All Categories
+                </option>
+
+                <option value="water">
+                    Water & Drainage
+                </option>
+
+                <option value="roads">
+                    Roads & Infrastructure
+                </option>
+
+                <option value="traffic">
+                    Traffic
+                </option>
+
+                <option value="waste">
+                    Waste Management
+                </option>
+
+                <option value="electricity">
+                    Electricity & Lighting
+                </option>
+
+                <option value="parks">
+                    Parks & Environment
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="filter-group">
+
+            <label for="impactFilter">
+                Impact
+            </label>
+
+            <select id="impactFilter">
+
+                <option value="all">
+                    All Impact Levels
+                </option>
+
+                <option value="high">
+                    High Impact
+                </option>
+
+                <option value="medium">
+                    Medium Impact
+                </option>
+
+                <option value="low">
+                    Low Impact
+                </option>
+
+            </select>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+         ===================================================== -->
+
+    <section class="nearby-content">
+
+
+        <!-- =================================================
+             REAL MAP
+             ================================================= -->
+
+        <div class="map-card">
+
+            <div class="map-header">
+
+                <div>
+
+                    <h2>
+                        Problems Around You
+                    </h2>
+
+                    <p>
+                        Real citizen-reported problems near your location.
+                    </p>
+
+                </div>
+
+                <span
+                    class="problem-count"
+                    id="mapProblemCount"
+                >
+                    Loading...
+                </span>
+
+            </div>
+
+
+            <!-- REAL LEAFLET MAP -->
+
+            <div
+                id="nearbyMap"
+                class="map-area"
+            ></div>
+
+
+            <!-- MAP LEGEND -->
+
+            <div class="map-legend">
+
+                <div>
+                    <span class="legend-dot your-dot"></span>
+                    Your Location
+                </div>
+
+                <div>
+                    <span class="legend-dot high-dot"></span>
+                    High
+                </div>
+
+                <div>
+                    <span class="legend-dot medium-dot"></span>
+                    Medium
+                </div>
+
+                <div>
+                    <span class="legend-dot low-dot"></span>
+                    Low
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             PROBLEM LIST
+             ================================================= -->
+
+        <div class="problems-panel">
+
+            <div class="problems-panel-header">
+
+                <div>
+
+                    <h2>
+                        Nearby Reports
+                    </h2>
+
+                    <p>
+                        Public problems reported in your area.
+                    </p>
+
+                </div>
+
+                <span id="visibleCount">
+                    Loading...
+                </span>
+
+            </div>
+
+
+            <div
+                class="problems-list"
+                id="problemsList"
+            >
+
+                <div class="nearby-loading">
+
+                    <div class="loading-spinner"></div>
+
+                    <p>
+                        Finding problems near you...
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- NO RESULTS -->
+
+            <div
+                class="no-results"
+                id="noResults"
+                style="display:none;"
+            >
+
+                <div class="no-results-icon">
+                    ⌕
+                </div>
+
+                <h3>
+                    No nearby problems found
+                </h3>
+
+                <p>
+                    Try changing your search or filters.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         PRIVACY NOTE
+         ===================================================== -->
+
+    <section class="nearby-note">
+
+        <div class="note-icon">
+            🔒
+        </div>
+
+        <div>
+
+            <strong>
+                Citizen Privacy Protected
+            </strong>
+
+            <p>
+                Nearby problem information is public, but
+                personal details of the citizen who reported
+                the problem are never displayed.
+            </p>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+
+<!-- =========================================================
+     LEAFLET JS
+     ========================================================= -->
+<!-- =========================================================
+     LEAFLET
+========================================================= -->
+
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
+
+<style>
+
+/* =========================================================
+   REAL MAP
+========================================================= */
+
+#nearbyMap {
+    width: 100%;
+    height: 600px;
+    min-height: 500px;
+    display: block;
+    position: relative;
+    overflow: hidden;
+}
+
+.leaflet-container {
+    width: 100%;
+    height: 100%;
+    font-family: inherit;
+}
+
+
+/* =========================================================
+   MAP MARKERS
+========================================================= */
+
+.urbannexus-problem-marker {
+    width: 34px;
+    height: 34px;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: white;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    border: 3px solid white;
+
+    box-shadow:
+        0 3px 10px rgba(0, 0, 0, 0.25);
+}
+
+
+.urbannexus-problem-marker.high {
+    background: #d63c3c;
+}
+
+
+.urbannexus-problem-marker.medium {
+    background: #d28a22;
+}
+
+
+.urbannexus-problem-marker.low {
+    background: #43956c;
+}
+
+
+/* =========================================================
+   YOUR LOCATION
+========================================================= */
+
+.urbannexus-user-marker {
+    width: 20px;
+    height: 20px;
+
+    border-radius: 50%;
+
+    background: #4d2a7f;
+
+    border: 4px solid white;
+
+    box-shadow:
+        0 3px 12px rgba(0, 0, 0, 0.30);
+}
+
+</style>
+
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        "use strict";
+
+
+        /* =====================================================
+           ELEMENTS
+        ===================================================== */
+
+        const mapElement =
+            document.getElementById(
+                "nearbyMap"
+            );
+
+
+        const problemsList =
+            document.getElementById(
+                "problemsList"
+            );
+
+
+        const visibleCount =
+            document.getElementById(
+                "visibleCount"
+            );
+
+
+        const mapProblemCount =
+            document.getElementById(
+                "mapProblemCount"
+            );
+
+
+        const searchInput =
+            document.getElementById(
+                "problemSearch"
+            );
+
+
+        const categoryFilter =
+            document.getElementById(
+                "categoryFilter"
+            );
+
+
+        const impactFilter =
+            document.getElementById(
+                "impactFilter"
+            );
+
+
+        const locationTitle =
+            document.getElementById(
+                "locationTitle"
+            );
+
+
+        const locationAddress =
+            document.getElementById(
+                "locationAddress"
+            );
+
+
+        const noResults =
+            document.getElementById(
+                "noResults"
+            );
+
+
+        /* =====================================================
+           CHECK LEAFLET
+        ===================================================== */
+
+        if (!mapElement) {
+
+            console.error(
+                "UrbanNexus: nearbyMap element not found."
+            );
+
+            return;
+        }
+
+
+        if (typeof L === "undefined") {
+
+            console.error(
+                "UrbanNexus: Leaflet is not loaded."
+            );
+
+            return;
+        }
+
+
+        /* =====================================================
+           DEFAULT CHENNAI LOCATION
+        ===================================================== */
+
+        const DEFAULT_LAT =
+            13.0827;
+
+
+        const DEFAULT_LNG =
+            80.2707;
+
+
+        /* =====================================================
+           CREATE REAL LEAFLET MAP
+        ===================================================== */
+
+        const map =
+            L.map(
+                mapElement
+            );
+
+
+        map.setView(
+            [
+                DEFAULT_LAT,
+                DEFAULT_LNG
+            ],
+            12
+        );
+
+
+        /* =====================================================
+           OPEN STREET MAP
+        ===================================================== */
+
+        L.tileLayer(
+
+            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+
+            {
+                maxZoom: 19,
+
+                attribution:
+                    "&copy; OpenStreetMap contributors"
+            }
+
+        ).addTo(map);
+
+
+        /* =====================================================
+           VARIABLES
+        ===================================================== */
+
+        let userMarker = null;
+
+        let problemMarkers = [];
+
+        let nearbyProblems = [];
+
+        let allMapProblems = [];
+
+
+        /* =====================================================
+           CREATE YOUR LOCATION MARKER
+        ===================================================== */
+
+        function showUserLocation(
+            latitude,
+            longitude
+        ) {
+
+            /* Remove old marker */
+
+            if (userMarker) {
+
+                map.removeLayer(
+                    userMarker
+                );
+            }
+
+
+            /* Custom user marker */
+
+            const userIcon =
+                L.divIcon({
+
+                    className: "",
+
+                    html:
+                        `<div class="urbannexus-user-marker"></div>`,
+
+                    iconSize: [
+                        20,
+                        20
+                    ],
+
+                    iconAnchor: [
+                        10,
+                        10
+                    ],
+
+                    popupAnchor: [
+                        0,
+                        -10
+                    ]
+                });
+
+
+            userMarker =
+                L.marker(
+
+                    [
+                        latitude,
+                        longitude
+                    ],
+
+                    {
+                        icon: userIcon
+                    }
+
+                ).addTo(map);
+
+
+            userMarker.bindPopup(
+                "<strong>Your Selected Location</strong>"
+            );
+        }
+
+
+        /* =====================================================
+           GET CURRENT LOCATION
+        ===================================================== */
+
+        function detectLocation() {
+
+            if (locationTitle) {
+
+                locationTitle.textContent =
+                    "Detecting Location...";
+            }
+
+
+            if (locationAddress) {
+
+                locationAddress.textContent =
+                    "Please allow location permission.";
+            }
+
+
+            if (!navigator.geolocation) {
+
+                console.warn(
+                    "Browser does not support geolocation."
+                );
+
+                useDefaultLocation();
+
+                return;
+            }
+
+
+            navigator.geolocation.getCurrentPosition(
+
+                function (position) {
+
+                    const latitude =
+                        position.coords.latitude;
+
+
+                    const longitude =
+                        position.coords.longitude;
+
+
+                    console.log(
+                        "CURRENT LOCATION:",
+                        latitude,
+                        longitude
+                    );
+
+
+                    showUserLocation(
+                        latitude,
+                        longitude
+                    );
+
+
+                    map.setView(
+
+                        [
+                            latitude,
+                            longitude
+                        ],
+
+                        14
+                    );
+
+
+                    getAddress(
+                        latitude,
+                        longitude
+                    );
+
+
+                    loadProblems(
+                        latitude,
+                        longitude
+                    );
+                },
+
+
+                function (error) {
+
+                    console.warn(
+                        "Location permission failed:",
+                        error
+                    );
+
+
+                    useDefaultLocation();
+                },
+
+
+                {
+
+                    enableHighAccuracy:
+                        true,
+
+                    timeout:
+                        10000,
+
+                    maximumAge:
+                        60000
+                }
+            );
+        }
+
+
+        /* =====================================================
+           DEFAULT LOCATION
+        ===================================================== */
+
+        function useDefaultLocation() {
+
+            showUserLocation(
+
+                DEFAULT_LAT,
+                DEFAULT_LNG
+            );
+
+
+            map.setView(
+
+                [
+                    DEFAULT_LAT,
+                    DEFAULT_LNG
+                ],
+
+                12
+            );
+
+
+            if (locationTitle) {
+
+                locationTitle.textContent =
+                    "Selected Area";
+            }
+
+
+            if (locationAddress) {
+
+                locationAddress.textContent =
+                    "Chennai";
+            }
+
+
+            loadProblems(
+
+                DEFAULT_LAT,
+                DEFAULT_LNG
+            );
+        }
+
+
+        /* =====================================================
+           REVERSE GEOCODING
+        ===================================================== */
+
+        async function getAddress(
+            latitude,
+            longitude
+        ) {
+
+            try {
+
+                const response =
+                    await fetch(
+
+                        `/api/reverse-geocode?latitude=${encodeURIComponent(latitude)}&longitude=${encodeURIComponent(longitude)}`
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Reverse geocoding failed"
+                    );
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                if (locationTitle) {
+
+                    locationTitle.textContent =
+                        "Your Selected Area";
+                }
+
+
+                if (locationAddress) {
+
+                    locationAddress.textContent =
+                        data.address ||
+                        "Current Location";
+                }
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Address error:",
+                    error
+                );
+
+
+                if (locationTitle) {
+
+                    locationTitle.textContent =
+                        "Your Selected Area";
+                }
+
+
+                if (locationAddress) {
+
+                    locationAddress.textContent =
+                        "Current Location";
+                }
+            }
+        }
+
+
+        /* =====================================================
+           LOAD PROBLEMS FROM FLASK
+        ===================================================== */
+
+        async function loadProblems(
+            latitude,
+            longitude
+        ) {
+
+            if (problemsList) {
+
+                problemsList.innerHTML = `
+
+                    <div class="nearby-loading">
+
+                        <div class="loading-spinner"></div>
+
+                        <p>
+                            Finding problems near you...
+                        </p>
+
+                    </div>
+
+                `;
+            }
+
+
+            try {
+
+                const url =
+                    `/citizen/nearby-problems?latitude=${encodeURIComponent(latitude)}&longitude=${encodeURIComponent(longitude)}`;
+
+
+                console.log(
+                    "REQUESTING:",
+                    url
+                );
+
+
+                const response =
+                    await fetch(
+                        url
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Server returned " +
+                        response.status
+                    );
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                console.log(
+                    "SERVER RESPONSE:",
+                    data
+                );
+
+
+                /* =================================================
+                   NEARBY REPORTS
+                   
+                   Used for right-side list.
+                ================================================= */
+
+                nearbyProblems =
+                    Array.isArray(
+                        data.problems
+                    )
+
+                        ? data.problems
+
+                        : [];
+
+
+                /* =================================================
+                   ALL MAP REPORTS
+                   
+                   Used for map markers.
+                ================================================= */
+
+                allMapProblems =
+                    Array.isArray(
+                        data.all_problems
+                    )
+
+                        ? data.all_problems
+
+                        : [];
+
+
+                console.log(
+                    "NEARBY PROBLEMS:",
+                    nearbyProblems
+                );
+
+
+                console.log(
+                    "ALL MAP PROBLEMS:",
+                    allMapProblems
+                );
+
+
+                /* =================================================
+                   RENDER
+                ================================================= */
+
+                renderProblems();
+
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Problem loading error:",
+                    error
+                );
+
+
+                nearbyProblems = [];
+
+                allMapProblems = [];
+
+
+                if (visibleCount) {
+
+                    visibleCount.textContent =
+                        "0 results";
+                }
+
+
+                if (mapProblemCount) {
+
+                    mapProblemCount.textContent =
+                        "0 Problems";
+                }
+
+
+                if (problemsList) {
+
+                    problemsList.innerHTML = `
+
+                        <div class="nearby-loading">
+
+                            <p>
+                                Unable to load nearby problems.
+                            </p>
+
+                        </div>
+
+                    `;
+                }
+
+
+                renderProblemMarkers([]);
+            }
+        }
+
+
+        /* =====================================================
+           RENDER EVERYTHING
+        ===================================================== */
+
+        function renderProblems() {
+
+            const search =
+                searchInput
+
+                    ? searchInput.value
+                        .toLowerCase()
+                        .trim()
+
+                    : "";
+
+
+            const selectedCategory =
+                categoryFilter
+
+                    ? categoryFilter.value
+
+                    : "all";
+
+
+            const selectedImpact =
+                impactFilter
+
+                    ? impactFilter.value
+
+                    : "all";
+
+
+            /* =================================================
+               FILTER NEARBY REPORTS
+            ================================================= */
+
+            const filteredProblems =
+                nearbyProblems.filter(
+
+                    function (problem) {
+
+                        const title =
+                            String(
+                                problem.title ||
+                                ""
+                            ).toLowerCase();
+
+
+                        const description =
+                            String(
+                                problem.description ||
+                                ""
+                            ).toLowerCase();
+
+
+                        const category =
+                            String(
+                                problem.category ||
+                                "General"
+                            );
+
+
+                        const impact =
+                            String(
+                                problem.impact_level ||
+                                "MEDIUM"
+                            ).toLowerCase();
+
+
+                        const categoryKey =
+                            getCategoryKey(
+                                category
+                            );
+
+
+                        const searchMatch =
+
+                            !search ||
+
+                            title.includes(
+                                search
+                            ) ||
+
+                            description.includes(
+                                search
+                            ) ||
+
+                            category
+                                .toLowerCase()
+                                .includes(
+                                    search
+                                );
+
+
+                        const categoryMatch =
+
+                            selectedCategory ===
+                            "all"
+
+                            ||
+
+                            selectedCategory ===
+                            categoryKey;
+
+
+                        const impactMatch =
+
+                            selectedImpact ===
+                            "all"
+
+                            ||
+
+                            selectedImpact ===
+                            impact;
+
+
+                        return (
+
+                            searchMatch &&
+
+                            categoryMatch &&
+
+                            impactMatch
+
+                        );
+                    }
+                );
+
+
+            /* =================================================
+               COUNTS
+            ================================================= */
+
+            if (visibleCount) {
+
+                visibleCount.textContent =
+
+                    filteredProblems.length +
+
+                    (
+
+                        filteredProblems.length === 1
+
+                            ? " result"
+
+                            : " results"
+                    );
+            }
+
+
+            if (mapProblemCount) {
+
+                mapProblemCount.textContent =
+
+                    allMapProblems.length +
+
+                    (
+
+                        allMapProblems.length === 1
+
+                            ? " Problem"
+
+                            : " Problems"
+                    );
+            }
+
+
+            /* =================================================
+               RIGHT SIDE
+            ================================================= */
+
+            renderProblemList(
+                filteredProblems
+            );
+
+
+            /* =================================================
+               MAP
+               
+               IMPORTANT:
+               ALL complaints are displayed.
+            ================================================= */
+
+            renderProblemMarkers(
+                allMapProblems
+            );
+        }
+
+
+        /* =====================================================
+           RENDER RIGHT SIDE LIST
+        ===================================================== */
+
+        function renderProblemList(
+            problems
+        ) {
+
+            if (!problemsList) {
+
+                return;
+            }
+
+
+            problemsList.innerHTML = "";
+
+
+            if (
+                problems.length === 0
+            ) {
+
+                if (noResults) {
+
+                    noResults.style.display =
+                        "flex";
+                }
+
+                return;
+            }
+
+
+            if (noResults) {
+
+                noResults.style.display =
+                    "none";
+            }
+
+
+            problems.forEach(
+
+                function (problem) {
+
+                    const impact =
+                        String(
+                            problem.impact_level ||
+                            "MEDIUM"
+                        ).toLowerCase();
+
+
+                    const article =
+                        document.createElement(
+                            "article"
+                        );
+
+
+                    article.className =
+                        "nearby-problem";
+
+
+                    article.innerHTML = `
+
+                        <div class="
+                            problem-icon
+                            ${getCategoryKey(
+                                problem.category
+                            )}
+                        ">
+
+                            ${getProblemIcon(
+                                problem.category
+                            )}
+
+                        </div>
+
+
+                        <div class="problem-main">
+
+                            <div class="problem-title-row">
+
+                                <h3>
+
+                                    ${escapeHtml(
+                                        problem.title ||
+                                        "Urban Problem"
+                                    )}
+
+                                </h3>
+
+
+                                <span class="
+                                    impact-badge
+                                    ${impact}
+                                ">
+
+                                    ${impact.toUpperCase()}
+
+                                </span>
+
+                            </div>
+
+
+                            <p class="problem-location">
+
+                                📍
+
+                                ${escapeHtml(
+                                    problem.address ||
+                                    "Location available"
+                                )}
+
+                            </p>
+
+
+                            <div class="problem-meta">
+
+                                <span>
+
+                                    ${formatDistance(
+                                        problem
+                                    )}
+
+                                </span>
+
+
+                                <span>
+
+                                    ${escapeHtml(
+                                        problem.category ||
+                                        "General"
+                                    )}
+
+                                </span>
+
+
+                                <span class="
+                                    status
+                                    ${getStatusClass(
+                                        problem.status
+                                    )}
+                                ">
+
+                                    ${escapeHtml(
+                                        problem.status ||
+                                        "Submitted"
+                                    )}
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <a
+                            href="/citizen/report/${encodeURIComponent(problem.id)}"
+                            class="problem-view"
+                        >
+
+                            View →
+
+                        </a>
+
+                    `;
+
+
+                    /* Clicking report focuses map */
+
+                    article.addEventListener(
+
+                        "click",
+
+                        function (event) {
+
+                            if (
+                                event.target.closest(
+                                    "a"
+                                )
+                            ) {
+
+                                return;
+                            }
+
+
+                            focusProblemOnMap(
+                                problem
+                            );
+                        }
+                    );
+
+
+                    problemsList.appendChild(
+                        article
+                    );
+
+                }
+            );
+        }
+
+
+        /* =====================================================
+           CREATE MAP MARKERS
+           
+           THIS IS THE IMPORTANT FIX.
+           
+           Every complaint with latitude +
+           longitude will appear.
+        ===================================================== */
+
+        function renderProblemMarkers(
+            problems
+        ) {
+
+            /* -----------------------------------------------
+               REMOVE OLD MARKERS
+            ------------------------------------------------ */
+
+            problemMarkers.forEach(
+
+                function (marker) {
+
+                    map.removeLayer(
+                        marker
+                    );
+                }
+            );
+
+
+            problemMarkers = [];
+
+
+            if (
+                !Array.isArray(
+                    problems
+                )
+            ) {
+
+                return;
+            }
+
+
+            /* -----------------------------------------------
+               CREATE MARKER FOR EVERY REPORT
+            ------------------------------------------------ */
+
+            problems.forEach(
+
+                function (problem) {
+
+                    const latitude =
+                        Number(
+                            problem.latitude
+                        );
+
+
+                    const longitude =
+                        Number(
+                            problem.longitude
+                        );
+
+
+                    /* Skip reports without coordinates */
+
+                    if (
+
+                        !Number.isFinite(
+                            latitude
+                        )
+
+                        ||
+
+                        !Number.isFinite(
+                            longitude
+                        )
+
+                    ) {
+
+                        return;
+                    }
+
+
+                    const impact =
+                        String(
+                            problem.impact_level ||
+                            "MEDIUM"
+                        ).toLowerCase();
+
+
+                    /* -----------------------------------------
+                       CUSTOM MARKER
+                    ----------------------------------------- */
+
+                    const icon =
+                        L.divIcon({
+
+                            className: "",
+
+                            html: `
+
+                                <div class="
+                                    urbannexus-problem-marker
+                                    ${impact}
+                                ">
+
+                                    !
+
+                                </div>
+
+                            `,
+
+                            iconSize: [
+                                34,
+                                34
+                            ],
+
+                            iconAnchor: [
+                                17,
+                                17
+                            ],
+
+                            popupAnchor: [
+                                0,
+                                -17
+                            ]
+                        });
+
+
+                    /* -----------------------------------------
+                       ADD MARKER
+                    ----------------------------------------- */
+
+                    const marker =
+                        L.marker(
+
+                            [
+                                latitude,
+                                longitude
+                            ],
+
+                            {
+                                icon: icon
+                            }
+
+                        ).addTo(map);
+
+
+                    /* -----------------------------------------
+                       PRIVACY-SAFE POPUP
+                       
+                       NO:
+                       citizen_id
+                       name
+                       email
+                       phone
+                    ----------------------------------------- */
+
+                    marker.bindPopup(`
+
+                        <div style="
+                            min-width:230px;
+                            font-family:Arial,sans-serif;
+                            line-height:1.5;
+                        ">
+
+                            <strong style="
+                                font-size:15px;
+                            ">
+
+                                ${escapeHtml(
+                                    problem.title ||
+                                    "Urban Problem"
+                                )}
+
+                            </strong>
+
+
+                            <br><br>
+
+
+                            <strong>
+                                Category:
+                            </strong>
+
+                            ${escapeHtml(
+                                problem.category ||
+                                "General"
+                            )}
+
+
+                            <br>
+
+
+                            <strong>
+                                Impact:
+                            </strong>
+
+                            ${escapeHtml(
+                                String(
+                                    problem.impact_level ||
+                                    "MEDIUM"
+                                ).toUpperCase()
+                            )}
+
+
+                            <br>
+
+
+                            <strong>
+                                Status:
+                            </strong>
+
+                            ${escapeHtml(
+                                problem.status ||
+                                "Submitted"
+                            )}
+
+
+                            <br>
+
+
+                            <strong>
+                                Location:
+                            </strong>
+
+                            ${escapeHtml(
+                                problem.address ||
+                                "Location available"
+                            )}
+
+                        </div>
+
+                    `);
+
+
+                    /* Save marker */
+
+                    problemMarkers.push(
+                        marker
+                    );
+
+                }
+            );
+
+
+            /* =================================================
+               FIT MAP TO ALL COMPLAINTS
+               
+               IMPORTANT:
+               This happens AFTER markers are created.
+            ================================================= */
+
+            if (
+                problemMarkers.length > 0
+            ) {
+
+                const markerGroup =
+                    L.featureGroup(
+                        problemMarkers
+                    );
+
+
+                map.fitBounds(
+
+                    markerGroup.getBounds(),
+
+                    {
+
+                        padding: [
+                            60,
+                            60
+                        ],
+
+                        maxZoom: 14
+                    }
+                );
+
+            }
+
+            else {
+
+                /*
+                 * No complaints have coordinates.
+                 * Keep user's location visible.
+                 */
+
+                if (userMarker) {
+
+                    const position =
+                        userMarker.getLatLng();
+
+
+                    map.setView(
+
+                        [
+                            position.lat,
+                            position.lng
+                        ],
+
+                        14
+                    );
+
+                }
+
+                else {
+
+                    map.setView(
+
+                        [
+                            DEFAULT_LAT,
+                            DEFAULT_LNG
+                        ],
+
+                        12
+                    );
+                }
+            }
+        }
+
+
+        /* =====================================================
+           FOCUS ON REPORT
+        ===================================================== */
+
+        function focusProblemOnMap(
+            problem
+        ) {
+
+            const latitude =
+                Number(
+                    problem.latitude
+                );
+
+
+            const longitude =
+                Number(
+                    problem.longitude
+                );
+
+
+            if (
+
+                !Number.isFinite(
+                    latitude
+                )
+
+                ||
+
+                !Number.isFinite(
+                    longitude
+                )
+
+            ) {
+
+                return;
+            }
+
+
+            map.setView(
+
+                [
+                    latitude,
+                    longitude
+                ],
+
+                17
+            );
+
+
+            /* Find corresponding marker */
+
+            const marker =
+                problemMarkers.find(
+
+                    function (item) {
+
+                        const position =
+                            item.getLatLng();
+
+
+                        return (
+
+                            Math.abs(
+                                position.lat -
+                                latitude
+                            ) < 0.000001
+
+                            &&
+
+                            Math.abs(
+                                position.lng -
+                                longitude
+                            ) < 0.000001
+
+                        );
+                    }
+                );
+
+
+            if (marker) {
+
+                marker.openPopup();
+            }
+        }
+
+
+        /* =====================================================
+           CATEGORY
+        ===================================================== */
+
+        function getCategoryKey(
+            category
+        ) {
+
+            const value =
+                String(
+                    category || ""
+                ).toLowerCase();
+
+
+            if (
+
+                value.includes("water")
+
+                ||
+
+                value.includes("drain")
+
+            ) {
+
+                return "water";
+            }
+
+
+            if (
+
+                value.includes("road")
+
+                ||
+
+                value.includes(
+                    "infrastructure"
+                )
+
+            ) {
+
+                return "roads";
+            }
+
+
+            if (
+                value.includes("traffic")
+            ) {
+
+                return "traffic";
+            }
+
+
+            if (
+
+                value.includes("waste")
+
+                ||
+
+                value.includes("garbage")
+
+            ) {
+
+                return "waste";
+            }
+
+
+            if (
+
+                value.includes("electric")
+
+                ||
+
+                value.includes("lighting")
+
+            ) {
+
+                return "electricity";
+            }
+
+
+            if (
+
+                value.includes("park")
+
+                ||
+
+                value.includes(
+                    "environment"
+                )
+
+            ) {
+
+                return "parks";
+            }
+
+
+            return "general";
+        }
+
+
+        /* =====================================================
+           PROBLEM ICON
+        ===================================================== */
+
+        function getProblemIcon(
+            category
+        ) {
+
+            const key =
+                getCategoryKey(
+                    category
+                );
+
+
+            if (key === "water") {
+
+                return "≋";
+            }
+
+
+            if (key === "roads") {
+
+                return "▰";
+            }
+
+
+            if (key === "traffic") {
+
+                return "◎";
+            }
+
+
+            if (key === "waste") {
+
+                return "♻";
+            }
+
+
+            if (key === "electricity") {
+
+                return "◉";
+            }
+
+
+            if (key === "parks") {
+
+                return "♧";
+            }
+
+
+            return "!";
+        }
+
+
+        /* =====================================================
+           STATUS CLASS
+        ===================================================== */
+
+        function getStatusClass(
+            status
+        ) {
+
+            return String(
+                status ||
+                "Submitted"
+            )
+            .toLowerCase()
+            .replace(
+                /\s+/g,
+                "-"
+            );
+        }
+
+
+        /* =====================================================
+           DISTANCE
+        ===================================================== */
+
+        function formatDistance(
+            problem
+        ) {
+
+            if (
+
+                problem.distance_km !==
+                undefined
+
+                &&
+
+                problem.distance_km !==
+                null
+
+            ) {
+
+                const km =
+                    Number(
+                        problem.distance_km
+                    );
+
+
+                if (
+                    Number.isFinite(km)
+                ) {
+
+                    if (km < 1) {
+
+                        return (
+
+                            Math.round(
+                                km * 1000
+                            )
+
+                            +
+
+                            " m away"
+                        );
+                    }
+
+
+                    return (
+
+                        km.toFixed(1)
+
+                        +
+
+                        " km away"
+                    );
+                }
+            }
+
+
+            return "Nearby";
+        }
+
+
+        /* =====================================================
+           HTML ESCAPE
+        ===================================================== */
+
+        function escapeHtml(
+            value
+        ) {
+
+            return String(
+                value || ""
+            )
+
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+
+            .replace(
+                /</g,
+                "&lt;"
+            )
+
+            .replace(
+                />/g,
+                "&gt;"
+            )
+
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+        }
+
+
+        /* =====================================================
+           FILTER EVENTS
+        ===================================================== */
+
+        if (searchInput) {
+
+            searchInput.addEventListener(
+
+                "input",
+
+                renderProblems
+            );
+        }
+
+
+        if (categoryFilter) {
+
+            categoryFilter.addEventListener(
+
+                "change",
+
+                renderProblems
+            );
+        }
+
+
+        if (impactFilter) {
+
+            impactFilter.addEventListener(
+
+                "change",
+
+                renderProblems
+            );
+        }
+
+
+        /* =====================================================
+           START
+        ===================================================== */
+
+        detectLocation();
+
+
+        /* =====================================================
+           FIX LEAFLET SIZE
+        ===================================================== */
+
+        setTimeout(
+
+            function () {
+
+                map.invalidateSize();
+
+            },
+
+            300
+        );
+
+
+        setTimeout(
+
+            function () {
+
+                map.invalidateSize();
+
+            },
+
+            1000
+        );
+
+
+        setTimeout(
+
+            function () {
+
+                map.invalidateSize();
+
+            },
+
+            2000
+        );
+
+    }
+
+);
+
+</script>
+
+{% endblock %}
+

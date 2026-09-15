@@ -1,0 +1,2410 @@
+/* =========================================================
+   URBANNEXUS
+   MUNICIPALITY - PRIORITY PROBLEMS
+========================================================= */
+
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.priority-page {
+    width: 100%;
+    min-height: 100vh;
+
+    padding: 30px 36px 45px;
+
+    background: #f7f5fa;
+
+    color: #282230;
+
+    box-sizing: border-box;
+
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.priority-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 25px;
+
+    margin-bottom: 24px;
+}
+
+
+.priority-eyebrow {
+    margin: 0 0 6px;
+
+    color: #7250a7;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    letter-spacing: 1.1px;
+}
+
+
+.priority-header h1 {
+    margin: 0;
+
+    color: #282230;
+
+    font-size: 34px;
+    line-height: 1.15;
+
+    font-weight: 750;
+}
+
+
+.priority-subtitle {
+    max-width: 760px;
+
+    margin: 8px 0 0;
+
+    color: #786f83;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+
+.priority-header-meta {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+.priority-city-card {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 9px 13px;
+
+    background: #ffffff;
+
+    border: 1px solid #ded7e6;
+
+    border-radius: 10px;
+}
+
+
+.priority-city-icon {
+    color: #7250a7;
+
+    font-size: 17px;
+}
+
+
+.priority-city-card strong {
+    display: block;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+.priority-city-card span:last-child {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #8a8192;
+
+    font-size: 9px;
+}
+
+
+.priority-status {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 11px 13px;
+
+    background: #e7f4eb;
+
+    color: #287044;
+
+    border-radius: 10px;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+.priority-status > span {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #3e9b5c;
+}
+
+
+/* =========================================================
+   SUMMARY CARDS
+========================================================= */
+
+.priority-summary-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 14px;
+
+    margin-bottom: 20px;
+}
+
+
+.priority-summary-card {
+    min-height: 94px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 15px;
+
+    border: 1px solid #ded7e6;
+
+    border-radius: 13px;
+
+    background: #ffffff;
+
+    box-sizing: border-box;
+}
+
+
+.priority-summary-card.critical {
+    background: #fdeeee;
+    border-color: #edcfcc;
+}
+
+
+.priority-summary-card.high {
+    background: #fff2df;
+    border-color: #ead9bd;
+}
+
+
+.priority-summary-card.connected {
+    background: #ebe5f5;
+    border-color: #d5c8e3;
+}
+
+
+.priority-summary-card.city {
+    background: #e7f1ea;
+    border-color: #cedfd2;
+}
+
+
+.priority-summary-icon {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 10px;
+
+    background: rgba(255,255,255,.65);
+
+    color: #5d3d91;
+
+    font-size: 17px;
+    font-weight: 750;
+}
+
+
+.priority-summary-card span {
+    display: block;
+
+    color: #756c7b;
+
+    font-size: 9px;
+    font-weight: 700;
+}
+
+
+.priority-summary-card strong {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #342b3c;
+
+    font-size: 21px;
+
+    line-height: 1;
+
+    font-weight: 800;
+}
+
+
+.priority-summary-card p {
+    margin: 4px 0 0;
+
+    color: #918896;
+
+    font-size: 8px;
+}
+
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.priority-toolbar {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 18px;
+}
+
+
+.priority-search {
+    position: relative;
+
+    flex: 1;
+
+    min-width: 0;
+}
+
+
+.priority-search > span {
+    position: absolute;
+
+    left: 14px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: #8c8392;
+
+    font-size: 16px;
+}
+
+
+.priority-search input {
+    width: 100%;
+    height: 46px;
+
+    padding: 0 15px 0 40px;
+
+    border: 1px solid #dcd5e5;
+
+    border-radius: 10px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #342b3c;
+
+    font-family: inherit;
+
+    font-size: 12px;
+
+    box-sizing: border-box;
+}
+
+
+.priority-search input:focus {
+    border-color: #8b68bd;
+
+    box-shadow:
+        0 0 0 3px rgba(114,80,167,.10);
+}
+
+
+.priority-toolbar select {
+    width: 175px;
+    height: 46px;
+
+    padding: 0 12px;
+
+    border: 1px solid #dcd5e5;
+
+    border-radius: 10px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #4e4556;
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    box-sizing: border-box;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   MAIN LAYOUT
+========================================================= */
+
+.priority-layout {
+    display: grid;
+
+    grid-template-columns:
+        minmax(420px, .82fr)
+        minmax(560px, 1.3fr);
+
+    gap: 20px;
+
+    align-items: start;
+}
+
+
+/* =========================================================
+   PANELS
+========================================================= */
+
+.priority-list-panel,
+.priority-detail-panel {
+    background: #ffffff;
+
+    border: 1px solid #ded7e6;
+
+    border-radius: 15px;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   PRIORITY LIST PANEL
+========================================================= */
+
+.priority-list-panel {
+    overflow: hidden;
+}
+
+
+.priority-list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    padding: 20px;
+
+    border-bottom: 1px solid #eeeaf1;
+}
+
+
+.priority-list-header h2 {
+    margin: 0;
+
+    color: #282230;
+
+    font-size: 19px;
+
+    font-weight: 750;
+}
+
+
+.panel-kicker {
+    margin: 0 0 5px;
+
+    color: #7250a7;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+}
+
+
+.priority-list-count {
+    padding: 5px 8px;
+
+    background: #eee7f7;
+
+    color: #5d3d91;
+
+    border-radius: 6px;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   PRIORITY ITEMS
+========================================================= */
+
+.priority-items {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.priority-problem-item {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        38px
+        minmax(0,1fr)
+        60px;
+
+    align-items: center;
+
+    gap: 11px;
+
+    padding: 17px 18px;
+
+    background: #ffffff;
+
+    border: none;
+
+    border-bottom: 1px solid #eeeaf1;
+
+    color: inherit;
+
+    text-align: left;
+
+    font-family: inherit;
+
+    box-sizing: border-box;
+
+    cursor: pointer;
+
+    transition: background .2s ease;
+}
+
+
+.priority-problem-item:last-child {
+    border-bottom: none;
+}
+
+
+.priority-problem-item:hover {
+    background: #faf8fc;
+}
+
+
+.priority-problem-item.selected {
+    background: #f3eef9;
+
+    box-shadow:
+        inset 3px 0 0 #7250a7;
+}
+
+
+.rank-number {
+    color: #a29aa8;
+
+    font-size: 11px;
+
+    font-weight: 750;
+}
+
+
+.priority-problem-main {
+    min-width: 0;
+}
+
+
+.priority-problem-title {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+}
+
+
+.priority-problem-title h3 {
+    min-width: 0;
+
+    margin: 0;
+
+    color: #342b3c;
+
+    font-size: 13px;
+
+    line-height: 1.35;
+
+    font-weight: 700;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+.priority-level {
+    flex-shrink: 0;
+
+    padding: 4px 6px;
+
+    border-radius: 5px;
+
+    font-size: 7px;
+
+    font-weight: 800;
+}
+
+
+.priority-level.critical {
+    background: #fde5e3;
+
+    color: #b83b35;
+}
+
+
+.priority-level.high {
+    background: #fff0d9;
+
+    color: #a76318;
+}
+
+
+.priority-level.medium {
+    background: #e5f1e8;
+
+    color: #37734a;
+}
+
+
+.problem-location {
+    margin: 5px 0 0;
+
+    color: #766d7d;
+
+    font-size: 10px;
+
+    line-height: 1.3;
+}
+
+
+.priority-factor-row {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 5px;
+
+    margin-top: 5px;
+
+    color: #9b93a2;
+
+    font-size: 8px;
+}
+
+
+.priority-score {
+    text-align: right;
+}
+
+
+.priority-score strong {
+    display: block;
+
+    color: #4f347b;
+
+    font-size: 21px;
+
+    line-height: 1;
+
+    font-weight: 800;
+}
+
+
+.priority-score span {
+    display: block;
+
+    margin-top: 4px;
+
+    color: #9a919f;
+
+    font-size: 8px;
+}
+
+
+/* =========================================================
+   DETAIL PANEL
+========================================================= */
+
+.priority-detail-panel {
+    padding: 22px;
+
+    overflow: hidden;
+}
+
+
+.priority-detail-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding-bottom: 18px;
+
+    border-bottom: 1px solid #eeeaf1;
+}
+
+
+.detail-ai-heading {
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+}
+
+
+.detail-ai-icon {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    background: #eee7f7;
+
+    color: #5d3d91;
+
+    border-radius: 10px;
+
+    font-size: 18px;
+}
+
+
+.detail-ai-heading h2 {
+    margin: 0;
+
+    color: #282230;
+
+    font-size: 18px;
+
+    font-weight: 750;
+}
+
+
+.detail-ai-badge {
+    padding: 6px 8px;
+
+    background: #eee7f7;
+
+    color: #5d3d91;
+
+    border-radius: 6px;
+
+    font-size: 8px;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   DETAIL PROBLEM HEADER
+========================================================= */
+
+.detail-problem-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 19px 0;
+}
+
+
+.detail-rank {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #7250a7;
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: .8px;
+}
+
+
+.detail-problem-header h2 {
+    margin: 0;
+
+    color: #342b3c;
+
+    font-size: 21px;
+
+    line-height: 1.25;
+
+    font-weight: 750;
+}
+
+
+.detail-problem-header p {
+    margin: 5px 0 0;
+
+    color: #837987;
+
+    font-size: 10px;
+}
+
+
+.detail-score {
+    flex-shrink: 0;
+
+    text-align: right;
+}
+
+
+.detail-score strong {
+    display: block;
+
+    color: #4f347b;
+
+    font-size: 32px;
+
+    line-height: 1;
+
+    font-weight: 800;
+}
+
+
+.detail-score span {
+    display: block;
+
+    margin-top: 4px;
+
+    color: #948b99;
+
+    font-size: 8px;
+}
+
+
+/* =========================================================
+   PRIORITY BANNER
+========================================================= */
+
+.priority-level-banner {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 10px;
+
+    padding: 13px;
+
+    margin-bottom: 19px;
+
+    background: #fff5e8;
+
+    border: 1px solid #ecd9bd;
+
+    border-radius: 10px;
+}
+
+
+.banner-icon {
+    width: 29px;
+    height: 29px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    background: #fbe7c9;
+
+    color: #a76318;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+}
+
+
+.priority-level-banner strong {
+    display: block;
+
+    color: #79501f;
+
+    font-size: 11px;
+
+    font-weight: 750;
+}
+
+
+.priority-level-banner p {
+    margin: 4px 0 0;
+
+    color: #866f54;
+
+    font-size: 9px;
+
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   SCORE BREAKDOWN
+========================================================= */
+
+.score-section {
+    margin-bottom: 18px;
+}
+
+
+.section-heading h3 {
+    margin: 0;
+
+    color: #342b3c;
+
+    font-size: 15px;
+
+    font-weight: 750;
+}
+
+
+.score-list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 11px;
+
+    margin-top: 12px;
+}
+
+
+.score-row-label {
+    display: flex;
+    justify-content: space-between;
+
+    margin-bottom: 5px;
+}
+
+
+.score-row-label span {
+    color: #665d6d;
+
+    font-size: 9px;
+
+    font-weight: 600;
+}
+
+
+.score-row-label strong {
+    color: #4f347b;
+
+    font-size: 9px;
+
+    font-weight: 750;
+}
+
+
+.score-track {
+    width: 100%;
+
+    height: 7px;
+
+    overflow: hidden;
+
+    background: #eeeaf1;
+
+    border-radius: 10px;
+}
+
+
+.score-fill {
+    height: 100%;
+
+    border-radius: inherit;
+
+    background: #8b68bd;
+}
+
+
+/* =========================================================
+   PRIORITY REASON
+========================================================= */
+
+.priority-reason,
+.recommended-action {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 10px;
+
+    padding: 13px;
+
+    margin-bottom: 10px;
+
+    border-radius: 10px;
+}
+
+
+.priority-reason {
+    background: #f6f2fb;
+
+    border: 1px solid #ddd1e8;
+}
+
+
+.recommended-action {
+    background: #f1f8f3;
+
+    border: 1px solid #cfe3d4;
+}
+
+
+.reason-icon,
+.action-icon {
+    width: 29px;
+    height: 29px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+}
+
+
+.reason-icon {
+    background: #e9dff2;
+
+    color: #624394;
+}
+
+
+.action-icon {
+    background: #dcefe2;
+
+    color: #287044;
+
+    border-radius: 50%;
+}
+
+
+.priority-reason > div:last-child,
+.recommended-action > div:last-child {
+    min-width: 0;
+}
+
+
+.priority-reason > div:last-child > span,
+.recommended-action > div:last-child > span {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #7c6d88;
+
+    font-size: 7px;
+
+    font-weight: 800;
+
+    letter-spacing: .8px;
+}
+
+
+.priority-reason h3,
+.recommended-action h3 {
+    margin: 0;
+
+    color: #43374b;
+
+    font-size: 11px;
+
+    line-height: 1.35;
+
+    font-weight: 750;
+}
+
+
+.recommended-action h3 {
+    color: #315a3d;
+}
+
+
+.priority-reason p,
+.recommended-action p {
+    margin: 4px 0 0;
+
+    color: #746a79;
+
+    font-size: 9px;
+
+    line-height: 1.45;
+}
+
+
+/* =========================================================
+   CONNECTIONS
+========================================================= */
+
+.detail-connections {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0,1fr));
+
+    gap: 8px;
+
+    margin-top: 17px;
+}
+
+
+.connection-item {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 10px;
+
+    background: #faf8fc;
+
+    border: 1px solid #ebe6ef;
+
+    border-radius: 9px;
+}
+
+
+.connection-icon {
+    width: 28px;
+    height: 28px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+}
+
+
+.connection-icon.purple {
+    background: #eee7f7;
+    color: #68469d;
+}
+
+
+.connection-icon.blue {
+    background: #e6f0f7;
+    color: #457da5;
+}
+
+
+.connection-icon.orange {
+    background: #fff0de;
+    color: #ad681c;
+}
+
+
+.connection-icon.green {
+    background: #e6f1e8;
+    color: #42744c;
+}
+
+
+.connection-item span:not(.connection-icon) {
+    display: block;
+
+    color: #7f7585;
+
+    font-size: 8px;
+}
+
+
+.connection-item strong {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #3b3342;
+
+    font-size: 15px;
+
+    line-height: 1;
+
+    font-weight: 750;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.priority-detail-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-top: 18px;
+
+    padding-top: 14px;
+
+    border-top: 1px solid #eeeaf1;
+}
+
+
+.priority-note {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 7px;
+
+    min-width: 0;
+}
+
+
+.priority-note > span {
+    color: #918897;
+
+    font-size: 10px;
+}
+
+
+.priority-note p {
+    max-width: 600px;
+
+    margin: 0;
+
+    color: #938a99;
+
+    font-size: 8px;
+
+    line-height: 1.45;
+}
+
+
+.intervention-btn {
+    flex-shrink: 0;
+
+    padding: 9px 12px;
+
+    background: #34205f;
+
+    color: #ffffff;
+
+    text-decoration: none;
+
+    border-radius: 8px;
+
+    font-size: 9px;
+
+    font-weight: 700;
+}
+
+
+.intervention-btn:hover {
+    background: #4a2d78;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1200px) {
+
+    .priority-page {
+        padding: 28px 24px 40px;
+    }
+
+
+    .priority-layout {
+        grid-template-columns: 1fr;
+    }
+
+
+    .priority-list-panel {
+        max-height: none;
+    }
+
+}
+
+
+@media (max-width: 900px) {
+
+    .priority-summary-grid {
+        grid-template-columns:
+            repeat(2, minmax(0,1fr));
+    }
+
+
+    .priority-detail-panel {
+        padding: 18px;
+    }
+
+
+    .detail-connections {
+        grid-template-columns:
+            repeat(2, minmax(0,1fr));
+    }
+
+}
+
+
+@media (max-width: 800px) {
+
+    .priority-page {
+        padding: 22px 16px 35px;
+    }
+
+
+    .priority-header {
+        flex-direction: column;
+    }
+
+
+    .priority-header h1 {
+        font-size: 30px;
+    }
+
+
+    .priority-subtitle {
+        font-size: 12px;
+    }
+
+
+    .priority-header-meta {
+        width: 100%;
+    }
+
+
+    .priority-city-card {
+        flex: 1;
+    }
+
+
+    .priority-toolbar {
+        display: grid;
+
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+
+    .priority-search {
+        grid-column: 1 / -1;
+    }
+
+
+    .priority-toolbar select {
+        width: 100%;
+    }
+
+
+    .priority-detail-footer {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    .intervention-btn {
+        width: 100%;
+
+        text-align: center;
+
+        box-sizing: border-box;
+    }
+
+}
+
+
+@media (max-width: 560px) {
+
+    .priority-page {
+        padding: 18px 12px 30px;
+    }
+
+
+    .priority-summary-grid {
+        grid-template-columns: 1fr 1fr;
+
+        gap: 9px;
+    }
+
+
+    .priority-summary-card {
+        min-height: 82px;
+
+        padding: 11px;
+    }
+
+
+    .priority-summary-icon {
+        width: 32px;
+        height: 32px;
+    }
+
+
+    .priority-summary-card strong {
+        font-size: 18px;
+    }
+
+
+    .priority-toolbar {
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+
+    .priority-toolbar select {
+        width: 100%;
+    }
+
+
+    .priority-problem-item {
+        grid-template-columns:
+            27px
+            minmax(0,1fr)
+            50px;
+
+        gap: 7px;
+
+        padding: 15px 13px;
+    }
+
+
+    .priority-problem-title {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 4px;
+    }
+
+
+    .priority-problem-title h3 {
+        white-space: normal;
+
+        font-size: 13px;
+    }
+
+
+    .priority-factor-row {
+        font-size: 8px;
+    }
+
+
+    .priority-score strong {
+        font-size: 19px;
+    }
+
+
+    .detail-problem-header {
+        flex-direction: column;
+    }
+
+
+    .detail-score {
+        text-align: left;
+    }
+
+
+    .detail-score strong {
+        font-size: 28px;
+    }
+
+
+    .detail-connections {
+        grid-template-columns: 1fr 1fr;
+    }
+
+
+    .network-note p {
+        font-size: 9px;
+    }
+
+}
+/* =========================================================
+   PRIORITY PAGE
+   MORE SPACIOUS + CLEAN CARD LAYOUT
+========================================================= */
+
+
+/* =========================================================
+   SUMMARY CARDS
+========================================================= */
+
+.priority-summary-grid {
+    gap: 16px !important;
+}
+
+.priority-summary-card {
+    min-height: 112px !important;
+
+    padding: 18px 20px !important;
+
+    gap: 14px !important;
+
+    border-radius: 14px !important;
+}
+
+.priority-summary-icon {
+    width: 42px !important;
+    height: 42px !important;
+
+    border-radius: 11px !important;
+
+    font-size: 18px !important;
+}
+
+.priority-summary-card span {
+    font-size: 10px !important;
+}
+
+.priority-summary-card strong {
+    margin-top: 4px !important;
+
+    font-size: 24px !important;
+}
+
+.priority-summary-card p {
+    margin-top: 5px !important;
+
+    font-size: 9px !important;
+}
+
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.priority-toolbar {
+    gap: 12px !important;
+
+    margin-bottom: 22px !important;
+}
+
+.priority-search input,
+.priority-toolbar select {
+    height: 50px !important;
+}
+
+.priority-search input {
+    font-size: 13px !important;
+}
+
+.priority-toolbar select {
+    font-size: 12px !important;
+}
+
+
+/* =========================================================
+   MAIN PANELS
+========================================================= */
+
+.priority-list-panel,
+.priority-detail-panel {
+    border-radius: 16px !important;
+}
+
+
+/* =========================================================
+   LIST HEADER
+========================================================= */
+
+.priority-list-header {
+    padding: 22px 22px 19px !important;
+}
+
+.priority-list-header h2 {
+    font-size: 21px !important;
+}
+
+.priority-list-count {
+    font-size: 10px !important;
+
+    padding: 6px 9px !important;
+}
+
+
+/* =========================================================
+   PRIORITY PROBLEM CARDS
+========================================================= */
+
+.priority-problem-item {
+    min-height: 108px !important;
+
+    grid-template-columns:
+        42px
+        minmax(0, 1fr)
+        68px !important;
+
+    gap: 14px !important;
+
+    padding: 20px 22px !important;
+}
+
+
+.priority-problem-item:hover {
+    background: #faf8fc;
+}
+
+
+.priority-problem-item.selected {
+    box-shadow:
+        inset 4px 0 0 #7250a7 !important;
+}
+
+
+/* Rank */
+
+.rank-number {
+    font-size: 12px !important;
+}
+
+
+/* Problem title */
+
+.priority-problem-title {
+    gap: 9px !important;
+}
+
+
+.priority-problem-title h3 {
+    font-size: 14px !important;
+
+    line-height: 1.4 !important;
+}
+
+
+/* Priority pill */
+
+.priority-level {
+    padding: 5px 7px !important;
+
+    font-size: 8px !important;
+}
+
+
+/* Location */
+
+.problem-location {
+    margin-top: 6px !important;
+
+    font-size: 11px !important;
+}
+
+
+/* Factors */
+
+.priority-factor-row {
+    gap: 6px !important;
+
+    margin-top: 7px !important;
+
+    font-size: 9px !important;
+
+    line-height: 1.35 !important;
+}
+
+
+/* Score */
+
+.priority-score strong {
+    font-size: 23px !important;
+}
+
+.priority-score span {
+    margin-top: 5px !important;
+
+    font-size: 9px !important;
+}
+
+
+/* =========================================================
+   DETAIL PANEL
+========================================================= */
+
+.priority-detail-panel {
+    padding: 25px !important;
+}
+
+
+/* Detail header */
+
+.priority-detail-header {
+    padding-bottom: 20px !important;
+}
+
+.detail-ai-icon {
+    width: 42px !important;
+    height: 42px !important;
+}
+
+.detail-ai-heading h2 {
+    font-size: 20px !important;
+}
+
+.detail-ai-badge {
+    font-size: 9px !important;
+
+    padding: 7px 9px !important;
+}
+
+
+/* Selected problem */
+
+.detail-problem-header {
+    padding: 23px 0 !important;
+}
+
+.detail-rank {
+    font-size: 9px !important;
+}
+
+.detail-problem-header h2 {
+    font-size: 23px !important;
+
+    line-height: 1.3 !important;
+}
+
+.detail-problem-header p {
+    margin-top: 6px !important;
+
+    font-size: 11px !important;
+}
+
+.detail-score strong {
+    font-size: 34px !important;
+}
+
+.detail-score span {
+    font-size: 9px !important;
+}
+
+
+/* =========================================================
+   PRIORITY BANNER
+========================================================= */
+
+.priority-level-banner {
+    padding: 15px !important;
+
+    margin-bottom: 22px !important;
+}
+
+.banner-icon {
+    width: 32px !important;
+    height: 32px !important;
+
+    font-size: 15px !important;
+}
+
+.priority-level-banner strong {
+    font-size: 12px !important;
+}
+
+.priority-level-banner p {
+    margin-top: 5px !important;
+
+    font-size: 10px !important;
+
+    line-height: 1.45 !important;
+}
+
+
+/* =========================================================
+   SCORE BREAKDOWN
+========================================================= */
+
+.score-section {
+    margin-bottom: 22px !important;
+}
+
+.section-heading h3 {
+    font-size: 16px !important;
+}
+
+.score-list {
+    gap: 14px !important;
+
+    margin-top: 15px !important;
+}
+
+.score-row-label {
+    margin-bottom: 6px !important;
+}
+
+.score-row-label span {
+    font-size: 10px !important;
+}
+
+.score-row-label strong {
+    font-size: 10px !important;
+}
+
+.score-track {
+    height: 8px !important;
+}
+
+
+/* =========================================================
+   REASON + RECOMMENDATION
+========================================================= */
+
+.priority-reason,
+.recommended-action {
+    padding: 15px !important;
+
+    margin-bottom: 12px !important;
+
+    gap: 11px !important;
+}
+
+
+.reason-icon,
+.action-icon {
+    width: 32px !important;
+    height: 32px !important;
+}
+
+
+.priority-reason > div:last-child > span,
+.recommended-action > div:last-child > span {
+    font-size: 8px !important;
+}
+
+
+.priority-reason h3,
+.recommended-action h3 {
+    font-size: 13px !important;
+
+    line-height: 1.4 !important;
+}
+
+
+.priority-reason p,
+.recommended-action p {
+    margin-top: 5px !important;
+
+    font-size: 10px !important;
+
+    line-height: 1.5 !important;
+}
+
+
+/* =========================================================
+   CONNECTION CARDS
+========================================================= */
+
+.detail-connections {
+    gap: 10px !important;
+
+    margin-top: 20px !important;
+}
+
+
+.connection-item {
+    min-height: 58px !important;
+
+    padding: 12px !important;
+
+    gap: 9px !important;
+}
+
+
+.connection-icon {
+    width: 31px !important;
+    height: 31px !important;
+
+    font-size: 14px !important;
+}
+
+
+.connection-item span:not(.connection-icon) {
+    font-size: 9px !important;
+}
+
+.connection-item strong {
+    font-size: 17px !important;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.priority-detail-footer {
+    margin-top: 20px !important;
+
+    padding-top: 16px !important;
+}
+
+
+.priority-note p {
+    font-size: 9px !important;
+
+    line-height: 1.5 !important;
+}
+
+
+.intervention-btn {
+    padding: 10px 14px !important;
+
+    font-size: 10px !important;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1200px) {
+
+    .priority-problem-item {
+        min-height: 102px !important;
+    }
+
+}
+
+
+@media (max-width: 800px) {
+
+    .priority-summary-card {
+        min-height: 105px !important;
+
+        padding: 16px !important;
+    }
+
+
+    .priority-problem-item {
+        min-height: 105px !important;
+
+        padding: 18px 16px !important;
+    }
+
+
+    .priority-detail-panel {
+        padding: 20px !important;
+    }
+
+
+    .detail-problem-header h2 {
+        font-size: 21px !important;
+    }
+
+}
+
+
+@media (max-width: 560px) {
+
+    .priority-summary-card {
+        min-height: 95px !important;
+
+        padding: 14px !important;
+    }
+
+
+    .priority-summary-card strong {
+        font-size: 22px !important;
+    }
+
+
+    .priority-problem-item {
+        min-height: 112px !important;
+
+        grid-template-columns:
+            28px
+            minmax(0,1fr)
+            52px !important;
+
+        padding: 17px 14px !important;
+    }
+
+
+    .priority-problem-title h3 {
+        font-size: 14px !important;
+
+        white-space: normal !important;
+    }
+
+
+    .priority-factor-row {
+        font-size: 9px !important;
+    }
+
+
+    .detail-problem-header h2 {
+        font-size: 20px !important;
+    }
+
+
+    .detail-score strong {
+        font-size: 30px !important;
+    }
+
+}
+
+/* =========================================================
+   PRIORITY SUMMARY CARDS
+   PROFESSIONAL COLOR SYSTEM
+========================================================= */
+
+.priority-summary-grid {
+    gap: 16px !important;
+}
+
+
+/* Base card */
+.priority-summary-card {
+    position: relative;
+
+    min-height: 112px !important;
+
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 18px 20px !important;
+
+    background: #ffffff !important;
+
+    border: 1px solid #ddd7e8 !important;
+    border-radius: 14px !important;
+
+    box-shadow:
+        0 2px 8px rgba(52, 32, 95, 0.04);
+
+    overflow: hidden;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+/* Subtle top accent */
+.priority-summary-card::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    width: 4px;
+
+    border-radius: 14px 0 0 14px;
+}
+
+
+/* Hover */
+.priority-summary-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 6px 16px rgba(52, 32, 95, 0.08);
+}
+
+
+/* =========================================================
+   CRITICAL
+========================================================= */
+
+.priority-summary-card.critical {
+    background: #fff8f7 !important;
+
+    border-color: #efd9d6 !important;
+}
+
+.priority-summary-card.critical::before {
+    background: #c85b52;
+}
+
+.priority-summary-card.critical .priority-summary-icon {
+    background: #fbe8e6;
+
+    color: #b84d46;
+}
+
+
+/* =========================================================
+   HIGH
+========================================================= */
+
+.priority-summary-card.high {
+    background: #fffbf4 !important;
+
+    border-color: #ebdfca !important;
+}
+
+.priority-summary-card.high::before {
+    background: #c88735;
+}
+
+.priority-summary-card.high .priority-summary-icon {
+    background: #f8eddc;
+
+    color: #b87825;
+}
+
+
+/* =========================================================
+   INTERCONNECTED
+========================================================= */
+
+.priority-summary-card.connected {
+    background: #faf8fd !important;
+
+    border-color: #ddd4ea !important;
+}
+
+.priority-summary-card.connected::before {
+    background: #7450a8;
+}
+
+.priority-summary-card.connected .priority-summary-icon {
+    background: #eee7f7;
+
+    color: #624294;
+}
+
+
+/* =========================================================
+   CITY IMPACT
+========================================================= */
+
+.priority-summary-card.city {
+    background: #f7fbf8 !important;
+
+    border-color: #d6e4d9 !important;
+}
+
+.priority-summary-card.city::before {
+    background: #4d8b61;
+}
+
+.priority-summary-card.city .priority-summary-icon {
+    background: #e7f2ea;
+
+    color: #3f7c52;
+}
+
+
+/* =========================================================
+   ICON
+========================================================= */
+
+.priority-summary-icon {
+    width: 42px !important;
+    height: 42px !important;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    background: #f4f1f7;
+
+    border-radius: 11px !important;
+
+    font-size: 18px !important;
+    font-weight: 750;
+
+    box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.5);
+}
+
+
+/* =========================================================
+   TEXT
+========================================================= */
+
+.priority-summary-card > div:last-child {
+    min-width: 0;
+}
+
+
+.priority-summary-card span {
+    display: block;
+
+    color: #736a7d;
+
+    font-size: 10px !important;
+    font-weight: 650;
+
+    line-height: 1.2;
+}
+
+
+.priority-summary-card strong {
+    display: block;
+
+    margin-top: 4px !important;
+
+    color: #2f2737;
+
+    font-size: 24px !important;
+    line-height: 1;
+
+    font-weight: 800;
+}
+
+
+.priority-summary-card p {
+    margin: 5px 0 0 !important;
+
+    color: #928a99;
+
+    font-size: 9px !important;
+    line-height: 1.3;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 800px) {
+
+    .priority-summary-card {
+        min-height: 105px !important;
+
+        padding: 16px 17px !important;
+    }
+
+    .priority-summary-icon {
+        width: 38px !important;
+        height: 38px !important;
+    }
+
+}
+
+
+@media (max-width: 560px) {
+
+    .priority-summary-card {
+        min-height: 98px !important;
+
+        padding: 14px !important;
+    }
+
+    .priority-summary-card strong {
+        font-size: 22px !important;
+    }
+
+    .priority-summary-card span {
+        font-size: 9px !important;
+    }
+
+    .priority-summary-card p {
+        font-size: 8px !important;
+    }
+
+}
+/* =========================================================
+   DARKER PROFESSIONAL SUMMARY CARD COLORS
+========================================================= */
+
+.priority-summary-card {
+    border-width: 1px !important;
+}
+
+
+/* =========================
+   CRITICAL
+========================= */
+
+.priority-summary-card.critical {
+    background: #f8dedd !important;
+    border-color: #e3b8b5 !important;
+}
+
+.priority-summary-card.critical::before {
+    background: #c64d45 !important;
+}
+
+.priority-summary-card.critical .priority-summary-icon {
+    background: #f2c7c4 !important;
+    color: #a93630 !important;
+}
+
+.priority-summary-card.critical span {
+    color: #713e3b !important;
+}
+
+.priority-summary-card.critical strong {
+    color: #682b28 !important;
+}
+
+.priority-summary-card.critical p {
+    color: #845b58 !important;
+}
+
+
+/* =========================
+   HIGH PRIORITY
+========================= */
+
+.priority-summary-card.high {
+    background: #f9e6c5 !important;
+    border-color: #e2c898 !important;
+}
+
+.priority-summary-card.high::before {
+    background: #c27b24 !important;
+}
+
+.priority-summary-card.high .priority-summary-icon {
+    background: #f2d9ab !important;
+    color: #a96112 !important;
+}
+
+.priority-summary-card.high span {
+    color: #76572f !important;
+}
+
+.priority-summary-card.high strong {
+    color: #72430d !important;
+}
+
+.priority-summary-card.high p {
+    color: #846945 !important;
+}
+
+
+/* =========================
+   INTERCONNECTED
+========================= */
+
+.priority-summary-card.connected {
+    background: #e3d8f1 !important;
+    border-color: #c8b4df !important;
+}
+
+.priority-summary-card.connected::before {
+    background: #7046a1 !important;
+}
+
+.priority-summary-card.connected .priority-summary-icon {
+    background: #d3c0e8 !important;
+    color: #59338d !important;
+}
+
+.priority-summary-card.connected span {
+    color: #65507a !important;
+}
+
+.priority-summary-card.connected strong {
+    color: #4d2b7d !important;
+}
+
+.priority-summary-card.connected p {
+    color: #746482 !important;
+}
+
+
+/* =========================
+   CITY IMPACT
+========================= */
+
+.priority-summary-card.city {
+    background: #d9ebdf !important;
+    border-color: #b8d4c0 !important;
+}
+
+.priority-summary-card.city::before {
+    background: #438256 !important;
+}
+
+.priority-summary-card.city .priority-summary-icon {
+    background: #c6dfce !important;
+    color: #2f6e43 !important;
+}
+
+.priority-summary-card.city span {
+    color: #4e6d58 !important;
+}
+
+.priority-summary-card.city strong {
+    color: #285a38 !important;
+}
+
+.priority-summary-card.city p {
+    color: #64806d !important;
+}
+
+
+/* =========================================================
+   ICONS
+========================================================= */
+
+.priority-summary-icon {
+    box-shadow: none !important;
+}
+
+
+/* =========================================================
+   HOVER
+========================================================= */
+
+.priority-summary-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 7px 18px rgba(52, 32, 95, 0.10) !important;
+}

@@ -1,0 +1,811 @@
+{% extends "base.html" %}
+
+{% block title %}
+Citizen Dashboard - UrbanNexus
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/citizen-dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<section class="page-container">
+
+    <!-- =========================================================
+         WELCOME
+    ========================================================== -->
+
+    <div class="welcome-section">
+
+        <div>
+
+            <p class="eyebrow">
+                CITIZEN DASHBOARD
+            </p>
+
+            <h1>
+                Good morning, Citizen <span>👋</span>
+            </h1>
+
+            <p class="welcome-text">
+                Help make your city better by reporting problems
+                and keeping track of their progress.
+            </p>
+
+        </div>
+
+        <a href="/citizen/report"
+           class="primary-button">
+
+            <span>＋</span>
+            Report a Problem
+
+        </a>
+
+    </div>
+
+
+    <!-- =========================================================
+         STATS
+    ========================================================== -->
+
+    <div class="stats-grid">
+
+        <!-- TOTAL REPORTS -->
+
+        <div class="stat-card">
+
+            <div class="stat-top">
+
+                <div class="stat-icon purple">
+                    ▤
+                </div>
+
+                <span class="stat-label">
+                    TOTAL REPORTS
+                </span>
+
+            </div>
+
+            <div class="stat-value">
+                {{ total_reports }}
+            </div>
+
+            <p>
+                Your submitted reports
+            </p>
+
+        </div>
+
+
+        <!-- ACTIVE REPORTS -->
+
+        <div class="stat-card">
+
+            <div class="stat-top">
+
+                <div class="stat-icon orange">
+                    ◷
+                </div>
+
+                <span class="stat-label">
+                    ACTIVE REPORTS
+                </span>
+
+            </div>
+
+            <div class="stat-value">
+                {{ active_reports }}
+            </div>
+
+            <p>
+                Currently being handled
+            </p>
+
+        </div>
+
+
+        <!-- AI ANALYZED -->
+
+        <div class="stat-card">
+
+            <div class="stat-top">
+
+                <div class="stat-icon blue">
+                    ◈
+                </div>
+
+                <span class="stat-label">
+                    AI ANALYZED
+                </span>
+
+            </div>
+
+            <div class="stat-value">
+                {{ analysis_reports }}
+            </div>
+
+            <p>
+                Problems analyzed by AI
+            </p>
+
+        </div>
+
+
+        <!-- RESOLVED -->
+
+        <div class="stat-card">
+
+            <div class="stat-top">
+
+                <div class="stat-icon green">
+                    ✓
+                </div>
+
+                <span class="stat-label">
+                    RESOLVED
+                </span>
+
+            </div>
+
+            <div class="stat-value">
+                {{ resolved_reports }}
+            </div>
+
+            <p>
+                Problems successfully resolved
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         CONTENT GRID
+    ========================================================== -->
+
+    <div class="content-grid">
+
+
+        <!-- =====================================================
+             RECENT REPORTS
+        ====================================================== -->
+
+        <section class="panel recent-panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2>
+                        Recent Reports
+                    </h2>
+
+                    <p>
+                        Your recently submitted problems
+                    </p>
+
+                </div>
+
+                <a href="/citizen/reports"
+                   class="view-all">
+
+                    View all →
+
+                </a>
+
+            </div>
+
+
+            <div class="report-list">
+
+                {% if recent_reports %}
+
+                    {% for report in recent_reports %}
+
+                    <a href="/citizen/report/{{ report._id }}"
+                       class="report-item"
+                       style="text-decoration: none; color: inherit;">
+
+                        <!-- PROBLEM ICON -->
+
+                        <div class="problem-icon
+                            {% if 'Water' in report.get('category', '') %}
+                                water
+                            {% elif 'Road' in report.get('category', '') %}
+                                road
+                            {% elif 'Street' in report.get('category', '') or 'Light' in report.get('category', '') %}
+                                lighting
+                            {% elif 'Waste' in report.get('category', '') %}
+                                waste
+                            {% elif 'Traffic' in report.get('category', '') %}
+                                traffic
+                            {% else %}
+                                general
+                            {% endif %}">
+
+                            {% if 'Water' in report.get('category', '') %}
+
+                                ≋
+
+                            {% elif 'Road' in report.get('category', '') %}
+
+                                ▰
+
+                            {% elif 'Street' in report.get('category', '') or 'Light' in report.get('category', '') %}
+
+                                ☼
+
+                            {% elif 'Waste' in report.get('category', '') %}
+
+                                ♻
+
+                            {% elif 'Traffic' in report.get('category', '') %}
+
+                                ⇄
+
+                            {% else %}
+
+                                ◈
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- REPORT INFORMATION -->
+
+                        <div class="report-info">
+
+                            <div class="report-title-row">
+
+                                <h3>
+
+                                    {{ report.get(
+                                        "title",
+                                        "Untitled Problem"
+                                    ) }}
+
+                                </h3>
+
+
+                                <!-- STATUS -->
+
+                                {% set report_status =
+                                    report.get(
+                                        "status",
+                                        "Submitted"
+                                    )
+                                %}
+
+                                <span class="status
+                                    {% if report_status == 'AI Analyzed' %}
+                                        analyzed
+                                    {% elif report_status == 'In Progress' %}
+                                        progress
+                                    {% elif report_status == 'Assigned' %}
+                                        assigned
+                                    {% elif report_status == 'Resolved' %}
+                                        resolved
+                                    {% elif report_status == 'Verified' %}
+                                        verified
+                                    {% else %}
+                                        submitted
+                                    {% endif %}">
+
+                                    {{ report_status }}
+
+                                </span>
+
+                            </div>
+
+
+                            <!-- LOCATION -->
+
+                            <p>
+
+                                {{ report.get(
+                                    "address",
+                                    report.get(
+                                        "location",
+                                        "Location not provided"
+                                    )
+                                ) }}
+
+                            </p>
+
+
+                            <!-- DATE -->
+
+                            <span class="report-date">
+
+                                {% if report.get("created_at") %}
+
+                                    Reported
+                                    {{ report.get("created_at").strftime("%d %b %Y") }}
+
+                                {% else %}
+
+                                    Recently reported
+
+                                {% endif %}
+
+                            </span>
+
+                        </div>
+
+
+                        <span class="report-arrow">
+                            ›
+                        </span>
+
+                    </a>
+
+                    {% endfor %}
+
+
+                {% else %}
+
+                    <!-- EMPTY STATE -->
+
+                    <div class="empty-dashboard-state">
+
+                        <div class="empty-state-icon">
+                            ◈
+                        </div>
+
+                        <h3>
+                            No reports yet
+                        </h3>
+
+                        <p>
+                            You haven't reported any urban problems yet.
+                        </p>
+
+                        <a href="/citizen/report"
+                           class="secondary-button">
+
+                            Report Your First Problem
+
+                        </a>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             RIGHT COLUMN
+        ====================================================== -->
+
+        <div class="right-column">
+
+
+            <!-- =================================================
+                 CITY INSIGHT
+            ================================================== -->
+
+            <section class="insight-card">
+
+                <div class="insight-header">
+
+                    <div class="ai-badge">
+                        ✦
+                    </div>
+
+                    <div>
+
+                        <span>
+                            URBANNEXUS INSIGHT
+                        </span>
+
+                        {% if analysis_reports > 0 %}
+
+                            <h2>
+                                Your report can make a difference
+                            </h2>
+
+                        {% else %}
+
+                            <h2>
+                                Start improving your city
+                            </h2>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                {% if analysis_reports > 0 %}
+
+                    <p>
+
+                        Your reports are being analyzed by
+                        UrbanNexus AI to identify impact,
+                        root causes and connected urban problems.
+
+                    </p>
+
+                {% else %}
+
+                    <p>
+
+                        Reports from citizens help UrbanNexus
+                        identify connected urban problems and
+                        direct them to the right departments.
+
+                    </p>
+
+                {% endif %}
+
+
+                <a href="/citizen/report"
+                   class="insight-button">
+
+                    Report an issue →
+
+                </a>
+
+            </section>
+
+
+            <!-- =================================================
+                 QUICK ACTIONS
+            ================================================== -->
+
+            <section class="panel quick-panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <h2>
+                            Quick Actions
+                        </h2>
+
+                        <p>
+                            What would you like to do?
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- REPORT -->
+
+                <a href="/citizen/report"
+                   class="quick-action">
+
+                    <div class="quick-icon purple-bg">
+                        ＋
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Report a Problem
+                        </strong>
+
+                        <span>
+                            Tell us about an urban issue
+                        </span>
+
+                    </div>
+
+                    <span>
+                        ›
+                    </span>
+
+                </a>
+
+
+                <!-- NEARBY -->
+
+                <a href="/citizen/nearby"
+                   class="quick-action">
+
+                    <div class="quick-icon blue-bg">
+                        ⌖
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            View Nearby Problems
+                        </strong>
+
+                        <span>
+                            See issues reported around you
+                        </span>
+
+                    </div>
+
+                    <span>
+                        ›
+                    </span>
+
+                </a>
+
+
+                <!-- MY REPORTS -->
+
+                <a href="/citizen/reports"
+                   class="quick-action">
+
+                    <div class="quick-icon green-bg">
+                        ◉
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Track My Reports
+                        </strong>
+
+                        <span>
+                            Check the latest updates
+                        </span>
+
+                    </div>
+
+                    <span>
+                        ›
+                    </span>
+
+                </a>
+
+            </section>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         CITY PROBLEMS
+    ========================================================== -->
+
+    <section class="panel nearby-panel">
+
+        <div class="panel-header">
+
+            <div>
+
+                <h2>
+                    Problems Around You
+                </h2>
+
+                <p>
+                    Recently reported urban problems
+                </p>
+
+            </div>
+
+            <a href="/citizen/nearby"
+               class="view-all">
+
+                Explore map →
+
+            </a>
+
+        </div>
+
+
+        <div class="nearby-grid">
+
+            {% if city_problems %}
+
+                {% for problem in city_problems %}
+
+                <a href="/citizen/report/{{ problem._id }}"
+                   class="nearby-card"
+                   style="text-decoration: none; color: inherit;">
+
+                    <!-- MARKER -->
+
+                    <div class="nearby-marker
+                        {% if problem.get('impact_level', 'MEDIUM') == 'HIGH' %}
+                            red
+                        {% elif problem.get('impact_level', 'MEDIUM') == 'MEDIUM' %}
+                            orange
+                        {% else %}
+                            purple
+                        {% endif %}">
+
+                        {% if problem.get('impact_level', 'MEDIUM') == 'HIGH' %}
+
+                            !
+
+                        {% elif 'Water' in problem.get('category', '') %}
+
+                            ≋
+
+                        {% elif 'Road' in problem.get('category', '') %}
+
+                            ▰
+
+                        {% else %}
+
+                            ◈
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div>
+
+                        <h3>
+
+                            {{ problem.get(
+                                "title",
+                                "Urban Problem"
+                            ) }}
+
+                        </h3>
+
+                        <p>
+
+                            {{ problem.get(
+                                "address",
+                                problem.get(
+                                    "location",
+                                    "Location not provided"
+                                )
+                            ) }}
+
+                        </p>
+
+                    </div>
+
+
+                    <!-- IMPACT -->
+
+                    {% set problem_impact =
+                        problem.get(
+                            "impact_level",
+                            "MEDIUM"
+                        )|upper
+                    %}
+
+                    <span class="nearby-status
+                        {% if problem_impact == 'HIGH' %}
+                            high
+                        {% elif problem_impact == 'MEDIUM' %}
+                            medium
+                        {% else %}
+                            low
+                        {% endif %}">
+
+                        {{ problem_impact }}
+
+                    </span>
+
+                </a>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="empty-dashboard-state">
+
+                    <div class="empty-state-icon">
+                        ⌖
+                    </div>
+
+                    <h3>
+                        No city problems yet
+                    </h3>
+
+                    <p>
+                        No urban problems have been reported yet.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================================
+         CITY IMPACT SUMMARY
+    ========================================================== -->
+
+    <section class="dashboard-impact">
+
+        <div class="impact-heading">
+
+            <div>
+
+                <p class="eyebrow">
+                    URBANNEXUS ANALYSIS
+                </p>
+
+                <h2>
+                    Your Reports Help the City
+                </h2>
+
+                <p>
+                    Every citizen report contributes to
+                    understanding interconnected urban problems.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="impact-stats">
+
+            <div class="impact-stat">
+
+                <span>
+                    Your Reports
+                </span>
+
+                <strong>
+                    {{ total_reports }}
+                </strong>
+
+            </div>
+
+
+            <div class="impact-stat">
+
+                <span>
+                    AI Analyzed
+                </span>
+
+                <strong>
+                    {{ analysis_reports }}
+                </strong>
+
+            </div>
+
+
+            <div class="impact-stat">
+
+                <span>
+                    Active
+                </span>
+
+                <strong>
+                    {{ active_reports }}
+                </strong>
+
+            </div>
+
+
+            <div class="impact-stat">
+
+                <span>
+                    Resolved
+                </span>
+
+                <strong>
+                    {{ resolved_reports }}
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,1658 @@
+/* =========================================================
+   URBANNEXUS
+   MUNICIPALITY - DEPENDENCY ANALYSIS
+========================================================= */
+
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.dependency-page {
+    width: 100%;
+    min-height: 100vh;
+
+    padding: 30px 36px 45px;
+
+    background: #f7f5fa;
+
+    color: #282230;
+
+    box-sizing: border-box;
+
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.dependency-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 24px;
+
+    margin-bottom: 24px;
+}
+
+
+.dependency-eyebrow {
+    margin: 0 0 6px;
+
+    color: #7250a7;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    letter-spacing: 1.1px;
+}
+
+
+.dependency-header h1 {
+    margin: 0;
+
+    color: #282230;
+
+    font-size: 34px;
+    line-height: 1.15;
+
+    font-weight: 750;
+}
+
+
+.dependency-subtitle {
+    max-width: 720px;
+
+    margin: 8px 0 0;
+
+    color: #786f83;
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+
+.dependency-header-meta {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+.dependency-city-card {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 9px 13px;
+
+    background: #ffffff;
+
+    border: 1px solid #ded7e6;
+
+    border-radius: 10px;
+}
+
+
+.dependency-city-icon {
+    color: #7250a7;
+
+    font-size: 17px;
+}
+
+
+.dependency-city-card strong {
+    display: block;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+.dependency-city-card span:last-child {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #8a8192;
+
+    font-size: 9px;
+}
+
+
+.dependency-ai-status {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 11px 13px;
+
+    background: #e7f4eb;
+
+    color: #287044;
+
+    border-radius: 10px;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+.dependency-ai-status span {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #3e9b5c;
+}
+
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.dependency-toolbar {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 18px;
+}
+
+
+.dependency-search {
+    position: relative;
+
+    flex: 1;
+
+    min-width: 0;
+}
+
+
+.dependency-search > span {
+    position: absolute;
+
+    left: 14px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: #8c8392;
+
+    font-size: 16px;
+}
+
+
+.dependency-search input {
+    width: 100%;
+    height: 46px;
+
+    padding: 0 15px 0 40px;
+
+    border: 1px solid #dcd5e5;
+
+    border-radius: 10px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #342b3c;
+
+    font-family: inherit;
+
+    font-size: 12px;
+
+    box-sizing: border-box;
+}
+
+
+.dependency-search input::placeholder {
+    color: #9b93a2;
+}
+
+
+.dependency-search input:focus {
+    border-color: #8b68bd;
+
+    box-shadow:
+        0 0 0 3px rgba(114, 80, 167, 0.10);
+}
+
+
+.dependency-toolbar select {
+    width: 170px;
+    height: 46px;
+
+    padding: 0 12px;
+
+    border: 1px solid #dcd5e5;
+
+    border-radius: 10px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #4e4556;
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    box-sizing: border-box;
+
+    cursor: pointer;
+}
+
+
+.dependency-toolbar select:focus {
+    border-color: #8b68bd;
+}
+
+
+/* =========================================================
+   MAIN GRID
+========================================================= */
+
+.dependency-layout {
+    display: grid;
+
+    grid-template-columns:
+        minmax(320px, 0.78fr)
+        minmax(550px, 1.55fr);
+
+    gap: 20px;
+
+    align-items: start;
+}
+
+
+/* =========================================================
+   PANELS
+========================================================= */
+
+.dependency-clusters,
+.network-panel {
+    background: #ffffff;
+
+    border: 1px solid #ded7e6;
+
+    border-radius: 15px;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   LEFT PANEL
+========================================================= */
+
+.dependency-clusters {
+    overflow: hidden;
+}
+
+
+.dependency-panel-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    padding: 20px;
+
+    border-bottom: 1px solid #eeeaf1;
+}
+
+
+.panel-kicker {
+    margin: 0 0 5px;
+
+    color: #7250a7;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    letter-spacing: 1px;
+}
+
+
+.dependency-panel-heading h2 {
+    margin: 0;
+
+    color: #282230;
+
+    font-size: 19px;
+    font-weight: 750;
+}
+
+
+.cluster-count {
+    padding: 5px 8px;
+
+    background: #eee7f7;
+
+    color: #5d3d91;
+
+    border-radius: 6px;
+
+    font-size: 9px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   CLUSTER LIST
+========================================================= */
+
+.cluster-list {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.cluster-item {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+
+    padding: 17px 18px;
+
+    background: #ffffff;
+
+    border: none;
+    border-bottom: 1px solid #eeeaf1;
+
+    color: inherit;
+
+    text-align: left;
+
+    font-family: inherit;
+
+    box-sizing: border-box;
+
+    cursor: pointer;
+
+    transition: background 0.2s ease;
+}
+
+
+.cluster-item:last-child {
+    border-bottom: none;
+}
+
+
+.cluster-item:hover {
+    background: #faf8fc;
+}
+
+
+.cluster-item.selected {
+    background: #f3eef9;
+
+    box-shadow:
+        inset 3px 0 0 #7250a7;
+}
+
+
+.cluster-number {
+    width: 27px;
+    min-width: 27px;
+
+    color: #a39aa9;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+
+.cluster-content {
+    min-width: 0;
+
+    flex: 1;
+}
+
+
+.cluster-title-row {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+}
+
+
+.cluster-title-row h3 {
+    min-width: 0;
+
+    margin: 0;
+
+    color: #342b3c;
+
+    font-size: 13px;
+    line-height: 1.35;
+
+    font-weight: 700;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+.cluster-impact {
+    flex-shrink: 0;
+
+    padding: 4px 6px;
+
+    border-radius: 5px;
+
+    font-size: 7px;
+    font-weight: 800;
+}
+
+
+.cluster-impact.high {
+    background: #fde5e3;
+    color: #b83b35;
+}
+
+
+.cluster-impact.medium {
+    background: #fff0d9;
+    color: #a76318;
+}
+
+
+.cluster-impact.low {
+    background: #e5f1e8;
+    color: #37734a;
+}
+
+
+.cluster-content > p {
+    margin: 5px 0 0;
+
+    color: #746b7c;
+
+    font-size: 10px;
+
+    line-height: 1.45;
+}
+
+
+.cluster-meta {
+    display: flex;
+    align-items: center;
+
+    gap: 5px;
+
+    margin-top: 5px;
+
+    color: #9b93a2;
+
+    font-size: 8px;
+}
+
+
+.cluster-arrow {
+    flex-shrink: 0;
+
+    color: #9f96a6;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   NETWORK PANEL
+========================================================= */
+
+.network-panel {
+    padding: 22px;
+
+    overflow: hidden;
+}
+
+
+.network-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding-bottom: 18px;
+
+    border-bottom: 1px solid #eeeaf1;
+}
+
+
+.network-title {
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+}
+
+
+.network-ai-icon {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    background: #eee7f7;
+
+    color: #5d3d91;
+
+    border-radius: 10px;
+
+    font-size: 19px;
+}
+
+
+.network-title h2 {
+    margin: 0;
+
+    color: #282230;
+
+    font-size: 19px;
+
+    font-weight: 750;
+}
+
+
+.network-badge {
+    padding: 6px 8px;
+
+    background: #eee7f7;
+
+    color: #5d3d91;
+
+    border-radius: 6px;
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   SELECTED NETWORK
+========================================================= */
+
+.network-selected {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 14px;
+
+    padding: 19px 0;
+}
+
+
+.selected-label {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #84768f;
+
+    font-size: 7px;
+
+    font-weight: 800;
+
+    letter-spacing: .8px;
+}
+
+
+.network-selected h2 {
+    margin: 0;
+
+    color: #342b3c;
+
+    font-size: 20px;
+
+    line-height: 1.25;
+
+    font-weight: 750;
+}
+
+
+.network-selected p {
+    max-width: 650px;
+
+    margin: 5px 0 0;
+
+    color: #796f80;
+
+    font-size: 11px;
+
+    line-height: 1.45;
+}
+
+
+.selected-impact {
+    flex-shrink: 0;
+
+    padding: 6px 8px;
+
+    background: #fde5e3;
+
+    color: #b83b35;
+
+    border-radius: 6px;
+
+    font-size: 8px;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   LEGEND
+========================================================= */
+
+.network-legend {
+    display: flex;
+    align-items: center;
+
+    gap: 18px;
+
+    padding: 10px 12px;
+
+    margin-bottom: 13px;
+
+    background: #faf8fc;
+
+    border: 1px solid #eeeaf2;
+
+    border-radius: 8px;
+}
+
+
+.network-legend div {
+    display: flex;
+    align-items: center;
+
+    gap: 6px;
+
+    color: #766c7b;
+
+    font-size: 9px;
+
+    font-weight: 600;
+}
+
+
+.legend-dot {
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+}
+
+
+.legend-dot.root {
+    background: #8c65b7;
+}
+
+
+.legend-dot.current {
+    background: #6d95ba;
+}
+
+
+.legend-dot.downstream {
+    background: #d57a6e;
+}
+
+
+/* =========================================================
+   GRAPH
+========================================================= */
+
+.dependency-graph-wrapper {
+    width: 100%;
+
+    overflow-x: auto;
+
+    padding-bottom: 7px;
+}
+
+
+.dependency-graph {
+    min-width: 720px;
+
+    display: flex;
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    padding: 10px 3px 15px;
+}
+
+
+.graph-node {
+    width: 150px;
+    min-width: 150px;
+
+    min-height: 92px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-direction: column;
+
+    padding: 12px;
+
+    box-sizing: border-box;
+
+    background: #f8f6fa;
+
+    border: 1px solid #ddd6e5;
+
+    border-radius: 12px;
+
+    text-align: center;
+}
+
+
+.graph-node.root-node {
+    background: #eee7f7;
+
+    border-color: #cdb9df;
+}
+
+
+.graph-node.current-node {
+    background: #e9f2f8;
+
+    border-color: #bfd4e2;
+}
+
+
+.graph-node.downstream-node {
+    background: #f6f0fa;
+
+    border-color: #d8c8e6;
+}
+
+
+.graph-node.impact-node {
+    background: #fcebe8;
+
+    border-color: #e9c6c0;
+}
+
+
+.graph-node-label {
+    margin-bottom: 6px;
+
+    color: #7d6d8c;
+
+    font-size: 7px;
+
+    font-weight: 800;
+
+    letter-spacing: .7px;
+}
+
+
+.graph-node strong {
+    color: #342b3c;
+
+    font-size: 11px;
+
+    line-height: 1.35;
+
+    font-weight: 750;
+}
+
+
+.graph-node small {
+    margin-top: 5px;
+
+    color: #938a99;
+
+    font-size: 8px;
+
+    line-height: 1.3;
+}
+
+
+.graph-connector {
+    flex-shrink: 0;
+
+    color: #8462ac;
+
+    font-size: 19px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   NETWORK SUMMARY
+========================================================= */
+
+.network-summary-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 9px;
+
+    margin-top: 4px;
+}
+
+
+.network-summary-card {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 11px;
+
+    background: #faf8fc;
+
+    border: 1px solid #ebe6ef;
+
+    border-radius: 9px;
+}
+
+
+.summary-icon {
+    width: 29px;
+    height: 29px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+}
+
+
+.summary-icon.purple {
+    background: #eee7f7;
+    color: #69489f;
+}
+
+
+.summary-icon.blue {
+    background: #e6f0f7;
+    color: #457da5;
+}
+
+
+.summary-icon.orange {
+    background: #fff0de;
+    color: #ad681c;
+}
+
+
+.summary-icon.green {
+    background: #e6f1e8;
+    color: #42744c;
+}
+
+
+.network-summary-card span:last-child {
+    display: block;
+
+    color: #7f7585;
+
+    font-size: 8px;
+}
+
+
+.network-summary-card strong {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #3b3342;
+
+    font-size: 15px;
+
+    font-weight: 750;
+}
+
+
+/* =========================================================
+   AI INSIGHT
+========================================================= */
+
+.network-ai-insight {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 11px;
+
+    margin-top: 17px;
+
+    padding: 14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f6f2fb,
+            #fbf9fd
+        );
+
+    border: 1px solid #ded2e8;
+
+    border-radius: 11px;
+}
+
+
+.network-ai-insight-icon {
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    background: #eee7f7;
+
+    color: #5d3d91;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+}
+
+
+.ai-insight-label {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #7b6988;
+
+    font-size: 7px;
+
+    font-weight: 800;
+
+    letter-spacing: .8px;
+}
+
+
+.network-ai-insight h3 {
+    margin: 0;
+
+    color: #463750;
+
+    font-size: 12px;
+
+    font-weight: 750;
+}
+
+
+.network-ai-insight p {
+    max-width: 750px;
+
+    margin: 5px 0 0;
+
+    color: #6e6475;
+
+    font-size: 10px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.network-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-top: 17px;
+
+    padding-top: 14px;
+
+    border-top: 1px solid #eeeaf1;
+}
+
+
+.network-note {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 7px;
+
+    min-width: 0;
+}
+
+
+.network-note > span {
+    color: #918897;
+
+    font-size: 10px;
+}
+
+
+.network-note p {
+    max-width: 600px;
+
+    margin: 0;
+
+    color: #938a99;
+
+    font-size: 8px;
+
+    line-height: 1.45;
+}
+
+
+.network-priority-btn {
+    flex-shrink: 0;
+
+    padding: 9px 12px;
+
+    background: #34205f;
+
+    color: #ffffff;
+
+    border-radius: 8px;
+
+    text-decoration: none;
+
+    font-size: 9px;
+
+    font-weight: 700;
+}
+
+
+.network-priority-btn:hover {
+    background: #4a2d78;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1150px) {
+
+    .dependency-page {
+        padding: 28px 24px 40px;
+    }
+
+
+    .dependency-layout {
+        grid-template-columns: 1fr;
+    }
+
+
+    .dependency-clusters {
+        max-height: 430px;
+
+        overflow-y: auto;
+    }
+
+}
+
+
+@media (max-width: 800px) {
+
+    .dependency-page {
+        padding: 22px 16px 35px;
+    }
+
+
+    .dependency-header {
+        flex-direction: column;
+    }
+
+
+    .dependency-header h1 {
+        font-size: 29px;
+    }
+
+
+    .dependency-subtitle {
+        font-size: 12px;
+    }
+
+
+    .dependency-header-meta {
+        width: 100%;
+    }
+
+
+    .dependency-city-card {
+        flex: 1;
+    }
+
+
+    .dependency-toolbar {
+        display: grid;
+
+        grid-template-columns: 1fr 1fr;
+
+        align-items: stretch;
+    }
+
+
+    .dependency-search {
+        grid-column: 1 / -1;
+    }
+
+
+    .dependency-toolbar select {
+        width: 100%;
+    }
+
+
+    .dependency-clusters {
+        max-height: none;
+
+        overflow: hidden;
+    }
+
+
+    .network-panel {
+        padding: 18px;
+    }
+
+
+    .network-summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+
+    .network-footer {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    .network-priority-btn {
+        width: 100%;
+
+        text-align: center;
+
+        box-sizing: border-box;
+    }
+
+}
+
+
+@media (max-width: 520px) {
+
+    .dependency-page {
+        padding: 18px 12px 30px;
+    }
+
+
+    .dependency-header h1 {
+        font-size: 27px;
+    }
+
+
+    .dependency-header-meta {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+
+    .dependency-ai-status {
+        justify-content: center;
+    }
+
+
+    .dependency-toolbar {
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+
+    .dependency-toolbar select {
+        width: 100%;
+    }
+
+
+    .cluster-item {
+        padding: 15px 13px;
+    }
+
+
+    .cluster-title-row {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 4px;
+    }
+
+
+    .cluster-title-row h3 {
+        white-space: normal;
+    }
+
+
+    .network-title h2 {
+        font-size: 17px;
+    }
+
+
+    .network-selected {
+        flex-direction: column;
+    }
+
+
+    .network-summary-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+
+    .network-legend {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 8px;
+    }
+
+}
+
+/* =========================================================
+   SLIGHTLY LARGER, CLEANER TYPOGRAPHY
+========================================================= */
+
+/* Header */
+.dependency-eyebrow {
+    font-size: 12px !important;
+}
+
+.dependency-header h1 {
+    font-size: 36px !important;
+}
+
+.dependency-subtitle {
+    font-size: 14px !important;
+}
+
+
+/* Header meta */
+.dependency-city-card strong {
+    font-size: 13px !important;
+}
+
+.dependency-city-card span:last-child {
+    font-size: 10px !important;
+}
+
+.dependency-ai-status {
+    font-size: 11px !important;
+}
+
+
+/* Search + filters */
+.dependency-search input {
+    font-size: 13px !important;
+}
+
+.dependency-toolbar select {
+    font-size: 12px !important;
+}
+
+
+/* Left panel */
+.panel-kicker {
+    font-size: 10px !important;
+}
+
+.dependency-panel-heading h2 {
+    font-size: 20px !important;
+}
+
+.cluster-count {
+    font-size: 10px !important;
+}
+
+
+/* Cluster items */
+.cluster-title-row h3 {
+    font-size: 14px !important;
+}
+
+.cluster-content > p {
+    font-size: 11px !important;
+}
+
+.cluster-meta {
+    font-size: 9px !important;
+}
+
+.cluster-impact {
+    font-size: 8px !important;
+}
+
+
+/* Network header */
+.network-title h2 {
+    font-size: 20px !important;
+}
+
+.network-badge {
+    font-size: 9px !important;
+}
+
+
+/* Selected network */
+.selected-label {
+    font-size: 8px !important;
+}
+
+.network-selected h2 {
+    font-size: 21px !important;
+}
+
+.network-selected p {
+    font-size: 12px !important;
+}
+
+.selected-impact {
+    font-size: 9px !important;
+}
+
+
+/* Legend */
+.network-legend div {
+    font-size: 10px !important;
+}
+
+
+/* Graph */
+.graph-node-label {
+    font-size: 8px !important;
+}
+
+.graph-node strong {
+    font-size: 12px !important;
+}
+
+.graph-node small {
+    font-size: 9px !important;
+}
+
+.graph-connector {
+    font-size: 20px !important;
+}
+
+
+/* Summary cards */
+.network-summary-card span:last-child {
+    font-size: 9px !important;
+}
+
+.network-summary-card strong {
+    font-size: 17px !important;
+}
+
+
+/* AI insight */
+.ai-insight-label {
+    font-size: 8px !important;
+}
+
+.network-ai-insight h3 {
+    font-size: 13px !important;
+}
+
+.network-ai-insight p {
+    font-size: 11px !important;
+}
+
+
+/* Footer */
+.network-note p {
+    font-size: 9px !important;
+}
+
+.network-priority-btn {
+    font-size: 10px !important;
+}
+
+/* =========================================================
+   READABLE TYPOGRAPHY
+========================================================= */
+
+/* Main page heading */
+.dependency-eyebrow {
+    font-size: 12px !important;
+    font-weight: 800 !important;
+}
+
+.dependency-header h1 {
+    font-size: 36px !important;
+    line-height: 1.15 !important;
+    font-weight: 750 !important;
+}
+
+.dependency-subtitle {
+    font-size: 15px !important;
+    line-height: 1.5 !important;
+}
+
+
+/* Search and filters */
+.dependency-search input {
+    font-size: 14px !important;
+}
+
+.dependency-toolbar select {
+    font-size: 13px !important;
+}
+
+
+/* Left panel */
+.dependency-panel-heading h2 {
+    font-size: 21px !important;
+}
+
+.panel-kicker {
+    font-size: 10px !important;
+}
+
+.cluster-title-row h3 {
+    font-size: 15px !important;
+    line-height: 1.35 !important;
+}
+
+.cluster-content > p {
+    font-size: 12px !important;
+    line-height: 1.45 !important;
+}
+
+.cluster-meta {
+    font-size: 10px !important;
+}
+
+.cluster-impact {
+    font-size: 8px !important;
+}
+
+
+/* Right panel */
+.network-title h2 {
+    font-size: 21px !important;
+}
+
+.network-selected h2 {
+    font-size: 22px !important;
+}
+
+.network-selected p {
+    font-size: 12px !important;
+    line-height: 1.45 !important;
+}
+
+.network-badge {
+    font-size: 9px !important;
+}
+
+
+/* Legend */
+.network-legend div {
+    font-size: 10px !important;
+}
+
+
+/* Dependency graph */
+.graph-node-label {
+    font-size: 8px !important;
+}
+
+.graph-node strong {
+    font-size: 13px !important;
+    line-height: 1.35 !important;
+}
+
+.graph-node small {
+    font-size: 10px !important;
+}
+
+.graph-connector {
+    font-size: 21px !important;
+}
+
+
+/* Summary cards */
+.network-summary-card span:last-child {
+    font-size: 10px !important;
+}
+
+.network-summary-card strong {
+    font-size: 18px !important;
+}
+
+
+/* AI insight */
+.ai-insight-label {
+    font-size: 8px !important;
+}
+
+.network-ai-insight h3 {
+    font-size: 14px !important;
+}
+
+.network-ai-insight p {
+    font-size: 11px !important;
+    line-height: 1.5 !important;
+}
+
+
+/* Footer */
+.network-note p {
+    font-size: 9px !important;
+}
+
+.network-priority-btn {
+    font-size: 10px !important;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 800px) {
+
+    .dependency-header h1 {
+        font-size: 30px !important;
+    }
+
+    .dependency-subtitle {
+        font-size: 13px !important;
+    }
+
+    .dependency-panel-heading h2 {
+        font-size: 20px !important;
+    }
+
+    .cluster-title-row h3 {
+        font-size: 14px !important;
+    }
+
+    .cluster-content > p {
+        font-size: 11px !important;
+    }
+
+    .network-title h2 {
+        font-size: 19px !important;
+    }
+
+    .network-selected h2 {
+        font-size: 20px !important;
+    }
+
+    .network-selected p {
+        font-size: 11px !important;
+    }
+
+    .graph-node strong {
+        font-size: 11px !important;
+    }
+
+    .network-ai-insight h3 {
+        font-size: 13px !important;
+    }
+
+    .network-ai-insight p {
+        font-size: 10px !important;
+    }
+}

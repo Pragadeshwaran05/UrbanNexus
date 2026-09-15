@@ -1,0 +1,1995 @@
+/* =========================================================
+   URBANNEXUS - REPORT A PROBLEM
+   ========================================================= */
+
+
+/* =========================================================
+   PAGE
+   ========================================================= */
+
+.report-page {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 34px 46px 60px;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   BACK LINK
+   ========================================================= */
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 10px 16px;
+
+    background: #ffffff;
+    color: #4a2879;
+
+    border: 1.5px solid #cbb9dc;
+    border-radius: 8px;
+
+    text-decoration: none;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    margin-bottom: 30px;
+
+    transition: all 0.2s ease;
+}
+
+.back-link:hover {
+    background: #4a2879;
+    color: #ffffff;
+    border-color: #4a2879;
+
+    text-decoration: none;
+}
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.report-header {
+    margin-bottom: 28px;
+}
+
+.report-header .eyebrow {
+    display: block;
+
+    color: #68429b;
+
+    font-size: 13px;
+    font-weight: 800;
+
+    letter-spacing: 1.4px;
+
+    margin-bottom: 8px;
+}
+
+.report-header h1 {
+    margin: 0 0 10px;
+
+    color: #20133b;
+
+    font-size: 38px;
+    line-height: 1.15;
+    font-weight: 750;
+}
+
+.report-header p {
+    margin: 0;
+
+    color: #5f5270;
+
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   PROGRESS CARD
+   ========================================================= */
+
+.progress-card {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    padding: 18px 24px;
+
+    background: #ffffff;
+
+    border: 1.5px solid #1f1f1f;
+    border-radius: 15px;
+
+    box-sizing: border-box;
+
+    margin-bottom: 30px;
+}
+
+
+/* Individual step */
+
+.progress-step {
+    flex: 0 0 auto;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    min-width: 155px;
+}
+
+
+/* Step number */
+
+.step-number {
+    width: 36px;
+    height: 36px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #ece6f5;
+    color: #6e5b84;
+
+    font-size: 14px;
+    font-weight: 750;
+}
+
+
+/* Active step */
+
+.progress-step.active .step-number {
+    background: #3b236d;
+    color: #ffffff;
+}
+
+
+/* Step text */
+
+.step-info {
+    display: flex;
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+.step-info strong {
+    color: #20152f;
+
+    font-size: 14px;
+    font-weight: 750;
+}
+
+.step-info span {
+    color: #766b82;
+
+    font-size: 11px;
+    line-height: 1.3;
+}
+
+
+/* Lines between steps */
+
+.progress-line {
+    flex: 1;
+
+    height: 1.5px;
+
+    background: #d9cce7;
+
+    margin: 0 16px;
+
+    min-width: 35px;
+}
+
+
+/* =========================================================
+   MAIN TWO-COLUMN LAYOUT
+   ========================================================= */
+
+.report-layout {
+    display: grid;
+
+    grid-template-columns: minmax(0, 1fr) 365px;
+
+    gap: 24px;
+
+    align-items: start;
+}
+
+
+/* =========================================================
+   FORM CARD
+   ========================================================= */
+
+.report-form-card {
+    background: #ffffff;
+
+    border: 1.5px solid #1e1e1e;
+    border-radius: 16px;
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   FORM SECTIONS
+   ========================================================= */
+
+.form-section {
+    padding: 30px;
+
+    border-bottom: 1px solid #e6dfeb;
+}
+
+.form-section:last-child {
+    border-bottom: none;
+}
+
+
+/* =========================================================
+   SECTION HEADING
+   ========================================================= */
+
+.section-heading {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 14px;
+
+    margin-bottom: 26px;
+}
+
+.section-icon {
+    width: 44px;
+    height: 44px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background: #eee6f8;
+    color: #7046a8;
+
+    font-size: 19px;
+    font-weight: 750;
+}
+
+.section-heading h2 {
+    margin: 2px 0 4px;
+
+    color: #20152f;
+
+    font-size: 22px;
+    line-height: 1.25;
+    font-weight: 750;
+}
+
+.section-heading p {
+    margin: 0;
+
+    color: #74677f;
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   FORM GROUP
+   ========================================================= */
+
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-group:last-child {
+    margin-bottom: 0;
+}
+
+.form-group > label {
+    display: block;
+
+    margin-bottom: 9px;
+
+    color: #21162f;
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.required {
+    color: #c7445c;
+}
+
+
+/* =========================================================
+   CATEGORY GRID
+   ========================================================= */
+
+.category-grid {
+    display: grid;
+
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    gap: 14px;
+
+    margin-bottom: 26px;
+}
+
+
+/* Category card */
+
+.category-card {
+    position: relative;
+
+    min-height: 120px;
+
+    display: block;
+
+    background: #ffffff;
+
+    border: 1.5px solid #cfc3da;
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        transform 0.2s ease;
+
+    box-sizing: border-box;
+}
+
+.category-card:hover {
+    border-color: #7650a5;
+
+    background: #faf8fd;
+
+    transform: translateY(-1px);
+}
+
+
+/* Hide radio visually */
+
+.category-card input {
+    position: absolute;
+
+    top: 13px;
+    left: 13px;
+
+    width: 16px;
+    height: 16px;
+
+    margin: 0;
+
+    accent-color: #432579;
+}
+
+
+/* Selected category */
+
+.category-card:has(input:checked) {
+    border: 2px solid #4a2a7c;
+
+    background: #f7f1fc;
+}
+
+
+/* Category content */
+
+.category-content {
+    display: flex;
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    padding: 18px 14px 15px 14px;
+}
+
+.category-icon {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    margin-bottom: 10px;
+
+    font-size: 17px;
+    font-weight: 700;
+}
+
+
+/* Category icon colors */
+
+.category-icon.water {
+    background: #e5f2fb;
+    color: #4d8db7;
+}
+
+.category-icon.roads {
+    background: #fceddf;
+    color: #d87932;
+}
+
+.category-icon.traffic {
+    background: #eee6fa;
+    color: #7450a9;
+}
+
+.category-icon.waste {
+    background: #e5f3eb;
+    color: #30966a;
+}
+
+.category-icon.electricity {
+    background: #fff0dc;
+    color: #e28b32;
+}
+
+.category-icon.environment {
+    background: #e4f2ed;
+    color: #36866e;
+}
+
+
+.category-content strong {
+    color: #20152f;
+
+    font-size: 13px;
+    font-weight: 750;
+
+    margin-bottom: 3px;
+}
+
+.category-content span {
+    color: #6e6378;
+
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   INPUTS
+   ========================================================= */
+
+.form-group input[type="text"],
+.form-group textarea,
+.form-group select {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    border: 1.5px solid #cfc4d8;
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    color: #241934;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.form-group input[type="text"],
+.form-group select {
+    height: 46px;
+
+    padding: 0 14px;
+}
+
+
+.form-group textarea {
+    padding: 13px 14px;
+
+    min-height: 120px;
+
+    resize: vertical;
+
+    line-height: 1.55;
+}
+
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    border-color: #68409b;
+
+    box-shadow: 0 0 0 3px rgba(104, 64, 155, 0.10);
+}
+
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #a296ad;
+}
+
+
+/* =========================================================
+   LOCATION
+   ========================================================= */
+
+.location-actions {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    margin-bottom: 22px;
+}
+
+
+.location-button,
+.manual-location-button {
+    height: 42px;
+
+    padding: 0 17px;
+
+    border-radius: 8px;
+
+    font-family: inherit;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+.location-button {
+    border: 1.5px solid #4b2b7c;
+
+    background: #4b2b7c;
+    color: #ffffff;
+}
+
+.location-button:hover {
+    background: #392064;
+}
+
+
+.manual-location-button {
+    border: 1.5px solid #cfc4d8;
+
+    background: #ffffff;
+    color: #4b2b7c;
+}
+
+
+.manual-location-button:hover {
+    background: #f7f2fb;
+}
+
+
+.location-or {
+    color: #8a7e94;
+
+    font-size: 11px;
+    font-weight: 650;
+}
+
+
+/* Latitude / longitude */
+
+.location-fields {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 14px;
+}
+
+
+/* =========================================================
+   MAP
+   ========================================================= */
+
+.map-preview {
+    width: 100%;
+
+    height: 210px;
+
+    overflow: hidden;
+
+    border: 1.5px solid #d3c8dc;
+    border-radius: 11px;
+
+    background: #f2eef5;
+
+    margin-top: 5px;
+}
+
+
+.map-placeholder {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+}
+
+
+.map-icon {
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #e6ddf0;
+    color: #69439c;
+
+    font-size: 21px;
+
+    margin-bottom: 10px;
+}
+
+
+.map-placeholder strong {
+    color: #38264c;
+
+    font-size: 14px;
+
+    margin-bottom: 4px;
+}
+
+
+.map-placeholder span {
+    color: #81758b;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   UPLOAD
+   ========================================================= */
+
+.upload-box {
+    border: 1.5px dashed #bcaacb;
+    border-radius: 12px;
+
+    background: #fbf9fd;
+
+    padding: 32px 20px;
+
+    text-align: center;
+}
+
+
+.upload-icon {
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 auto 12px;
+
+    border-radius: 12px;
+
+    background: #eee6f7;
+    color: #68419a;
+
+    font-size: 21px;
+    font-weight: 750;
+}
+
+
+.upload-box h3 {
+    margin: 0 0 6px;
+
+    color: #281a38;
+
+    font-size: 16px;
+}
+
+
+.upload-box p {
+    margin: 0 0 18px;
+
+    color: #796e83;
+
+    font-size: 12px;
+}
+
+
+.upload-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 40px;
+
+    padding: 0 18px;
+
+    border-radius: 8px;
+
+    background: #4a2a7b;
+    color: #ffffff;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+.upload-button:hover {
+    background: #392063;
+}
+
+
+.upload-note {
+    display: block;
+
+    margin-top: 12px;
+
+    color: #95899e;
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.form-actions {
+    display: flex;
+
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 12px;
+
+    padding: 22px 30px;
+
+    background: #faf8fc;
+
+    border-top: 1px solid #e5deea;
+}
+
+
+.cancel-button,
+.submit-button {
+    height: 44px;
+
+    padding: 0 22px;
+
+    border-radius: 8px;
+
+    font-family: inherit;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    text-decoration: none;
+
+    cursor: pointer;
+}
+
+
+.cancel-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1.5px solid #d0c5d9;
+
+    background: #ffffff;
+    color: #59496a;
+}
+
+
+.submit-button {
+    border: 1.5px solid #40226d;
+
+    background: #40226d;
+    color: #ffffff;
+}
+
+
+.submit-button:hover {
+    background: #301954;
+}
+
+
+/* =========================================================
+   RIGHT INFORMATION PANEL
+   ========================================================= */
+
+.report-info {
+    display: flex;
+    flex-direction: column;
+
+    gap: 16px;
+
+    position: sticky;
+
+    top: 24px;
+}
+
+
+/* Purple information card */
+
+.info-card.purple {
+    background: #392066;
+
+    color: #ffffff;
+
+    border: 1.5px solid #24123f;
+    border-radius: 15px;
+
+    padding: 26px;
+}
+
+
+.info-card-icon {
+    width: 45px;
+    height: 45px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background: rgba(255, 255, 255, 0.15);
+
+    color: #ffffff;
+
+    font-size: 19px;
+
+    margin-bottom: 18px;
+}
+
+
+.info-card.purple h2 {
+    margin: 0 0 10px;
+
+    color: #ffffff;
+
+    font-size: 21px;
+    line-height: 1.3;
+}
+
+
+.info-card.purple > p {
+    margin: 0 0 24px;
+
+    color: #ddd4eb;
+
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+
+/* Info steps */
+
+.info-step {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 11px;
+
+    margin-bottom: 18px;
+}
+
+
+.info-step:last-child {
+    margin-bottom: 0;
+}
+
+
+.info-number {
+    width: 30px;
+    height: 30px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.14);
+
+    color: #ffffff;
+
+    font-size: 12px;
+    font-weight: 750;
+}
+
+
+.info-step strong {
+    display: block;
+
+    color: #ffffff;
+
+    font-size: 13px;
+
+    margin-bottom: 3px;
+}
+
+
+.info-step span {
+    display: block;
+
+    color: #d8cfe7;
+
+    font-size: 11px;
+
+    line-height: 1.45;
+}
+
+
+/* =========================================================
+   TIP CARD
+   ========================================================= */
+
+.tip-card {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 13px;
+
+    padding: 19px;
+
+    border: 1.5px solid #cfc3da;
+    border-radius: 14px;
+
+    background: #f4eef9;
+}
+
+
+.tip-icon {
+    width: 38px;
+    height: 38px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    font-size: 17px;
+}
+
+
+.tip-card h3 {
+    margin: 0 0 5px;
+
+    color: #2b1d3c;
+
+    font-size: 13px;
+}
+
+
+.tip-card p {
+    margin: 0;
+
+    color: #6f637b;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   PRIVACY CARD
+   ========================================================= */
+
+.privacy-card {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 12px;
+
+    padding: 18px;
+
+    border: 1.5px solid #ddd4e3;
+    border-radius: 14px;
+
+    background: #ffffff;
+}
+
+
+.privacy-icon {
+    font-size: 17px;
+}
+
+
+.privacy-card h3 {
+    margin: 0 0 5px;
+
+    color: #2b1d3c;
+
+    font-size: 13px;
+}
+
+
+.privacy-card p {
+    margin: 0;
+
+    color: #74697d;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   RESPONSIVE - TABLET
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+    .report-page {
+        padding: 30px;
+    }
+
+    .report-layout {
+        grid-template-columns: minmax(0, 1fr) 310px;
+    }
+
+    .progress-step {
+        min-width: 120px;
+    }
+
+    .progress-line {
+        margin: 0 10px;
+    }
+
+    .category-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+   ========================================================= */
+@media (max-width: 800px) {
+
+    .report-page {
+        padding: 24px 18px 40px;
+    }
+
+    .report-header h1 {
+        font-size: 30px;
+    }
+
+    /* Mobile progress steps */
+    .progress-card {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        padding: 14px 10px;
+
+        gap: 4px;
+
+        overflow: hidden;
+    }
+
+    .progress-step {
+        flex: 1;
+        min-width: 0;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        gap: 5px;
+
+        text-align: center;
+    }
+
+    .step-number {
+        width: 32px;
+        height: 32px;
+
+        font-size: 12px;
+    }
+
+    .step-info {
+        align-items: center;
+        gap: 1px;
+    }
+
+    .step-info strong {
+        font-size: 11px;
+    }
+
+    .step-info span {
+        font-size: 9px;
+    }
+
+    /* Horizontal lines between steps */
+    .progress-line {
+        flex: 0 0 20px;
+
+        width: 20px;
+        height: 1.5px;
+
+        margin: 0;
+
+        background: #d9cce7;
+    }
+
+    /* Main content */
+    .report-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .report-info {
+        position: static;
+    }
+
+    /* Categories */
+    .category-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Location */
+    .location-fields {
+        grid-template-columns: 1fr;
+    }
+
+}
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 500px) {
+
+    .report-page {
+        padding: 20px 12px 30px;
+    }
+
+
+    .form-section {
+        padding: 20px;
+    }
+
+
+    .section-heading h2 {
+        font-size: 19px;
+    }
+
+
+    .form-actions {
+        flex-direction: column-reverse;
+
+        align-items: stretch;
+
+        padding: 18px 20px;
+    }
+
+
+    .cancel-button,
+    .submit-button {
+        width: 100%;
+    }
+
+
+    .location-actions {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+
+    .location-or {
+        text-align: center;
+    }
+
+}
+/* =========================================================
+   TOP RIGHT USER
+   ========================================================= */
+
+.top-user {
+    position: absolute;
+    top: 28px;
+    right: 42px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+
+    z-index: 10;
+}
+
+.top-user-info {
+    display: flex;
+    flex-direction: column;
+
+    align-items: flex-end;
+
+    gap: 2px;
+}
+
+.top-user-info strong {
+    color: #241638;
+
+    font-size: 13px;
+    font-weight: 750;
+}
+
+.top-user-info span {
+    color: #786b84;
+
+    font-size: 11px;
+}
+
+.top-user-avatar {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #eee6f8;
+    color: #4a2879;
+
+    border: 1.5px solid #cbb9dc;
+
+    font-size: 15px;
+    font-weight: 750;
+}
+.report-page {
+    position: relative;
+}
+
+/* =========================================================
+   URBANNEXUS - LOCATION SEARCH & NEARBY PROBLEMS
+   ========================================================= */
+
+
+/* =========================================================
+   LOCATION SEARCH CONTAINER
+   ========================================================= */
+
+.location-search-container {
+    flex: 1;
+    min-width: 0;
+}
+
+.location-search-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.location-search-row input {
+    flex: 1;
+    height: 42px;
+
+    padding: 0 13px;
+
+    box-sizing: border-box;
+
+    border: 1.5px solid #cfc4d8;
+    border-radius: 8px;
+
+    background: #ffffff;
+    color: #241934;
+
+    font-family: inherit;
+    font-size: 13px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.location-search-row input::placeholder {
+    color: #a296ad;
+}
+
+.location-search-row input:focus {
+    border-color: #68409b;
+
+    box-shadow:
+        0 0 0 3px rgba(104, 64, 155, 0.10);
+}
+
+
+/* =========================================================
+   SEARCH BUTTON
+   ========================================================= */
+
+.search-location-button {
+    height: 42px;
+
+    padding: 0 17px;
+
+    border: 1.5px solid #4b2b7c;
+    border-radius: 8px;
+
+    background: #ffffff;
+    color: #4b2b7c;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.search-location-button:hover {
+    background: #4b2b7c;
+    color: #ffffff;
+}
+
+.search-location-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   SEARCH RESULTS
+   ========================================================= */
+
+.location-search-results {
+    position: relative;
+
+    width: 100%;
+
+    margin-top: 8px;
+
+    background: #ffffff;
+
+    border: 1px solid #d9cde2;
+    border-radius: 10px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 8px 22px rgba(48, 29, 73, 0.10);
+
+    z-index: 1000;
+}
+
+.location-result {
+    width: 100%;
+
+    display: flex;
+    align-items: flex-start;
+
+    gap: 10px;
+
+    padding: 12px 13px;
+
+    border: none;
+    border-bottom: 1px solid #eee8f2;
+
+    background: #ffffff;
+
+    color: #332544;
+
+    text-align: left;
+
+    font-family: inherit;
+    font-size: 12px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease;
+}
+
+.location-result:last-child {
+    border-bottom: none;
+}
+
+.location-result:hover {
+    background: #f7f2fb;
+}
+
+.location-result span:first-child {
+    flex-shrink: 0;
+
+    font-size: 14px;
+}
+
+.location-result span:last-child {
+    line-height: 1.45;
+}
+
+.location-no-result {
+    padding: 14px;
+
+    color: #776b82;
+
+    font-size: 12px;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   LOCATION STATUS
+   ========================================================= */
+
+.location-status {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 11px;
+
+    margin-bottom: 16px;
+    padding: 13px 15px;
+
+    border: 1px solid #ded5e6;
+    border-radius: 10px;
+
+    background: #faf8fc;
+}
+
+.location-status > span {
+    flex-shrink: 0;
+
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #eee6f7;
+    color: #68409b;
+
+    font-size: 14px;
+}
+
+.location-status strong {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #2b1d3c;
+
+    font-size: 13px;
+    font-weight: 750;
+}
+
+.location-status p {
+    margin: 0;
+
+    color: #786c83;
+
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   SELECTED LOCATION
+   ========================================================= */
+
+.selected-location-box {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 11px;
+
+    margin-bottom: 16px;
+    padding: 14px 15px;
+
+    border: 1.5px solid #bfaad3;
+    border-radius: 10px;
+
+    background: #f6f0fb;
+}
+
+.selected-location-icon {
+    width: 30px;
+    height: 30px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #4a2a7b;
+    color: #ffffff;
+
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.selected-location-box strong {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #2b1c3c;
+
+    font-size: 13px;
+}
+
+.selected-location-box p {
+    margin: 0;
+
+    color: #6f637a;
+
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   REAL MAP
+   ========================================================= */
+
+.map-preview {
+    width: 100%;
+
+    height: 380px;
+
+    overflow: hidden;
+
+    border: 1.5px solid #d3c8dc;
+    border-radius: 12px;
+
+    background: #f2eef5;
+
+    margin-top: 8px;
+}
+
+#problemMap {
+    width: 100%;
+    height: 100%;
+}
+
+
+/* Leaflet */
+
+#problemMap .leaflet-control-zoom {
+    border: none;
+    box-shadow: 0 2px 8px rgba(40, 25, 60, 0.15);
+}
+
+#problemMap .leaflet-control-zoom a {
+    color: #4b2b7c;
+}
+
+
+/* =========================================================
+   NEARBY PROBLEMS SECTION
+   ========================================================= */
+
+.nearby-problems-section {
+    margin-top: 22px;
+
+    padding: 20px;
+
+    border: 1.5px solid #d8cbe3;
+    border-radius: 13px;
+
+    background: #fbf9fd;
+}
+
+
+/* Header */
+
+.nearby-problems-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 16px;
+}
+
+.nearby-problems-header .eyebrow {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #68429b;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: 1px;
+}
+
+.nearby-problems-header h3 {
+    margin: 0 0 4px;
+
+    color: #291a3a;
+
+    font-size: 17px;
+    font-weight: 750;
+}
+
+.nearby-problems-header p {
+    margin: 0;
+
+    color: #786c83;
+
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+
+/* Count */
+
+.nearby-problem-count {
+    min-width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 9px;
+
+    box-sizing: border-box;
+
+    border-radius: 9px;
+
+    background: #e9dff3;
+    color: #4a2879;
+
+    font-size: 13px;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   NEARBY PROBLEM LIST
+   ========================================================= */
+
+.nearby-problems-list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 9px;
+}
+
+
+/* Individual problem */
+
+.nearby-problem-item {
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+
+    padding: 12px;
+
+    border: 1px solid #ddd3e5;
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    transition:
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.nearby-problem-item:hover {
+    border-color: #b69acb;
+
+    transform: translateY(-1px);
+}
+
+
+/* Icon */
+
+.nearby-problem-icon {
+    width: 34px;
+    height: 34px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #eee6f7;
+    color: #69439c;
+
+    font-size: 14px;
+}
+
+
+/* Content */
+
+.nearby-problem-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.nearby-problem-content strong {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #2c1d3c;
+
+    font-size: 12px;
+    font-weight: 750;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.nearby-problem-content p {
+    margin: 0;
+
+    color: #7a6d83;
+
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   IMPACT BADGES
+   ========================================================= */
+
+.nearby-impact {
+    flex-shrink: 0;
+
+    padding: 5px 8px;
+
+    border-radius: 6px;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    letter-spacing: 0.5px;
+}
+
+.nearby-impact.high {
+    background: #fde9ed;
+    color: #b52e49;
+}
+
+.nearby-impact.medium {
+    background: #fff0dd;
+    color: #b76a20;
+}
+
+.nearby-impact.low {
+    background: #e7f3eb;
+    color: #34815d;
+}
+
+
+/* =========================================================
+   LOADING / EMPTY STATE
+   ========================================================= */
+
+.nearby-loading,
+.nearby-empty {
+    padding: 20px;
+
+    border: 1px dashed #d2c5dc;
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    color: #766a80;
+
+    font-size: 11px;
+
+    text-align: center;
+}
+
+.nearby-empty strong {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #40304f;
+
+    font-size: 12px;
+}
+
+.nearby-empty p {
+    margin: 0;
+
+    color: #81758a;
+
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   CURRENT LOCATION BUTTON
+   ========================================================= */
+
+.location-button:disabled {
+    opacity: 0.65;
+
+    cursor: wait;
+}
+
+
+/* =========================================================
+   RESPONSIVE - TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .location-actions {
+        flex-wrap: wrap;
+    }
+
+    .location-search-container {
+        width: 100%;
+        flex-basis: 100%;
+    }
+
+    .location-or {
+        display: none;
+    }
+
+    .map-preview {
+        height: 340px;
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+    .location-actions {
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 10px;
+    }
+
+    .location-button {
+        width: 100%;
+    }
+
+    .location-search-container {
+        width: 100%;
+    }
+
+    .location-search-row {
+        width: 100%;
+    }
+
+    .location-search-row input {
+        min-width: 0;
+    }
+
+    .search-location-button {
+        flex-shrink: 0;
+    }
+
+    .map-preview {
+        height: 320px;
+    }
+
+    .nearby-problems-section {
+        padding: 15px;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 500px) {
+
+    .location-search-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .location-search-row input {
+        width: 100%;
+    }
+
+    .search-location-button {
+        width: 100%;
+    }
+
+    .map-preview {
+        height: 280px;
+    }
+
+    .nearby-problems-header {
+        align-items: center;
+    }
+
+    .nearby-problem-item {
+        align-items: flex-start;
+    }
+
+    .nearby-impact {
+        font-size: 8px;
+        padding: 4px 6px;
+    }
+
+}

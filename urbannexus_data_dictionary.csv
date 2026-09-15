@@ -1,0 +1,18 @@
+column,meaning
+record_id,Unique training record
+problem_a,Potential source problem
+problem_b,Potential related/downstream problem
+category_a,Category of source
+category_b,Category of target
+description_a,Natural-language source description
+description_b,Natural-language target description
+location,Representative locality
+distance_km,Distance between observations in km
+time_difference_hours,Time gap between observations in hours
+severity_a,Severity of source
+severity_b,Severity of target
+nearby_frequency,Nearby occurrence count
+text_similarity,Text similarity score
+relationship,CAUSES / CONTRIBUTES_TO / NO_DEPENDENCY
+dependency_strength,"Prototype dependency strength, 0 to 1"
+dependency_label,"1 = dependency exists, 0 = no dependency"

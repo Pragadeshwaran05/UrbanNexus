@@ -1,0 +1,2088 @@
+{% extends "base.html" %}
+
+{% block title %}
+Interventions - UrbanNexus
+{% endblock %}
+
+
+{% block extra_css %}
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/municipality-interventions.css') }}">
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="interventions-page">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="interventions-header">
+
+        <div class="interventions-header-main">
+
+            <p class="interventions-eyebrow">
+                MUNICIPAL ACTION MANAGEMENT
+            </p>
+
+            <h1>
+                Interventions
+            </h1>
+
+            <p class="interventions-subtitle">
+                Coordinate departments, assign actions, and track
+                intervention progress across interconnected urban
+                problems.
+            </p>
+
+        </div>
+
+
+        <div class="interventions-header-meta">
+
+            <div class="interventions-city-card">
+
+                <span class="interventions-city-icon">
+                    ⌖
+                </span>
+
+                <div>
+                    <strong>Chennai</strong>
+                    <span>City Administration</span>
+                </div>
+
+            </div>
+
+
+            <div class="interventions-status">
+
+                <span></span>
+
+                Action Center Active
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         REAL SUMMARY DATA
+    ====================================================== -->
+
+    <section class="intervention-summary-grid">
+
+
+        <!-- ACTIVE -->
+
+        <div class="intervention-summary-card active">
+
+            <div class="summary-icon">
+                ⇄
+            </div>
+
+            <div>
+
+                <span>
+                    Active
+                </span>
+
+                <strong>
+                    {{ active_count }}
+                </strong>
+
+                <p>
+                    Currently in progress
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- URGENT -->
+
+        <div class="intervention-summary-card urgent">
+
+            <div class="summary-icon">
+                ⚠
+            </div>
+
+            <div>
+
+                <span>
+                    Urgent
+                </span>
+
+                <strong>
+                    {{ urgent_count }}
+                </strong>
+
+                <p>
+                    Need immediate action
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- DEPARTMENTS -->
+
+        <div class="intervention-summary-card departments">
+
+            <div class="summary-icon">
+                ◉
+            </div>
+
+            <div>
+
+                <span>
+                    Departments
+                </span>
+
+                <strong>
+                    {{ department_count }}
+                </strong>
+
+                <p>
+                    Currently involved
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- COMPLETED -->
+
+        <div class="intervention-summary-card completed">
+
+            <div class="summary-icon">
+                ✓
+            </div>
+
+            <div>
+
+                <span>
+                    Completed
+                </span>
+
+                <strong>
+                    {{ completed_count }}
+                </strong>
+
+                <p>
+                    Successfully resolved
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         TOOLBAR
+    ====================================================== -->
+
+    <section class="interventions-toolbar">
+
+        <div class="interventions-search">
+
+            <span>
+                ⌕
+            </span>
+
+            <input
+                type="text"
+                id="interventionSearch"
+                placeholder="Search interventions, problems or departments..."
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <select id="interventionStatusFilter">
+
+            <option value="all">
+                All Statuses
+            </option>
+
+            <option value="active">
+                In Progress
+            </option>
+
+            <option value="pending">
+                Pending
+            </option>
+
+            <option value="completed">
+                Completed
+            </option>
+
+        </select>
+
+
+        <select id="departmentFilter">
+
+            <option value="all">
+                All Departments
+            </option>
+
+            {% for department in department_list %}
+
+                <option
+                    value="{{ department|lower|replace(' ', '-')|replace('&', 'and') }}"
+                >
+                    {{ department }}
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         MAIN LAYOUT
+    ====================================================== -->
+
+    <div class="interventions-layout">
+
+
+        <!-- =================================================
+             INTERVENTION LIST
+        ================================================== -->
+
+        <section class="intervention-list-panel">
+
+
+            <div class="intervention-list-header">
+
+                <div>
+
+                    <p class="panel-kicker">
+                        MUNICIPAL ACTION QUEUE
+                    </p>
+
+                    <h2>
+                        Active Interventions
+                    </h2>
+
+                </div>
+
+
+                <span
+                    class="intervention-count"
+                    id="interventionCount"
+                >
+
+                    {{ interventions|length }}
+
+                    intervention{% if interventions|length != 1 %}s{% endif %}
+
+                </span>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 REAL MONGODB INTERVENTIONS
+            ================================================== -->
+
+            <div
+                class="intervention-items"
+                id="interventionItems"
+            >
+
+
+                {% for intervention in interventions %}
+
+
+                <button
+                    type="button"
+
+                    class="intervention-card {% if loop.first %}selected{% endif %}"
+
+                    data-id="{{ intervention.id }}"
+
+                    data-status="{{ intervention.status }}"
+
+                    data-department="{{ intervention.department|lower|replace(' ', '-')|replace('&', 'and') }}"
+
+                    data-search="
+                        {{ intervention.title }}
+                        {{ intervention.problem_title }}
+                        {{ intervention.category }}
+                        {{ intervention.department }}
+                        {{ intervention.priority }}
+                        {{ intervention.impact }}
+                    "
+                >
+
+
+                    <!-- ICON -->
+
+                    <div
+                        class="
+                            intervention-card-icon
+
+                            {% if 'water' in intervention.category|lower
+                               or 'drain' in intervention.category|lower %}
+                                water
+
+                            {% elif 'road' in intervention.category|lower
+                               or 'infrastructure' in intervention.category|lower %}
+                                roads
+
+                            {% elif 'traffic' in intervention.category|lower %}
+                                traffic
+
+                            {% elif 'waste' in intervention.category|lower
+                               or 'garbage' in intervention.category|lower %}
+                                waste
+
+                            {% else %}
+                                electricity
+                            {% endif %}
+                        "
+                    >
+
+                        {% if 'water' in intervention.category|lower
+                           or 'drain' in intervention.category|lower %}
+
+                            💧
+
+                        {% elif 'road' in intervention.category|lower
+                           or 'infrastructure' in intervention.category|lower %}
+
+                            🛣
+
+                        {% elif 'traffic' in intervention.category|lower %}
+
+                            🚦
+
+                        {% elif 'waste' in intervention.category|lower
+                           or 'garbage' in intervention.category|lower %}
+
+                            ♻
+
+                        {% else %}
+
+                            ◉
+
+                        {% endif %}
+
+                    </div>
+
+
+
+                    <!-- CONTENT -->
+
+                    <div class="intervention-card-content">
+
+
+                        <div class="intervention-card-title-row">
+
+                            <h3>
+                                {{ intervention.title }}
+                            </h3>
+
+
+                            <span
+                                class="
+                                    status-badge
+
+                                    {% if intervention.status == 'active' %}
+                                        active
+
+                                    {% elif intervention.status == 'completed' %}
+                                        completed
+
+                                    {% else %}
+                                        pending
+                                    {% endif %}
+                                "
+                            >
+
+                                {% if intervention.status == "active" %}
+
+                                    IN PROGRESS
+
+                                {% elif intervention.status == "completed" %}
+
+                                    COMPLETED
+
+                                {% else %}
+
+                                    PENDING
+
+                                {% endif %}
+
+                            </span>
+
+                        </div>
+
+
+
+                        <p class="intervention-problem">
+
+                            Linked problem:
+
+                            {{ intervention.problem_title }}
+
+                        </p>
+
+
+
+                        <div class="intervention-card-meta">
+
+                            <span>
+                                {{ intervention.department }}
+                            </span>
+
+                            <span>
+                                •
+                            </span>
+
+                            <span>
+
+                                {% if intervention.priority == "CRITICAL" %}
+
+                                    Critical
+
+                                {% elif intervention.priority == "HIGH" %}
+
+                                    High Priority
+
+                                {% elif intervention.priority == "MEDIUM" %}
+
+                                    Medium Priority
+
+                                {% else %}
+
+                                    Low Priority
+
+                                {% endif %}
+
+                            </span>
+
+                        </div>
+
+
+
+                        <!-- PROGRESS -->
+
+                        <div class="mini-progress">
+
+                            <div class="mini-progress-label">
+
+                                <span>
+                                    Progress
+                                </span>
+
+                                <strong>
+                                    {{ intervention.progress }}%
+                                </strong>
+
+                            </div>
+
+
+                            <div class="mini-progress-track">
+
+                               <div
+    class="progress-fill"
+    data-progress="{{ intervention.progress }}"
+></div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <span class="intervention-arrow">
+                        →
+                    </span>
+
+
+                </button>
+
+
+                {% else %}
+
+
+                <!-- EMPTY STATE -->
+
+                <div class="empty-interventions">
+
+                    <h3>
+                        No interventions found
+                    </h3>
+
+                    <p>
+                        No citizen-reported problems are currently
+                        available for intervention management.
+                    </p>
+
+                </div>
+
+
+                {% endfor %}
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             DETAIL PANEL
+        ================================================== -->
+
+        <section class="intervention-detail-panel">
+
+
+            <!-- DETAIL HEADER -->
+
+            <div class="intervention-detail-header">
+
+                <div class="detail-title">
+
+                    <div class="detail-action-icon">
+                        ⇄
+                    </div>
+
+                    <div>
+
+                        <p class="panel-kicker">
+                            INTERVENTION MANAGEMENT
+                        </p>
+
+                        <h2>
+                            Intervention Details
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <span
+                    class="detail-status-badge"
+                    id="detailStatusBadge"
+                >
+                    —
+                </span>
+
+            </div>
+
+
+
+            <!-- SELECTED INTERVENTION -->
+
+            <div class="selected-intervention">
+
+                <div>
+
+                    <span class="detail-label">
+                        ACTIVE INTERVENTION
+                    </span>
+
+                    <h2 id="detailInterventionTitle">
+                        Select an intervention
+                    </h2>
+
+                    <p id="detailInterventionDescription">
+                        Select a municipal intervention from the list
+                        to view its details.
+                    </p>
+
+                </div>
+
+
+                <div class="detail-progress">
+
+                    <strong id="detailProgress">
+                        0%
+                    </strong>
+
+                    <span>
+                        Complete
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 PROGRESS
+            ================================================== -->
+
+            <div class="intervention-progress-section">
+
+                <div class="section-heading-row">
+
+                    <div>
+
+                        <p class="panel-kicker">
+                            INTERVENTION PROGRESS
+                        </p>
+
+                        <h3>
+                            Current Status
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="progress-timeline">
+
+
+                    <!-- IDENTIFIED -->
+
+                    <div
+                        class="progress-stage"
+                        id="stageIdentified"
+                    >
+
+                        <div class="stage-dot">
+                            1
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Identified
+                            </strong>
+
+                            <span id="identifiedDate">
+                                —
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="progress-line"
+                        id="lineIdentified"
+                    >
+                    </div>
+
+
+
+                    <!-- ASSIGNED -->
+
+                    <div
+                        class="progress-stage"
+                        id="stageAssigned"
+                    >
+
+                        <div class="stage-dot">
+                            2
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Assigned
+                            </strong>
+
+                            <span id="assignedDate">
+                                —
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="progress-line"
+                        id="lineAssigned"
+                    >
+                    </div>
+
+
+
+                    <!-- IN PROGRESS -->
+
+                    <div
+                        class="progress-stage"
+                        id="stageProgress"
+                    >
+
+                        <div class="stage-dot">
+                            3
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                In Progress
+                            </strong>
+
+                            <span id="progressDate">
+                                —
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="progress-line"
+                        id="lineProgress"
+                    >
+                    </div>
+
+
+
+                    <!-- VERIFICATION -->
+
+                    <div
+                        class="progress-stage"
+                        id="stageVerification"
+                    >
+
+                        <div class="stage-dot">
+                            4
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Verification
+                            </strong>
+
+                            <span id="verificationDate">
+                                Pending
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="progress-line"
+                        id="lineVerification"
+                    >
+                    </div>
+
+
+
+                    <!-- COMPLETED -->
+
+                    <div
+                        class="progress-stage"
+                        id="stageCompleted"
+                    >
+
+                        <div class="stage-dot">
+                            5
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Completed
+                            </strong>
+
+                            <span id="completedDate">
+                                Pending
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 ASSIGNMENT DETAILS
+            ================================================== -->
+
+            <div class="assignment-grid">
+
+
+                <div class="assignment-card">
+
+                    <span class="assignment-label">
+                        DEPARTMENT
+                    </span>
+
+                    <strong id="detailDepartment">
+                        —
+                    </strong>
+
+                    <p>
+                        Responsible department
+                    </p>
+
+                </div>
+
+
+
+                <div class="assignment-card">
+
+                    <span class="assignment-label">
+                        OFFICER
+                    </span>
+
+                    <strong id="detailOfficer">
+                        Not assigned
+                    </strong>
+
+                    <p>
+                        Assigned field officer
+                    </p>
+
+                </div>
+
+
+
+                <div class="assignment-card">
+
+                    <span class="assignment-label">
+                        PRIORITY
+                    </span>
+
+                    <strong
+                        id="detailPriority"
+                        class="priority-critical"
+                    >
+                        —
+                    </strong>
+
+                    <p>
+                        Based on AI priority analysis
+                    </p>
+
+                </div>
+
+
+
+                <div class="assignment-card">
+
+                    <span class="assignment-label">
+                        LOCATION
+                    </span>
+
+                    <strong id="detailLocation">
+                        —
+                    </strong>
+
+                    <p>
+                        Reported problem location
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 CONNECTION CONTEXT
+            ================================================== -->
+
+            <div class="connection-context">
+
+                <div class="context-icon">
+                    ✦
+                </div>
+
+                <div>
+
+                    <span>
+                        CONNECTED PROBLEM CONTEXT
+                    </span>
+
+                    <h3>
+                        AI Analysis
+                    </h3>
+
+                    <p id="detailAIExplanation">
+                        Select an intervention to view the AI analysis.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 ROOT CAUSE
+            ================================================== -->
+
+            <div class="connection-context">
+
+                <div class="context-icon">
+                    ◎
+                </div>
+
+                <div>
+
+                    <span>
+                        ROOT CAUSE
+                    </span>
+
+                    <h3 id="detailRootCause">
+                        —
+                    </h3>
+
+                    <p>
+                        Identified from the UrbanNexus AI analysis.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 CASCADING EFFECTS
+            ================================================== -->
+
+            <div class="connection-context">
+
+                <div class="context-icon">
+                    →
+                </div>
+
+                <div>
+
+                    <span>
+                        CASCADING EFFECTS
+                    </span>
+
+                    <h3 id="detailCascadingTitle">
+                        No cascading effects
+                    </h3>
+
+                    <p id="detailCascadingEffects">
+                        No downstream effects identified.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 UPDATE AREA
+            ================================================== -->
+
+            <div class="update-section">
+
+                <div>
+
+                    <p class="panel-kicker">
+                        FIELD UPDATE
+                    </p>
+
+                    <h3>
+                        Latest Intervention Update
+                    </h3>
+
+                </div>
+
+
+                <div class="update-box">
+
+                    <span id="detailUpdateDate">
+                        Report information
+                    </span>
+
+                    <p id="detailUpdateText">
+                        Current intervention information is generated
+                        from the citizen report stored in MongoDB.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 FOOTER
+            ================================================== -->
+
+            <div class="intervention-detail-footer">
+
+                <div class="verification-note">
+
+                    <span>
+                        ⓘ
+                    </span>
+
+                    <p>
+                        Intervention status should be updated by the
+                        responsible municipal or department officer.
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="update-intervention-btn"
+                    id="updateInterventionBtn"
+                >
+                    Update Progress →
+                </button>
+
+            </div>
+
+
+        </section>
+
+
+    </div>
+
+
+</div>
+
+
+<!-- =========================================================
+     REAL INTERVENTION DATA FROM FLASK
+========================================================= -->
+
+<script id="urbannexus-intervention-data"
+        type="application/json">
+
+{{ interventions | tojson }}
+
+</script>
+
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+
+        /* =====================================================
+           GET REAL DATA
+        ===================================================== */
+
+        const dataElement =
+            document.getElementById(
+                "urbannexus-intervention-data"
+            );
+
+
+        let interventions = [];
+
+
+        if (dataElement) {
+
+            try {
+
+                interventions =
+                    JSON.parse(
+                        dataElement.textContent
+                    );
+
+            } catch (error) {
+
+                console.error(
+                    "Unable to read intervention data:",
+                    error
+                );
+
+            }
+
+        }
+
+
+
+        /* =====================================================
+           ELEMENTS
+        ===================================================== */
+
+        const searchInput =
+            document.getElementById(
+                "interventionSearch"
+            );
+
+
+        const statusFilter =
+            document.getElementById(
+                "interventionStatusFilter"
+            );
+
+
+        const departmentFilter =
+            document.getElementById(
+                "departmentFilter"
+            );
+
+
+        const items =
+            document.querySelectorAll(
+                ".intervention-card"
+            );
+
+
+        const count =
+            document.getElementById(
+                "interventionCount"
+            );
+
+
+
+        /* =====================================================
+           HELPER
+        ===================================================== */
+
+        function normalizeDepartment(
+            value
+        ) {
+
+            return String(
+                value || ""
+            )
+                .toLowerCase()
+                .replace(
+                    /\s+/g,
+                    "-"
+                )
+                .replace(
+                    /&/g,
+                    "and"
+                );
+
+        }
+
+
+
+        /* =====================================================
+           FIND INTERVENTION
+        ===================================================== */
+
+        function getIntervention(
+            id
+        ) {
+
+            return interventions.find(
+                function (item) {
+
+                    return String(
+                        item.id
+                    ) === String(
+                        id
+                    );
+
+                }
+            );
+
+        }
+
+
+
+        /* =====================================================
+           FORMAT DATE
+        ===================================================== */
+
+        function formatDate(
+            value
+        ) {
+
+            if (!value) {
+
+                return "—";
+
+            }
+
+
+            try {
+
+                const date =
+                    new Date(value);
+
+
+                if (
+                    isNaN(
+                        date.getTime()
+                    )
+                ) {
+
+                    return String(
+                        value
+                    );
+
+                }
+
+
+                return date.toLocaleDateString(
+                    "en-IN",
+                    {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric"
+                    }
+                );
+
+            } catch (error) {
+
+                return String(
+                    value
+                );
+
+            }
+
+        }
+
+
+
+        /* =====================================================
+           UPDATE DETAIL PANEL
+        ===================================================== */
+
+        function showIntervention(
+            intervention
+        ) {
+
+            if (!intervention) {
+
+                return;
+
+            }
+
+
+            const title =
+                document.getElementById(
+                    "detailInterventionTitle"
+                );
+
+
+            const description =
+                document.getElementById(
+                    "detailInterventionDescription"
+                );
+
+
+            const progress =
+                document.getElementById(
+                    "detailProgress"
+                );
+
+
+            const statusBadge =
+                document.getElementById(
+                    "detailStatusBadge"
+                );
+
+
+            const department =
+                document.getElementById(
+                    "detailDepartment"
+                );
+
+
+            const priority =
+                document.getElementById(
+                    "detailPriority"
+                );
+
+
+            const location =
+                document.getElementById(
+                    "detailLocation"
+                );
+
+
+            const aiExplanation =
+                document.getElementById(
+                    "detailAIExplanation"
+                );
+
+
+            const rootCause =
+                document.getElementById(
+                    "detailRootCause"
+                );
+
+
+            const cascadingTitle =
+                document.getElementById(
+                    "detailCascadingTitle"
+                );
+
+
+            const cascadingEffects =
+                document.getElementById(
+                    "detailCascadingEffects"
+                );
+
+
+            const updateDate =
+                document.getElementById(
+                    "detailUpdateDate"
+                );
+
+
+            const updateText =
+                document.getElementById(
+                    "detailUpdateText"
+                );
+
+
+
+            /* TITLE */
+
+            title.textContent =
+                intervention.title
+                || "Municipal Intervention";
+
+
+
+            /* DESCRIPTION */
+
+            description.textContent =
+                intervention.description
+                || (
+                    "Addressing the reported urban problem: "
+                    +
+                    (
+                        intervention.problem_title
+                        || "Urban Problem"
+                    )
+                );
+
+
+
+            /* PROGRESS */
+
+            const interventionProgress =
+                Number(
+                    intervention.progress || 0
+                );
+
+
+            progress.textContent =
+                interventionProgress
+                + "%";
+
+
+
+            /* STATUS */
+
+            let statusText =
+                "PENDING";
+
+
+            if (
+                intervention.status ===
+                "active"
+            ) {
+
+                statusText =
+                    "IN PROGRESS";
+
+            }
+
+            else if (
+                intervention.status ===
+                "completed"
+            ) {
+
+                statusText =
+                    "COMPLETED";
+
+            }
+
+
+            statusBadge.textContent =
+                statusText;
+
+
+
+            /* DEPARTMENT */
+
+            department.textContent =
+                intervention.department
+                || "Municipal Services";
+
+
+
+            /* PRIORITY */
+
+            priority.textContent =
+                intervention.priority
+                || "MEDIUM";
+
+
+            priority.className =
+                "priority-critical";
+
+
+            if (
+                intervention.priority ===
+                "LOW"
+            ) {
+
+                priority.className =
+                    "priority-low";
+
+            }
+
+            else if (
+                intervention.priority ===
+                "MEDIUM"
+            ) {
+
+                priority.className =
+                    "priority-medium";
+
+            }
+
+
+
+            /* LOCATION */
+
+            location.textContent =
+                intervention.address
+                || "Location not provided";
+
+
+
+            /* AI EXPLANATION */
+
+            aiExplanation.textContent =
+                intervention.ai_explanation
+                || "AI analysis is not available.";
+
+
+
+            /* ROOT CAUSE */
+
+            rootCause.textContent =
+                intervention.root_cause
+                || "Analysis pending";
+
+
+
+            /* CASCADING EFFECTS */
+
+            const effects =
+                intervention.cascading_effects
+                || [];
+
+
+            if (
+                effects.length > 0
+            ) {
+
+                cascadingTitle.textContent =
+                    effects.length
+                    +
+                    " downstream effect"
+                    +
+                    (
+                        effects.length === 1
+                        ? ""
+                        : "s"
+                    )
+                    +
+                    " identified";
+
+
+                cascadingEffects.textContent =
+                    effects.join(
+                        " → "
+                    );
+
+            }
+
+            else {
+
+                cascadingTitle.textContent =
+                    "No cascading effects";
+
+
+                cascadingEffects.textContent =
+                    "No downstream effects identified.";
+
+            }
+
+
+
+            /* UPDATE */
+
+            updateDate.textContent =
+                intervention.created_at
+                ? (
+                    "Report created "
+                    +
+                    formatDate(
+                        intervention.created_at
+                    )
+                )
+                : "Report information";
+
+
+            updateText.textContent =
+                "Current status: "
+                +
+                (
+                    intervention.original_status
+                    || "Submitted"
+                )
+                +
+                ". Progress: "
+                +
+                interventionProgress
+                +
+                "%.";
+
+
+
+            /* =================================================
+               UPDATE PROGRESS TIMELINE
+            ================================================= */
+
+            updateTimeline(
+                intervention
+            );
+
+        }
+
+
+
+        /* =====================================================
+           PROGRESS TIMELINE
+        ===================================================== */
+
+        function updateTimeline(
+            intervention
+        ) {
+
+            const stages = [
+
+                document.getElementById(
+                    "stageIdentified"
+                ),
+
+                document.getElementById(
+                    "stageAssigned"
+                ),
+
+                document.getElementById(
+                    "stageProgress"
+                ),
+
+                document.getElementById(
+                    "stageVerification"
+                ),
+
+                document.getElementById(
+                    "stageCompleted"
+                )
+
+            ];
+
+
+            const lines = [
+
+                document.getElementById(
+                    "lineIdentified"
+                ),
+
+                document.getElementById(
+                    "lineAssigned"
+                ),
+
+                document.getElementById(
+                    "lineProgress"
+                ),
+
+                document.getElementById(
+                    "lineVerification"
+                )
+
+            ];
+
+
+            const progress =
+                Number(
+                    intervention.progress || 0
+                );
+
+
+            let completedStages = 1;
+
+
+            if (
+                intervention.status ===
+                "active"
+            ) {
+
+                if (
+                    progress >= 75
+                ) {
+
+                    completedStages = 3;
+
+                }
+
+                else if (
+                    progress >= 40
+                ) {
+
+                    completedStages = 2;
+
+                }
+
+                else {
+
+                    completedStages = 1;
+
+                }
+
+            }
+
+            else if (
+                intervention.status ===
+                "completed"
+            ) {
+
+                completedStages = 5;
+
+            }
+
+            else {
+
+                completedStages = 1;
+
+            }
+
+
+
+            /* RESET */
+
+            stages.forEach(
+                function (stage) {
+
+                    if (!stage) {
+                        return;
+                    }
+
+                    stage.classList.remove(
+                        "done",
+                        "current"
+                    );
+
+                }
+            );
+
+
+            lines.forEach(
+                function (line) {
+
+                    if (!line) {
+                        return;
+                    }
+
+                    line.classList.remove(
+                        "completed"
+                    );
+
+                }
+            );
+
+
+
+            /* APPLY */
+
+            stages.forEach(
+                function (
+                    stage,
+                    index
+                ) {
+
+                    if (!stage) {
+                        return;
+                    }
+
+
+                    if (
+                        index <
+                        completedStages
+                    ) {
+
+                        stage.classList.add(
+                            "done"
+                        );
+
+                    }
+
+                    else if (
+                        index ===
+                        completedStages
+                    ) {
+
+                        stage.classList.add(
+                            "current"
+                        );
+
+                    }
+
+                }
+            );
+
+
+            lines.forEach(
+                function (
+                    line,
+                    index
+                ) {
+
+                    if (!line) {
+                        return;
+                    }
+
+
+                    if (
+                        index <
+                        completedStages - 1
+                    ) {
+
+                        line.classList.add(
+                            "completed"
+                        );
+
+                    }
+
+                }
+            );
+
+
+            /* CURRENT STAGE TEXT */
+
+            const progressDate =
+                document.getElementById(
+                    "progressDate"
+                );
+
+
+            const verificationDate =
+                document.getElementById(
+                    "verificationDate"
+                );
+
+
+            const completedDate =
+                document.getElementById(
+                    "completedDate"
+                );
+
+
+            if (
+                intervention.status ===
+                "completed"
+            ) {
+
+                progressDate.textContent =
+                    "Completed";
+
+                verificationDate.textContent =
+                    "Verified";
+
+                completedDate.textContent =
+                    "Completed";
+
+            }
+
+            else if (
+                intervention.status ===
+                "active"
+            ) {
+
+                progressDate.textContent =
+                    "Current";
+
+                verificationDate.textContent =
+                    "Pending";
+
+                completedDate.textContent =
+                    "Pending";
+
+            }
+
+            else {
+
+                progressDate.textContent =
+                    "Pending";
+
+                verificationDate.textContent =
+                    "Pending";
+
+                completedDate.textContent =
+                    "Pending";
+
+            }
+
+        }
+
+
+
+        /* =====================================================
+           FILTER
+        ===================================================== */
+
+        function filterInterventions() {
+
+            const search =
+                (
+                    searchInput.value
+                    || ""
+                )
+                    .toLowerCase()
+                    .trim();
+
+
+            const selectedStatus =
+                statusFilter.value;
+
+
+            const selectedDepartment =
+                departmentFilter.value;
+
+
+            let visibleCount = 0;
+
+
+            items.forEach(
+                function (item) {
+
+                    const text =
+                        (
+                            item.dataset.search
+                            || ""
+                        ).toLowerCase();
+
+
+                    const itemStatus =
+                        item.dataset.status;
+
+
+                    const itemDepartment =
+                        item.dataset.department;
+
+
+                    const matchesSearch =
+                        text.includes(
+                            search
+                        );
+
+
+                    const matchesStatus =
+                        selectedStatus ===
+                        "all"
+                        ||
+                        itemStatus ===
+                        selectedStatus;
+
+
+                    const matchesDepartment =
+                        selectedDepartment ===
+                        "all"
+                        ||
+                        itemDepartment ===
+                        selectedDepartment;
+
+
+                    const visible =
+                        matchesSearch
+                        &&
+                        matchesStatus
+                        &&
+                        matchesDepartment;
+
+
+                    item.style.display =
+                        visible
+                        ? "grid"
+                        : "none";
+
+
+                    if (visible) {
+
+                        visibleCount++;
+
+                    }
+
+                }
+            );
+
+
+            count.textContent =
+                visibleCount
+                +
+                " intervention"
+                +
+                (
+                    visibleCount === 1
+                    ? ""
+                    : "s"
+                );
+
+        }
+
+
+
+        /* =====================================================
+           EVENT LISTENERS
+        ===================================================== */
+
+        searchInput.addEventListener(
+            "input",
+            filterInterventions
+        );
+
+
+        statusFilter.addEventListener(
+            "change",
+            filterInterventions
+        );
+
+
+        departmentFilter.addEventListener(
+            "change",
+            filterInterventions
+        );
+
+
+
+        /* =====================================================
+           CARD CLICK
+        ===================================================== */
+
+        items.forEach(
+            function (item) {
+
+                item.addEventListener(
+                    "click",
+                    function () {
+
+
+                        items.forEach(
+                            function (other) {
+
+                                other.classList.remove(
+                                    "selected"
+                                );
+
+                            }
+                        );
+
+
+                        item.classList.add(
+                            "selected"
+                        );
+
+
+                        const intervention =
+                            getIntervention(
+                                item.dataset.id
+                            );
+
+
+                        showIntervention(
+                            intervention
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+
+
+        /* =====================================================
+           LOAD FIRST REAL INTERVENTION
+        ===================================================== */
+
+        if (
+            interventions.length > 0
+        ) {
+
+            showIntervention(
+                interventions[0]
+            );
+
+        }
+
+
+
+        /* =====================================================
+           INITIAL FILTER
+        ===================================================== */
+
+        filterInterventions();
+
+    }
+
+);
+
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    document
+        .querySelectorAll(".progress-fill")
+        .forEach(function (bar) {
+
+            const progress =
+                Number(bar.dataset.progress || 0);
+
+            bar.style.width =
+                progress + "%";
+        });
+
+});
+</script>
+{% endblock %}

@@ -1,0 +1,2402 @@
+/* =========================================================
+   URBANNEXUS
+   MUNICIPALITY - INTERVENTIONS
+========================================================= */
+
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.interventions-page {
+    width: 100%;
+    min-height: 100vh;
+
+    padding: 30px 36px 45px;
+
+    background: #f7f5fa;
+
+    color: #282230;
+
+    box-sizing: border-box;
+
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.interventions-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 25px;
+
+    margin-bottom: 24px;
+}
+
+
+.interventions-eyebrow {
+    margin: 0 0 6px;
+
+    color: #7250a7;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    letter-spacing: 1.1px;
+}
+
+
+.interventions-header h1 {
+    margin: 0;
+
+    color: #282230;
+
+    font-size: 34px;
+    line-height: 1.15;
+
+    font-weight: 750;
+}
+
+
+.interventions-subtitle {
+    max-width: 780px;
+
+    margin: 8px 0 0;
+
+    color: #786f83;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+
+.interventions-header-meta {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+.interventions-city-card {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 9px 13px;
+
+    background: #ffffff;
+
+    border: 1px solid #ded7e6;
+
+    border-radius: 10px;
+}
+
+
+.interventions-city-icon {
+    color: #7250a7;
+
+    font-size: 17px;
+}
+
+
+.interventions-city-card strong {
+    display: block;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+.interventions-city-card span:last-child {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #8a8192;
+
+    font-size: 9px;
+}
+
+
+.interventions-status {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 11px 13px;
+
+    background: #e7f4eb;
+
+    color: #287044;
+
+    border-radius: 10px;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+.interventions-status > span {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #3e9b5c;
+}
+
+
+/* =========================================================
+   SUMMARY
+========================================================= */
+
+.intervention-summary-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 16px;
+
+    margin-bottom: 20px;
+}
+
+
+.intervention-summary-card {
+    position: relative;
+
+    min-height: 106px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 13px;
+
+    padding: 17px 19px;
+
+    border: 1px solid #ddd7e8;
+
+    border-radius: 14px;
+
+    box-sizing: border-box;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 2px 8px rgba(52,32,95,.04);
+}
+
+
+.intervention-summary-card::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    width: 4px;
+}
+
+
+.intervention-summary-card.active {
+    background: #ebe4f5;
+    border-color: #d0c1e1;
+}
+
+
+.intervention-summary-card.active::before {
+    background: #7350a5;
+}
+
+
+.intervention-summary-card.urgent {
+    background: #f8e2e0;
+    border-color: #e6c4c1;
+}
+
+
+.intervention-summary-card.urgent::before {
+    background: #c55249;
+}
+
+
+.intervention-summary-card.departments {
+    background: #e3eef7;
+    border-color: #c8dae9;
+}
+
+
+.intervention-summary-card.departments::before {
+    background: #4f84ac;
+}
+
+
+.intervention-summary-card.completed {
+    background: #dfeee4;
+    border-color: #c5ddca;
+}
+
+
+.intervention-summary-card.completed::before {
+    background: #4c8b60;
+}
+
+
+.summary-icon {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 11px;
+
+    background: rgba(255,255,255,.62);
+
+    font-size: 18px;
+    font-weight: 750;
+}
+
+
+.intervention-summary-card.active .summary-icon {
+    color: #5d3d91;
+}
+
+
+.intervention-summary-card.urgent .summary-icon {
+    color: #a63c35;
+}
+
+
+.intervention-summary-card.departments .summary-icon {
+    color: #3c6f96;
+}
+
+
+.intervention-summary-card.completed .summary-icon {
+    color: #37724a;
+}
+
+
+.intervention-summary-card span {
+    display: block;
+
+    color: #6f6677;
+
+    font-size: 10px;
+    font-weight: 650;
+}
+
+
+.intervention-summary-card strong {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #332b3a;
+
+    font-size: 24px;
+
+    line-height: 1;
+
+    font-weight: 800;
+}
+
+
+.intervention-summary-card p {
+    margin: 5px 0 0;
+
+    color: #8d8493;
+
+    font-size: 9px;
+}
+
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.interventions-toolbar {
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+
+    margin-bottom: 19px;
+}
+
+
+.interventions-search {
+    position: relative;
+
+    flex: 1;
+
+    min-width: 0;
+}
+
+
+.interventions-search > span {
+    position: absolute;
+
+    left: 14px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: #8d8592;
+
+    font-size: 16px;
+}
+
+
+.interventions-search input {
+    width: 100%;
+    height: 48px;
+
+    padding: 0 15px 0 40px;
+
+    border: 1px solid #dcd5e5;
+
+    border-radius: 10px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #342b3c;
+
+    font-family: inherit;
+
+    font-size: 12px;
+
+    box-sizing: border-box;
+}
+
+
+.interventions-search input:focus {
+    border-color: #8b68bd;
+
+    box-shadow:
+        0 0 0 3px rgba(114,80,167,.10);
+}
+
+
+.interventions-toolbar select {
+    width: 175px;
+    height: 48px;
+
+    padding: 0 12px;
+
+    border: 1px solid #dcd5e5;
+
+    border-radius: 10px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #4e4556;
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    cursor: pointer;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   MAIN LAYOUT
+========================================================= */
+
+.interventions-layout {
+    display: grid;
+
+    grid-template-columns:
+        minmax(430px,.86fr)
+        minmax(560px,1.35fr);
+
+    gap: 20px;
+
+    align-items: start;
+}
+
+
+.intervention-list-panel,
+.intervention-detail-panel {
+    background: #ffffff;
+
+    border: 1px solid #ded7e6;
+
+    border-radius: 15px;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   LIST HEADER
+========================================================= */
+
+.intervention-list-panel {
+    overflow: hidden;
+}
+
+
+.intervention-list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    padding: 21px;
+
+    border-bottom: 1px solid #eeeaf1;
+}
+
+
+.panel-kicker {
+    margin: 0 0 5px;
+
+    color: #7250a7;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+}
+
+
+.intervention-list-header h2 {
+    margin: 0;
+
+    color: #282230;
+
+    font-size: 20px;
+
+    font-weight: 750;
+}
+
+
+.intervention-count {
+    padding: 6px 9px;
+
+    background: #eee7f7;
+
+    color: #5d3d91;
+
+    border-radius: 6px;
+
+    font-size: 9px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   INTERVENTION CARDS
+========================================================= */
+
+.intervention-items {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.intervention-card {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        43px
+        minmax(0,1fr)
+        22px;
+
+    align-items: center;
+
+    gap: 12px;
+
+    min-height: 132px;
+
+    padding: 19px 18px;
+
+    background: #ffffff;
+
+    border: none;
+
+    border-bottom: 1px solid #eeeaf1;
+
+    color: inherit;
+
+    text-align: left;
+
+    font-family: inherit;
+
+    box-sizing: border-box;
+
+    cursor: pointer;
+
+    transition: background .2s ease;
+}
+
+
+.intervention-card:last-child {
+    border-bottom: none;
+}
+
+
+.intervention-card:hover {
+    background: #faf8fc;
+}
+
+
+.intervention-card.selected {
+    background: #f3eef9;
+
+    box-shadow:
+        inset 3px 0 0 #7250a7;
+}
+
+
+.intervention-card-icon {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    font-size: 17px;
+}
+
+
+.intervention-card-icon.water {
+    background: #e6f1f7;
+}
+
+
+.intervention-card-icon.roads {
+    background: #fff0db;
+}
+
+
+.intervention-card-icon.traffic {
+    background: #eee7f7;
+}
+
+
+.intervention-card-icon.waste {
+    background: #e6f1e8;
+}
+
+
+.intervention-card-icon.electricity {
+    background: #f0e8f8;
+}
+
+
+.intervention-card-content {
+    min-width: 0;
+}
+
+
+.intervention-card-title-row {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+}
+
+
+.intervention-card-title-row h3 {
+    min-width: 0;
+
+    margin: 0;
+
+    color: #342b3c;
+
+    font-size: 13px;
+
+    line-height: 1.35;
+
+    font-weight: 700;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+.status-badge {
+    flex-shrink: 0;
+
+    padding: 5px 7px;
+
+    border-radius: 5px;
+
+    font-size: 7px;
+
+    font-weight: 800;
+}
+
+
+.status-badge.active {
+    background: #eee7f7;
+
+    color: #5d3d91;
+}
+
+
+.status-badge.pending {
+    background: #fff0d9;
+
+    color: #a76318;
+}
+
+
+.status-badge.completed {
+    background: #e3f0e6;
+
+    color: #37734a;
+}
+
+
+.intervention-problem {
+    margin: 5px 0 0;
+
+    color: #756b7b;
+
+    font-size: 10px;
+
+    line-height: 1.35;
+}
+
+
+.intervention-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 5px;
+
+    margin-top: 5px;
+
+    color: #9a919f;
+
+    font-size: 8px;
+}
+
+
+.mini-progress {
+    margin-top: 9px;
+}
+
+
+.mini-progress-label {
+    display: flex;
+    justify-content: space-between;
+
+    margin-bottom: 5px;
+}
+
+
+.mini-progress-label span {
+    color: #8f8695;
+
+    font-size: 8px;
+}
+
+
+.mini-progress-label strong {
+    color: #5d3d91;
+
+    font-size: 9px;
+}
+
+
+.mini-progress-track {
+    width: 100%;
+    height: 6px;
+
+    overflow: hidden;
+
+    background: #eeeaf1;
+
+    border-radius: 10px;
+}
+
+
+.mini-progress-track > div {
+    height: 100%;
+
+    background: #7250a7;
+
+    border-radius: inherit;
+}
+
+
+.mini-progress-track.completed > div {
+    background: #4c8b60;
+}
+
+
+.intervention-arrow {
+    color: #968d9c;
+
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   DETAIL PANEL
+========================================================= */
+
+.intervention-detail-panel {
+    padding: 23px;
+
+    overflow: hidden;
+}
+
+
+.intervention-detail-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding-bottom: 19px;
+
+    border-bottom: 1px solid #eeeaf1;
+}
+
+
+.detail-title {
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+}
+
+
+.detail-action-icon {
+    width: 41px;
+    height: 41px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    background: #eee7f7;
+
+    color: #5d3d91;
+
+    border-radius: 10px;
+
+    font-size: 19px;
+}
+
+
+.detail-title h2 {
+    margin: 0;
+
+    color: #282230;
+
+    font-size: 19px;
+
+    font-weight: 750;
+}
+
+
+.detail-status-badge {
+    padding: 6px 8px;
+
+    background: #eee7f7;
+
+    color: #5d3d91;
+
+    border-radius: 6px;
+
+    font-size: 8px;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   SELECTED INTERVENTION
+========================================================= */
+
+.selected-intervention {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 18px;
+
+    padding: 21px 0;
+}
+
+
+.detail-label {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #786981;
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: .8px;
+}
+
+
+.selected-intervention h2 {
+    margin: 0;
+
+    color: #342b3c;
+
+    font-size: 21px;
+
+    line-height: 1.3;
+
+    font-weight: 750;
+}
+
+
+.selected-intervention p {
+    max-width: 650px;
+
+    margin: 6px 0 0;
+
+    color: #796f80;
+
+    font-size: 11px;
+
+    line-height: 1.45;
+}
+
+
+.detail-progress {
+    flex-shrink: 0;
+
+    text-align: right;
+}
+
+
+.detail-progress strong {
+    display: block;
+
+    color: #5d3d91;
+
+    font-size: 32px;
+
+    line-height: 1;
+
+    font-weight: 800;
+}
+
+
+.detail-progress span {
+    display: block;
+
+    margin-top: 4px;
+
+    color: #948b99;
+
+    font-size: 9px;
+}
+
+
+/* =========================================================
+   PROGRESS
+========================================================= */
+
+.intervention-progress-section {
+    margin-bottom: 20px;
+}
+
+
+.section-heading-row {
+    margin-bottom: 13px;
+}
+
+
+.section-heading-row h3 {
+    margin: 0;
+
+    color: #342b3c;
+
+    font-size: 15px;
+
+    font-weight: 750;
+}
+
+
+.progress-timeline {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    overflow-x: auto;
+
+    padding: 5px 2px 8px;
+}
+
+
+.progress-stage {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    min-width: 105px;
+}
+
+
+.stage-dot {
+    width: 29px;
+    height: 29px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background: #eeeaf1;
+
+    color: #918899;
+
+    font-size: 10px;
+
+    font-weight: 800;
+}
+
+
+.progress-stage.done .stage-dot {
+    background: #dcefe2;
+
+    color: #287044;
+}
+
+
+.progress-stage.current .stage-dot {
+    background: #eee7f7;
+
+    color: #5d3d91;
+
+    box-shadow:
+        0 0 0 3px rgba(114,80,167,.10);
+}
+
+
+.progress-stage strong {
+    display: block;
+
+    color: #5a5060;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+.progress-stage span {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #9b929f;
+
+    font-size: 7px;
+
+    white-space: nowrap;
+}
+
+
+.progress-line {
+    width: 35px;
+    min-width: 35px;
+
+    height: 2px;
+
+    background: #e9e4ed;
+
+    border-radius: 10px;
+}
+
+
+.progress-line.completed {
+    background: #9b7ec0;
+}
+
+
+/* =========================================================
+   ASSIGNMENT GRID
+========================================================= */
+
+.assignment-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0,1fr));
+
+    gap: 9px;
+
+    margin-bottom: 17px;
+}
+
+
+.assignment-card {
+    min-height: 88px;
+
+    padding: 13px;
+
+    background: #faf8fc;
+
+    border: 1px solid #ebe6ef;
+
+    border-radius: 10px;
+
+    box-sizing: border-box;
+}
+
+
+.assignment-label {
+    display: block;
+
+    color: #8b8190;
+
+    font-size: 7px;
+
+    font-weight: 800;
+
+    letter-spacing: .7px;
+}
+
+
+.assignment-card strong {
+    display: block;
+
+    margin-top: 6px;
+
+    color: #403747;
+
+    font-size: 11px;
+
+    line-height: 1.3;
+
+    font-weight: 750;
+}
+
+
+.assignment-card p {
+    margin: 4px 0 0;
+
+    color: #978f9c;
+
+    font-size: 8px;
+
+    line-height: 1.3;
+}
+
+
+.priority-critical {
+    color: #b83b35 !important;
+}
+
+
+/* =========================================================
+   CONNECTION CONTEXT
+========================================================= */
+
+.connection-context {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 11px;
+
+    padding: 14px;
+
+    margin-bottom: 18px;
+
+    background: #f6f2fb;
+
+    border: 1px solid #ded2e8;
+
+    border-radius: 10px;
+}
+
+
+.context-icon {
+    width: 31px;
+    height: 31px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    background: #eee7f7;
+
+    color: #5d3d91;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+}
+
+
+.connection-context > div:last-child > span {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #7d6d88;
+
+    font-size: 7px;
+
+    font-weight: 800;
+
+    letter-spacing: .8px;
+}
+
+
+.connection-context h3 {
+    margin: 0;
+
+    color: #45374c;
+
+    font-size: 12px;
+
+    font-weight: 750;
+}
+
+
+.connection-context p {
+    max-width: 750px;
+
+    margin: 5px 0 0;
+
+    color: #746a79;
+
+    font-size: 9px;
+
+    line-height: 1.45;
+}
+
+
+/* =========================================================
+   UPDATE
+========================================================= */
+
+.update-section {
+    margin-bottom: 18px;
+}
+
+
+.update-section h3 {
+    margin: 0;
+
+    color: #342b3c;
+
+    font-size: 15px;
+
+    font-weight: 750;
+}
+
+
+.update-box {
+    margin-top: 11px;
+
+    padding: 13px;
+
+    background: #f8f6fa;
+
+    border-left: 3px solid #7250a7;
+
+    border-radius: 0 9px 9px 0;
+}
+
+
+.update-box span {
+    display: block;
+
+    color: #7f7585;
+
+    font-size: 8px;
+
+    font-weight: 700;
+}
+
+
+.update-box p {
+    margin: 5px 0 0;
+
+    color: #6f6676;
+
+    font-size: 10px;
+
+    line-height: 1.45;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.intervention-detail-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding-top: 15px;
+
+    border-top: 1px solid #eeeaf1;
+}
+
+
+.verification-note {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 7px;
+
+    min-width: 0;
+}
+
+
+.verification-note > span {
+    color: #918897;
+
+    font-size: 10px;
+}
+
+
+.verification-note p {
+    max-width: 560px;
+
+    margin: 0;
+
+    color: #938a99;
+
+    font-size: 8px;
+
+    line-height: 1.45;
+}
+
+
+.update-intervention-btn {
+    flex-shrink: 0;
+
+    padding: 10px 14px;
+
+    background: #34205f;
+
+    color: #ffffff;
+
+    border: none;
+
+    border-radius: 8px;
+
+    font-family: inherit;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+.update-intervention-btn:hover {
+    background: #4a2d78;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1200px) {
+
+    .interventions-page {
+        padding: 28px 24px 40px;
+    }
+
+
+    .interventions-layout {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+@media (max-width: 900px) {
+
+    .intervention-summary-grid {
+        grid-template-columns:
+            repeat(2, minmax(0,1fr));
+    }
+
+
+    .intervention-detail-panel {
+        padding: 20px;
+    }
+
+
+    .assignment-grid {
+        grid-template-columns:
+            repeat(2, minmax(0,1fr));
+    }
+
+}
+
+
+@media (max-width: 800px) {
+
+    .interventions-page {
+        padding: 22px 16px 35px;
+    }
+
+
+    .interventions-header {
+        flex-direction: column;
+    }
+
+
+    .interventions-header h1 {
+        font-size: 30px;
+    }
+
+
+    .interventions-subtitle {
+        font-size: 12px;
+    }
+
+
+    .interventions-header-meta {
+        width: 100%;
+    }
+
+
+    .interventions-city-card {
+        flex: 1;
+    }
+
+
+    .interventions-toolbar {
+        display: grid;
+
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+
+    .interventions-search {
+        grid-column: 1 / -1;
+    }
+
+
+    .interventions-toolbar select {
+        width: 100%;
+    }
+
+
+    .selected-intervention {
+        flex-direction: column;
+    }
+
+
+    .detail-progress {
+        text-align: left;
+    }
+
+
+    .intervention-detail-footer {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    .update-intervention-btn {
+        width: 100%;
+    }
+
+}
+
+
+@media (max-width: 560px) {
+
+    .interventions-page {
+        padding: 18px 12px 30px;
+    }
+
+
+    .intervention-summary-grid {
+        grid-template-columns:
+            1fr 1fr;
+
+        gap: 10px;
+    }
+
+
+    .intervention-summary-card {
+        min-height: 96px;
+
+        padding: 13px;
+    }
+
+
+    .summary-icon {
+        width: 36px;
+        height: 36px;
+    }
+
+
+    .intervention-summary-card strong {
+        font-size: 21px;
+    }
+
+
+    .interventions-toolbar {
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+
+    .interventions-toolbar select {
+        width: 100%;
+    }
+
+
+    .intervention-card {
+        grid-template-columns:
+            37px
+            minmax(0,1fr)
+            18px;
+
+        gap: 9px;
+
+        min-height: 132px;
+
+        padding: 17px 13px;
+    }
+
+
+    .intervention-card-icon {
+        width: 35px;
+        height: 35px;
+    }
+
+
+    .intervention-card-title-row {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 4px;
+    }
+
+
+    .intervention-card-title-row h3 {
+        white-space: normal;
+
+        font-size: 13px;
+    }
+
+
+    .intervention-problem {
+        font-size: 10px;
+    }
+
+
+    .intervention-card-meta {
+        font-size: 8px;
+    }
+
+
+    .intervention-detail-panel {
+        padding: 17px;
+    }
+
+
+    .detail-title h2 {
+        font-size: 18px;
+    }
+
+
+    .selected-intervention h2 {
+        font-size: 19px;
+    }
+
+
+    .assignment-grid {
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+
+    .progress-timeline {
+        justify-content: flex-start;
+    }
+
+}
+/* =========================================================
+   INTERVENTIONS
+   IMPROVED READABLE TYPOGRAPHY
+========================================================= */
+
+/* =========================================================
+   PAGE HEADER
+========================================================= */
+
+.interventions-eyebrow {
+    font-size: 12px !important;
+    font-weight: 800 !important;
+}
+
+.interventions-header h1 {
+    font-size: 36px !important;
+    line-height: 1.15 !important;
+    font-weight: 750 !important;
+}
+
+.interventions-subtitle {
+    font-size: 15px !important;
+    line-height: 1.5 !important;
+}
+
+
+/* =========================================================
+   HEADER META
+========================================================= */
+
+.interventions-city-card strong {
+    font-size: 13px !important;
+}
+
+.interventions-city-card span:last-child {
+    font-size: 10px !important;
+}
+
+.interventions-status {
+    font-size: 11px !important;
+}
+
+
+/* =========================================================
+   SUMMARY CARDS
+========================================================= */
+
+.intervention-summary-card span {
+    font-size: 11px !important;
+}
+
+.intervention-summary-card strong {
+    font-size: 25px !important;
+}
+
+.intervention-summary-card p {
+    font-size: 10px !important;
+}
+
+.summary-icon {
+    font-size: 19px !important;
+}
+
+
+/* =========================================================
+   SEARCH + FILTERS
+========================================================= */
+
+.interventions-search input {
+    font-size: 14px !important;
+}
+
+.interventions-toolbar select {
+    font-size: 13px !important;
+}
+
+
+/* =========================================================
+   LIST HEADER
+========================================================= */
+
+.panel-kicker {
+    font-size: 10px !important;
+}
+
+.intervention-list-header h2 {
+    font-size: 21px !important;
+}
+
+.intervention-count {
+    font-size: 10px !important;
+}
+
+
+/* =========================================================
+   INTERVENTION CARDS
+========================================================= */
+
+.intervention-card-title-row h3 {
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+}
+
+.status-badge {
+    font-size: 8px !important;
+}
+
+.intervention-problem {
+    font-size: 11px !important;
+    line-height: 1.4 !important;
+}
+
+.intervention-card-meta {
+    font-size: 9px !important;
+    line-height: 1.35 !important;
+}
+
+.mini-progress-label span {
+    font-size: 9px !important;
+}
+
+.mini-progress-label strong {
+    font-size: 10px !important;
+}
+
+
+/* =========================================================
+   DETAIL HEADER
+========================================================= */
+
+.detail-title h2 {
+    font-size: 20px !important;
+}
+
+.detail-status-badge {
+    font-size: 9px !important;
+}
+
+
+/* =========================================================
+   SELECTED INTERVENTION
+========================================================= */
+
+.detail-label {
+    font-size: 9px !important;
+}
+
+.selected-intervention h2 {
+    font-size: 23px !important;
+    line-height: 1.3 !important;
+}
+
+.selected-intervention p {
+    font-size: 12px !important;
+    line-height: 1.5 !important;
+}
+
+.detail-progress strong {
+    font-size: 34px !important;
+}
+
+.detail-progress span {
+    font-size: 10px !important;
+}
+
+
+/* =========================================================
+   PROGRESS
+========================================================= */
+
+.section-heading-row h3 {
+    font-size: 16px !important;
+}
+
+.progress-stage strong {
+    font-size: 10px !important;
+}
+
+.progress-stage span {
+    font-size: 8px !important;
+}
+
+
+/* =========================================================
+   ASSIGNMENT CARDS
+========================================================= */
+
+.assignment-label {
+    font-size: 8px !important;
+}
+
+.assignment-card strong {
+    font-size: 12px !important;
+    line-height: 1.35 !important;
+}
+
+.assignment-card p {
+    font-size: 9px !important;
+    line-height: 1.35 !important;
+}
+
+
+/* =========================================================
+   CONNECTION CONTEXT
+========================================================= */
+
+.connection-context > div:last-child > span {
+    font-size: 8px !important;
+}
+
+.connection-context h3 {
+    font-size: 13px !important;
+}
+
+.connection-context p {
+    font-size: 10px !important;
+    line-height: 1.5 !important;
+}
+
+
+/* =========================================================
+   FIELD UPDATE
+========================================================= */
+
+.update-section h3 {
+    font-size: 16px !important;
+}
+
+.update-box span {
+    font-size: 9px !important;
+}
+
+.update-box p {
+    font-size: 11px !important;
+    line-height: 1.5 !important;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.verification-note p {
+    font-size: 9px !important;
+    line-height: 1.5 !important;
+}
+
+.update-intervention-btn {
+    font-size: 10px !important;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 800px) {
+
+    .interventions-header h1 {
+        font-size: 30px !important;
+    }
+
+    .interventions-subtitle {
+        font-size: 13px !important;
+    }
+
+    .intervention-summary-card strong {
+        font-size: 23px !important;
+    }
+
+    .intervention-summary-card span {
+        font-size: 10px !important;
+    }
+
+    .intervention-list-header h2 {
+        font-size: 20px !important;
+    }
+
+    .intervention-card-title-row h3 {
+        font-size: 14px !important;
+    }
+
+    .intervention-problem {
+        font-size: 11px !important;
+    }
+
+    .intervention-card-meta {
+        font-size: 9px !important;
+    }
+
+    .detail-title h2 {
+        font-size: 19px !important;
+    }
+
+    .selected-intervention h2 {
+        font-size: 21px !important;
+    }
+
+    .selected-intervention p {
+        font-size: 11px !important;
+    }
+
+    .assignment-card strong {
+        font-size: 11px !important;
+    }
+
+    .connection-context h3 {
+        font-size: 12px !important;
+    }
+
+    .connection-context p {
+        font-size: 10px !important;
+    }
+
+}
+
+
+@media (max-width: 560px) {
+
+    .interventions-header h1 {
+        font-size: 28px !important;
+    }
+
+    .intervention-summary-card strong {
+        font-size: 21px !important;
+    }
+
+    .intervention-card-title-row h3 {
+        font-size: 13px !important;
+    }
+
+    .selected-intervention h2 {
+        font-size: 19px !important;
+    }
+
+    .selected-intervention p {
+        font-size: 10px !important;
+    }
+
+}
+/* =========================================================
+   LARGE, CLEAR, EASY-TO-READ TYPOGRAPHY
+========================================================= */
+
+/* PAGE HEADER */
+
+.interventions-eyebrow {
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    letter-spacing: 1.2px !important;
+}
+
+.interventions-header h1 {
+    font-size: 40px !important;
+    line-height: 1.15 !important;
+    font-weight: 750 !important;
+}
+
+.interventions-subtitle {
+    font-size: 16px !important;
+    line-height: 1.55 !important;
+}
+
+
+/* HEADER META */
+
+.interventions-city-card strong {
+    font-size: 14px !important;
+}
+
+.interventions-city-card span:last-child {
+    font-size: 11px !important;
+}
+
+.interventions-status {
+    font-size: 12px !important;
+}
+
+
+/* SUMMARY CARDS */
+
+.intervention-summary-card span {
+    font-size: 12px !important;
+}
+
+.intervention-summary-card strong {
+    font-size: 29px !important;
+}
+
+.intervention-summary-card p {
+    font-size: 10px !important;
+}
+
+.summary-icon {
+    font-size: 21px !important;
+}
+
+
+/* SEARCH + FILTERS */
+
+.interventions-search input {
+    font-size: 15px !important;
+}
+
+.interventions-toolbar select {
+    font-size: 14px !important;
+}
+
+
+/* PANEL HEADINGS */
+
+.panel-kicker {
+    font-size: 11px !important;
+    letter-spacing: 1px !important;
+}
+
+.intervention-list-header h2 {
+    font-size: 23px !important;
+}
+
+.intervention-count {
+    font-size: 11px !important;
+}
+
+
+/* INTERVENTION LIST */
+
+.intervention-card {
+    min-height: 150px !important;
+
+    padding: 22px 20px !important;
+}
+
+.intervention-card-title-row h3 {
+    font-size: 16px !important;
+    line-height: 1.4 !important;
+}
+
+.status-badge {
+    font-size: 9px !important;
+    padding: 6px 8px !important;
+}
+
+.intervention-problem {
+    font-size: 12px !important;
+    line-height: 1.45 !important;
+}
+
+.intervention-card-meta {
+    font-size: 10px !important;
+    line-height: 1.4 !important;
+}
+
+.mini-progress-label span {
+    font-size: 10px !important;
+}
+
+.mini-progress-label strong {
+    font-size: 11px !important;
+}
+
+
+/* DETAIL PANEL */
+
+.detail-title h2 {
+    font-size: 22px !important;
+}
+
+.detail-status-badge {
+    font-size: 10px !important;
+    padding: 7px 9px !important;
+}
+
+
+/* SELECTED INTERVENTION */
+
+.detail-label {
+    font-size: 10px !important;
+}
+
+.selected-intervention h2 {
+    font-size: 27px !important;
+    line-height: 1.3 !important;
+}
+
+.selected-intervention p {
+    font-size: 13px !important;
+    line-height: 1.55 !important;
+}
+
+.detail-progress strong {
+    font-size: 38px !important;
+}
+
+.detail-progress span {
+    font-size: 11px !important;
+}
+
+
+/* PROGRESS */
+
+.section-heading-row h3 {
+    font-size: 18px !important;
+}
+
+.progress-stage strong {
+    font-size: 11px !important;
+}
+
+.progress-stage span {
+    font-size: 9px !important;
+}
+
+
+/* ASSIGNMENT CARDS */
+
+.assignment-label {
+    font-size: 9px !important;
+}
+
+.assignment-card strong {
+    font-size: 13px !important;
+    line-height: 1.4 !important;
+}
+
+.assignment-card p {
+    font-size: 10px !important;
+    line-height: 1.4 !important;
+}
+
+
+/* CONNECTION CONTEXT */
+
+.connection-context > div:last-child > span {
+    font-size: 9px !important;
+}
+
+.connection-context h3 {
+    font-size: 14px !important;
+}
+
+.connection-context p {
+    font-size: 11px !important;
+    line-height: 1.55 !important;
+}
+
+
+/* FIELD UPDATE */
+
+.update-section h3 {
+    font-size: 18px !important;
+}
+
+.update-box span {
+    font-size: 10px !important;
+}
+
+.update-box p {
+    font-size: 12px !important;
+    line-height: 1.55 !important;
+}
+
+
+/* FOOTER */
+
+.verification-note p {
+    font-size: 10px !important;
+    line-height: 1.5 !important;
+}
+
+.update-intervention-btn {
+    font-size: 11px !important;
+    padding: 11px 15px !important;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 800px) {
+
+    .interventions-header h1 {
+        font-size: 32px !important;
+    }
+
+    .interventions-subtitle {
+        font-size: 14px !important;
+    }
+
+    .intervention-summary-card span {
+        font-size: 11px !important;
+    }
+
+    .intervention-summary-card strong {
+        font-size: 25px !important;
+    }
+
+    .intervention-list-header h2 {
+        font-size: 21px !important;
+    }
+
+    .intervention-card-title-row h3 {
+        font-size: 15px !important;
+    }
+
+    .intervention-problem {
+        font-size: 12px !important;
+    }
+
+    .intervention-card-meta {
+        font-size: 10px !important;
+    }
+
+    .detail-title h2 {
+        font-size: 20px !important;
+    }
+
+    .selected-intervention h2 {
+        font-size: 23px !important;
+    }
+
+    .selected-intervention p {
+        font-size: 12px !important;
+    }
+
+    .detail-progress strong {
+        font-size: 34px !important;
+    }
+
+    .assignment-card strong {
+        font-size: 12px !important;
+    }
+
+    .connection-context h3 {
+        font-size: 13px !important;
+    }
+
+    .update-section h3 {
+        font-size: 16px !important;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 560px) {
+
+    .interventions-header h1 {
+        font-size: 29px !important;
+    }
+
+    .interventions-subtitle {
+        font-size: 13px !important;
+    }
+
+    .intervention-summary-card strong {
+        font-size: 23px !important;
+    }
+
+    .intervention-card-title-row h3 {
+        font-size: 14px !important;
+    }
+
+    .intervention-problem {
+        font-size: 11px !important;
+    }
+
+    .selected-intervention h2 {
+        font-size: 21px !important;
+    }
+
+    .selected-intervention p {
+        font-size: 11px !important;
+    }
+}
+/* =========================================================
+   INTERVENTION CONTENT - LARGE & CLEAR
+========================================================= */
+
+/* Intervention card title */
+.intervention-card-title-row h3 {
+    font-size: 18px !important;
+    line-height: 1.4 !important;
+    font-weight: 750 !important;
+}
+
+
+/* Status badge */
+.status-badge {
+    font-size: 10px !important;
+    padding: 7px 9px !important;
+}
+
+
+/* Linked problem */
+.intervention-problem {
+    font-size: 14px !important;
+    line-height: 1.45 !important;
+
+    margin-top: 7px !important;
+}
+
+
+/* Department + priority */
+.intervention-card-meta {
+    font-size: 11px !important;
+    line-height: 1.45 !important;
+
+    margin-top: 7px !important;
+}
+
+
+/* Progress text */
+.mini-progress-label span {
+    font-size: 11px !important;
+}
+
+.mini-progress-label strong {
+    font-size: 12px !important;
+}
+
+
+/* Progress bar */
+.mini-progress-track {
+    height: 8px !important;
+}
+
+
+/* Arrow */
+.intervention-arrow {
+    font-size: 18px !important;
+}
+
+
+/* Icon */
+.intervention-card-icon {
+    width: 44px !important;
+    height: 44px !important;
+
+    font-size: 19px !important;
+}
+
+
+/* Give each card more breathing room */
+.intervention-card {
+    min-height: 155px !important;
+
+    padding: 23px 20px !important;
+
+    gap: 15px !important;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 800px) {
+
+    .intervention-card {
+        min-height: 150px !important;
+
+        padding: 20px 16px !important;
+    }
+
+    .intervention-card-title-row h3 {
+        font-size: 16px !important;
+    }
+
+    .intervention-problem {
+        font-size: 13px !important;
+    }
+
+    .intervention-card-meta {
+        font-size: 10px !important;
+    }
+
+    .mini-progress-label span {
+        font-size: 10px !important;
+    }
+
+    .mini-progress-label strong {
+        font-size: 11px !important;
+    }
+
+}
+
+
+@media (max-width: 560px) {
+
+    .intervention-card {
+        min-height: 145px !important;
+
+        padding: 18px 14px !important;
+    }
+
+    .intervention-card-title-row h3 {
+        font-size: 15px !important;
+    }
+
+    .intervention-problem {
+        font-size: 12px !important;
+    }
+
+    .intervention-card-meta {
+        font-size: 10px !important;
+    }
+
+}

@@ -1,0 +1,1080 @@
+{% extends "base.html" %}
+
+{% block title %}
+Report Details | UrbanNexus
+{% endblock %}
+
+
+{% block extra_css %}
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/report-details.css') }}">
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="details-page">
+
+
+    <!-- =========================================
+         TOP BAR
+    ========================================== -->
+
+    <div class="details-topbar">
+
+        <a href="{{ url_for('my_reports') }}"
+           class="back-link">
+
+            ← Back to My Reports
+
+        </a>
+
+
+        <div class="top-user">
+
+            <div class="top-user-info">
+
+                <strong>Citizen</strong>
+
+                <span>Resident</span>
+
+            </div>
+
+
+            <div class="top-user-avatar">
+                P
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================================
+         HEADER
+    ========================================== -->
+
+    <div class="details-header">
+
+        <div>
+
+            <span class="eyebrow">
+                REPORT DETAILS
+            </span>
+
+
+            <h1>
+                {{ title }}
+            </h1>
+
+
+            <div class="header-meta">
+
+                <span>
+                    ≋ {{ category }}
+                </span>
+
+
+                <span>
+                    ⌖ {{ location }}
+                </span>
+
+
+                <span>
+                    ◷ Reported {{ reported_date }}
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="header-status">
+
+            <span class="priority high">
+
+                {{ impact_level }} IMPACT
+
+            </span>
+
+
+            <span class="status-badge in-progress">
+
+                {{ status }}
+
+            </span>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================================
+         STATUS PROGRESS
+    ========================================== -->
+
+    <section class="status-card">
+
+        <div class="status-card-header">
+
+            <div>
+
+                <h2>
+                    Report Progress
+                </h2>
+
+                <p>
+                    Follow your report from submission to resolution.
+                </p>
+
+            </div>
+
+
+            <span class="progress-percent">
+
+                {{ progress }}%
+
+            </span>
+
+        </div>
+
+
+        <div class="main-progress">
+
+            <div class="main-progress-fill"
+                    data-progress="{{ progress }}">
+
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================
+             STATUS STEPS
+        ====================================== -->
+
+        <div class="status-steps">
+
+
+            <!-- SUBMITTED -->
+
+            <div class="status-step completed">
+
+                <div class="status-dot">
+                    ✓
+                </div>
+
+                <strong>
+                    Submitted
+                </strong>
+
+                <span>
+                    {{ reported_date }}
+                </span>
+
+            </div>
+
+
+
+            <!-- AI ANALYZED -->
+
+            <div class="status-step">
+
+                <div class="status-dot">
+                    2
+                </div>
+
+                <strong>
+                    AI Analyzed
+                </strong>
+
+                <span>
+                    Pending
+                </span>
+
+            </div>
+
+
+
+            <!-- VERIFIED -->
+
+            <div class="status-step">
+
+                <div class="status-dot">
+                    3
+                </div>
+
+                <strong>
+                    Verified
+                </strong>
+
+                <span>
+                    Pending
+                </span>
+
+            </div>
+
+
+
+            <!-- ASSIGNED -->
+
+            <div class="status-step">
+
+                <div class="status-dot">
+                    4
+                </div>
+
+                <strong>
+                    Assigned
+                </strong>
+
+                <span>
+                    {% if department != "Awaiting Assignment" %}
+                        {{ department }}
+                    {% else %}
+                        Pending
+                    {% endif %}
+                </span>
+
+            </div>
+
+
+
+            <!-- RESOLVED -->
+
+            <div class="status-step">
+
+                <div class="status-dot">
+                    5
+                </div>
+
+                <strong>
+                    Resolved
+                </strong>
+
+                <span>
+                    Pending
+                </span>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================
+         MAIN INFORMATION GRID
+    ========================================== -->
+
+    <div class="details-grid">
+
+
+        <!-- =====================================
+             PROBLEM INFORMATION
+        ====================================== -->
+
+        <section class="info-card">
+
+            <div class="card-heading">
+
+                <div class="heading-icon purple">
+                    !
+                </div>
+
+
+                <div>
+
+                    <h2>
+                        Problem Information
+                    </h2>
+
+                    <p>
+                        Details provided in your report.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="info-list">
+
+
+                <!-- CATEGORY -->
+
+                <div class="info-row">
+
+                    <span>
+                        Problem Category
+                    </span>
+
+                    <strong>
+                        {{ category }}
+                    </strong>
+
+                </div>
+
+
+                <!-- TITLE -->
+
+                <div class="info-row">
+
+                    <span>
+                        Problem Title
+                    </span>
+
+                    <strong>
+                        {{ title }}
+                    </strong>
+
+                </div>
+
+
+                <!-- LOCATION -->
+
+                <div class="info-row">
+
+                    <span>
+                        Location
+                    </span>
+
+                    <strong>
+                        {{ location }}
+                    </strong>
+
+                </div>
+
+
+                <!-- DATE -->
+
+                <div class="info-row">
+
+                    <span>
+                        Reported On
+                    </span>
+
+                    <strong>
+                        {{ reported_date }}
+                    </strong>
+
+                </div>
+
+
+                <!-- DEPARTMENT -->
+
+                <div class="info-row">
+
+                    <span>
+                        Assigned Department
+                    </span>
+
+                    <strong>
+                        {{ department }}
+                    </strong>
+
+                </div>
+
+
+                <!-- DESCRIPTION -->
+
+                <div class="info-row description-row">
+
+                    <span>
+                        Description
+                    </span>
+
+                    <strong class="description-text">
+                        {{ description }}
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================
+             AI IMPACT ANALYSIS
+        ====================================== -->
+
+        <section class="info-card ai-card">
+
+
+            <div class="card-heading">
+
+                <div class="heading-icon ai">
+                    ✦
+                </div>
+
+
+                <div>
+
+                    <h2>
+                        AI Impact Analysis
+                    </h2>
+
+                    <p>
+                        UrbanNexus analysis of your report.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="impact-grid">
+
+
+                <!-- IMPACT -->
+
+                <div class="impact-item">
+
+                    <span>
+                        Impact Level
+                    </span>
+
+                    <strong class="high-text">
+
+                        {{ impact_level }}
+
+                    </strong>
+
+                </div>
+
+
+                <!-- PRIORITY -->
+
+                <div class="impact-item">
+
+                    <span>
+                        Priority
+                    </span>
+
+                    <strong class="high-text">
+
+                        {{ priority }}
+
+                    </strong>
+
+                </div>
+
+
+                <!-- CONNECTED -->
+
+                <div class="impact-item">
+
+                    <span>
+                        Connected Problems
+                    </span>
+
+                    <strong>
+
+                        {{ connected_problems }}
+
+                    </strong>
+
+                </div>
+
+
+                <!-- LOCATION -->
+
+                <div class="impact-item">
+
+                    <span>
+                        Affected Area
+                    </span>
+
+                    <strong>
+
+                        {{ location }}
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- AI MESSAGE -->
+
+            <div class="ai-message">
+
+                <span class="ai-message-icon">
+                    ✦
+                </span>
+
+
+                <p>
+
+                    {% if status == "Submitted" %}
+
+                        Your report has been submitted successfully.
+                        UrbanNexus AI analysis is currently pending.
+
+                    {% else %}
+
+                        UrbanNexus has analyzed this report and generated
+                        impact and dependency insights.
+
+                    {% endif %}
+
+                </p>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+
+    <!-- =========================================
+         DEPENDENCY ANALYSIS
+    ========================================== -->
+
+    <section class="dependency-card">
+
+
+        <div class="dependency-header">
+
+            <div>
+
+                <span class="eyebrow">
+                    URBANNEXUS AI
+                </span>
+
+                <h2>
+                    Dependency Analysis
+                </h2>
+
+                <p>
+                    Connected urban problems identified from this report.
+                </p>
+
+            </div>
+
+
+            <span class="connection-badge">
+
+                {{ connected_problems }} Connections
+
+            </span>
+
+        </div>
+
+
+
+        {% if connected_problems > 0 %}
+
+
+            <!-- =================================
+                 DEPENDENCY FLOW
+            ================================== -->
+
+            <div class="dependency-flow">
+
+
+                <div class="dependency-node">
+
+                    <div class="node-icon water">
+                        ≋
+                    </div>
+
+                    <strong>
+                        Poor Drainage
+                    </strong>
+
+                    <span>
+                        Root Cause
+                    </span>
+
+                </div>
+
+
+                <div class="dependency-arrow">
+                    ↓
+                </div>
+
+
+                <div class="dependency-node active-node">
+
+                    <div class="node-icon purple">
+                        !
+                    </div>
+
+                    <strong>
+                        {{ title }}
+                    </strong>
+
+                    <span>
+                        Reported Problem
+                    </span>
+
+                </div>
+
+
+                <div class="dependency-arrow">
+                    ↓
+                </div>
+
+
+                <div class="dependency-node">
+
+                    <div class="node-icon roads">
+                        ▰
+                    </div>
+
+                    <strong>
+                        Road Blockage
+                    </strong>
+
+                    <span>
+                        Secondary Effect
+                    </span>
+
+                </div>
+
+
+                <div class="dependency-arrow">
+                    ↓
+                </div>
+
+
+                <div class="dependency-node">
+
+                    <div class="node-icon traffic">
+                        ◎
+                    </div>
+
+                    <strong>
+                        Traffic Congestion
+                    </strong>
+
+                    <span>
+                        Cascading Effect
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- INSIGHT -->
+
+            <div class="dependency-insight">
+
+                <div class="insight-icon">
+                    ✦
+                </div>
+
+
+                <div>
+
+                    <strong>
+                        UrbanNexus Insight
+                    </strong>
+
+                    <p>
+                        Addressing the root cause may reduce downstream
+                        urban problems.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        {% else %}
+
+
+            <!-- =================================
+                 NO AI ANALYSIS YET
+            ================================== -->
+
+            <div class="dependency-empty">
+
+                <div class="insight-icon">
+                    ✦
+                </div>
+
+
+                <div>
+
+                    <strong>
+                        AI Dependency Analysis Pending
+                    </strong>
+
+                    <p>
+                        UrbanNexus has not yet analyzed this report.
+                        Connected problems and cascading effects will
+                        appear here after AI analysis is completed.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        {% endif %}
+
+
+    </section>
+
+
+
+    <!-- =========================================
+         UPDATES TIMELINE
+    ========================================== -->
+
+    <section class="timeline-card">
+
+
+        <div class="card-heading">
+
+            <div class="heading-icon purple">
+                ◷
+            </div>
+
+
+            <div>
+
+                <h2>
+                    Updates & Progress
+                </h2>
+
+                <p>
+                    Activity recorded for this report.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="timeline">
+
+
+            <!-- =================================
+                 REPORT SUBMITTED
+            ================================== -->
+
+            <div class="timeline-item completed">
+
+                <div class="timeline-marker">
+                    ✓
+                </div>
+
+
+                <div class="timeline-content">
+
+                    <div class="timeline-title">
+
+                        <strong>
+                            Report Submitted
+                        </strong>
+
+                        <span>
+                            {{ reported_date }}
+                        </span>
+
+                    </div>
+
+
+                    <p>
+                        Your urban problem report was successfully submitted.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================
+                 AI ANALYSIS
+            ================================== -->
+
+            <div class="timeline-item">
+
+                <div class="timeline-marker">
+                    2
+                </div>
+
+
+                <div class="timeline-content">
+
+                    <div class="timeline-title">
+
+                        <strong>
+                            AI Analysis
+                        </strong>
+
+                        <span>
+                            {% if status != "Submitted" %}
+                                Completed
+                            {% else %}
+                                Pending
+                            {% endif %}
+                        </span>
+
+                    </div>
+
+
+                    <p>
+
+                        {% if status != "Submitted" %}
+
+                            UrbanNexus AI analysis has been completed.
+
+                        {% else %}
+
+                            UrbanNexus will analyze the report after submission.
+
+                        {% endif %}
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================
+                 DEPARTMENT
+            ================================== -->
+
+            <div class="timeline-item">
+
+                <div class="timeline-marker">
+                    3
+                </div>
+
+
+                <div class="timeline-content">
+
+                    <div class="timeline-title">
+
+                        <strong>
+                            Department Assignment
+                        </strong>
+
+                        <span>
+
+                            {% if department != "Awaiting Assignment" %}
+
+                                Assigned
+
+                            {% else %}
+
+                                Pending
+
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+
+                    <p>
+
+                        {% if department != "Awaiting Assignment" %}
+
+                            Assigned to {{ department }}.
+
+                        {% else %}
+
+                            The responsible department will be assigned
+                            after verification.
+
+                        {% endif %}
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================
+                 WORK
+            ================================== -->
+
+            <div class="timeline-item">
+
+                <div class="timeline-marker">
+                    4
+                </div>
+
+
+                <div class="timeline-content">
+
+                    <div class="timeline-title">
+
+                        <strong>
+                            Work In Progress
+                        </strong>
+
+                        <span>
+
+                            {% if status == "In Progress" %}
+
+                                Current
+
+                            {% else %}
+
+                                Pending
+
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+
+                    <p>
+
+                        {% if status == "In Progress" %}
+
+                            The assigned department has started working
+                            on the reported issue.
+
+                        {% else %}
+
+                            Work will begin after the report is assigned.
+
+                        {% endif %}
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================
+                 RESOLUTION
+            ================================== -->
+
+            <div class="timeline-item">
+
+                <div class="timeline-marker">
+                    5
+                </div>
+
+
+                <div class="timeline-content">
+
+                    <div class="timeline-title">
+
+                        <strong>
+                            Resolution
+                        </strong>
+
+                        <span>
+
+                            {% if status == "Resolved" %}
+
+                                Completed
+
+                            {% else %}
+
+                                Pending
+
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+
+                    <p>
+
+                        {% if status == "Resolved" %}
+
+                            The reported issue has been resolved.
+
+                        {% else %}
+
+                            You will be notified when the issue is resolved.
+
+                        {% endif %}
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================
+         CITIZEN ACTION
+    ========================================== -->
+
+    <section class="citizen-action">
+
+        <div>
+
+            <h3>
+                Is the problem still affecting your area?
+            </h3>
+
+            <p>
+                You can continue to follow this report until it is resolved.
+            </p>
+
+        </div>
+
+
+        <a href="{{ url_for('my_reports') }}"
+           class="action-button">
+
+            ← Back to My Reports
+
+        </a>
+
+    </section>
+
+
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const progressBar = document.querySelector(".main-progress-fill");
+
+    if (progressBar) {
+
+        const progress = parseInt(
+            progressBar.dataset.progress || "0",
+            10
+        );
+
+        progressBar.style.width = progress + "%";
+    }
+
+});
+</script>
+{% endblock %}

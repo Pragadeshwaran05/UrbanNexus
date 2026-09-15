@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}UrbanNexus{% endblock %}
+    </title>
+
+
+    <!-- =====================================================
+         ROLE-BASED CSS
+    ====================================================== -->
+
+    {% if portal == "municipality" %}
+
+        <!-- Municipality Sidebar -->
+        <link rel="stylesheet"
+              href="{{ url_for('static', filename='css/municipality-sidebar.css') }}">
+
+    {% else %}
+
+        <!-- Citizen Sidebar -->
+        <link rel="stylesheet"
+              href="{{ url_for('static', filename='css/citizen-dashboard.css') }}">
+
+    {% endif %}
+
+
+    <!-- =====================================================
+         PAGE-SPECIFIC CSS
+    ====================================================== -->
+
+    {% block extra_css %}
+    {% endblock %}
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         MAIN APPLICATION LAYOUT
+    ====================================================== -->
+
+    <div class="dashboard-layout">
+
+
+        <!-- =================================================
+             DESKTOP SIDEBAR
+        ================================================== -->
+
+        {% if portal == "municipality" %}
+
+            {% include "municipality/sidebar.html" %}
+
+        {% else %}
+
+            {% include "sidebar.html" %}
+
+        {% endif %}
+
+
+
+        <!-- =================================================
+             MOBILE HEADER
+        ================================================== -->
+
+        {% if portal == "municipality" %}
+
+            <!-- MUNICIPALITY MOBILE HEADER -->
+
+            <header class="mobile-header">
+
+                <button
+                    class="mobile-menu-btn"
+                    id="mobileMenuBtn"
+                    aria-label="Open navigation"
+                    type="button">
+
+                    ☰
+
+                </button>
+
+
+                <a
+                    href="{{ url_for('municipality_dashboard') }}"
+                    class="mobile-brand">
+
+                    <div class="mobile-brand-icon">
+                        U
+                    </div>
+
+                    <div class="mobile-brand-name">
+                        UrbanNexus
+                    </div>
+
+                </a>
+
+            </header>
+
+
+        {% else %}
+
+            <!-- CITIZEN MOBILE HEADER -->
+
+            <header class="mobile-header">
+
+                <button
+                    class="mobile-menu-btn"
+                    id="mobileMenuBtn"
+                    aria-label="Open navigation"
+                    type="button">
+
+                    ☰
+
+                </button>
+
+
+                <a
+                    href="{{ url_for('citizen_dashboard') }}"
+                    class="mobile-brand">
+
+                    <div class="mobile-brand-icon">
+                        U
+                    </div>
+
+                    <div class="mobile-brand-name">
+                        UrbanNexus
+                    </div>
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('notifications') }}"
+                    class="mobile-notification-btn"
+                    aria-label="Notifications">
+
+                    <span>🔔</span>
+
+                    <b>3</b>
+
+                </a>
+
+            </header>
+
+        {% endif %}
+
+
+
+        <!-- =================================================
+             MAIN CONTENT
+        ================================================== -->
+
+        <main class="main-content">
+
+            {% block content %}
+            {% endblock %}
+
+        </main>
+
+
+    </div>
+
+
+
+    <!-- =====================================================
+         PAGE-SPECIFIC JAVASCRIPT
+    ====================================================== -->
+
+   {% block extra_js %}{% endblock %}
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const menuButton = document.getElementById("mobileMenuBtn");
+
+    if (!menuButton) {
+        return;
+    }
+
+    const sidebar =
+        document.querySelector(".municipality-sidebar") ||
+        document.querySelector(".sidebar");
+
+    if (!sidebar) {
+        return;
+    }
+
+    /* Create overlay */
+    let overlay = document.querySelector(".mobile-sidebar-overlay");
+
+    if (!overlay) {
+        overlay = document.createElement("div");
+        overlay.className = "mobile-sidebar-overlay";
+        document.body.appendChild(overlay);
+    }
+
+    /* Open sidebar */
+    function openSidebar() {
+        sidebar.classList.add("mobile-sidebar-open");
+        overlay.classList.add("mobile-sidebar-overlay-visible");
+        document.body.classList.add("sidebar-menu-open");
+    }
+
+    /* Close sidebar */
+    function closeSidebar() {
+        sidebar.classList.remove("mobile-sidebar-open");
+        overlay.classList.remove("mobile-sidebar-overlay-visible");
+        document.body.classList.remove("sidebar-menu-open");
+    }
+
+    /* ☰ button */
+    menuButton.addEventListener("click", function (event) {
+
+        event.stopPropagation();
+
+        if (sidebar.classList.contains("mobile-sidebar-open")) {
+            closeSidebar();
+        } else {
+            openSidebar();
+        }
+
+    });
+
+    /* Click grey area → close */
+    overlay.addEventListener("click", function () {
+        closeSidebar();
+    });
+
+    /* Click sidebar link → close */
+    sidebar.querySelectorAll("a").forEach(function (link) {
+
+        link.addEventListener("click", function () {
+            closeSidebar();
+        });
+
+    });
+
+    /* ESC → close */
+    document.addEventListener("keydown", function (event) {
+
+        if (event.key === "Escape") {
+            closeSidebar();
+        }
+
+    });
+
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,742 @@
+{% extends "base.html" %}
+
+{% block title %}
+Municipal Dashboard - UrbanNexus
+{% endblock %}
+
+{% block extra_css %}
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/municipality-sidebar.css') }}">
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/municipality-dashboard.css') }}">
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="municipality-dashboard">
+
+    <!-- =========================================
+         HEADER
+    ========================================== -->
+
+    <header class="municipality-dashboard-header">
+
+        <div>
+            <p class="municipality-eyebrow">
+                MUNICIPAL COMMAND CENTER
+            </p>
+
+            <h1>City Overview</h1>
+
+            <p class="municipality-subtitle">
+                Monitor urban problems, understand dependencies,
+                and prioritize high-impact interventions.
+            </p>
+        </div>
+
+
+        <div class="municipality-header-status">
+
+            <div class="city-location">
+                <span class="location-icon">⌖</span>
+
+                <div>
+                    <strong>Chennai</strong>
+                    <span>City Administration</span>
+                </div>
+            </div>
+
+            <div class="system-status">
+                <span class="status-dot"></span>
+                System Active
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================================
+         OVERVIEW STATS
+    ========================================== -->
+
+    <section class="municipality-stats-grid">
+
+        <div class="municipality-stat-card problems">
+
+            <div class="municipality-stat-top">
+                <div class="municipality-stat-icon">
+                    ◈
+                </div>
+
+                <span class="stat-trend positive">
+                    +8.4%
+                </span>
+            </div>
+
+            <div class="municipality-stat-value">
+                248
+            </div>
+
+            <div class="municipality-stat-label">
+                Total Problems
+            </div>
+
+            <p>
+                Reported across the city
+            </p>
+
+        </div>
+
+
+        <div class="municipality-stat-card impact">
+
+            <div class="municipality-stat-top">
+                <div class="municipality-stat-icon">
+                    ⚠
+                </div>
+
+                <span class="stat-trend warning">
+                    13%
+                </span>
+            </div>
+
+            <div class="municipality-stat-value">
+                32
+            </div>
+
+            <div class="municipality-stat-label">
+                High-Impact Problems
+            </div>
+
+            <p>
+                Require priority attention
+            </p>
+
+        </div>
+
+
+        <div class="municipality-stat-card analysis">
+
+            <div class="municipality-stat-top">
+                <div class="municipality-stat-icon">
+                    ✦
+                </div>
+
+                <span class="stat-trend">
+                    AI
+                </span>
+            </div>
+
+            <div class="municipality-stat-value">
+                18
+            </div>
+
+            <div class="municipality-stat-label">
+                AI Analyses
+            </div>
+
+            <p>
+                Problems currently under analysis
+            </p>
+
+        </div>
+
+
+        <div class="municipality-stat-card interventions">
+
+            <div class="municipality-stat-top">
+                <div class="municipality-stat-icon">
+                    ⇄
+                </div>
+
+                <span class="stat-trend positive">
+                    +5
+                </span>
+            </div>
+
+            <div class="municipality-stat-value">
+                41
+            </div>
+
+            <div class="municipality-stat-label">
+                Active Interventions
+            </div>
+
+            <p>
+                Currently being handled
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================
+         MAIN DASHBOARD GRID
+    ========================================== -->
+
+    <section class="municipality-dashboard-grid">
+
+
+        <!-- PRIORITY PROBLEMS -->
+
+        <div class="municipality-panel priority-panel">
+
+            <div class="panel-header">
+
+                <div>
+                    <p class="panel-kicker">
+                        AI PRIORITIZATION
+                    </p>
+
+                    <h2>Priority Problems</h2>
+
+                    <p>
+                        Problems requiring immediate municipal attention.
+                    </p>
+                </div>
+
+                <a href="/municipality/priority"
+                   class="panel-link">
+                    View All →
+                </a>
+
+            </div>
+
+
+            <div class="priority-list">
+
+
+                <!-- Problem 1 -->
+
+                <div class="priority-item">
+
+                    <div class="priority-rank">
+                        01
+                    </div>
+
+                    <div class="priority-info">
+
+                        <div class="priority-title-row">
+
+                            <h3>
+                                Waterlogging near Main Road
+                            </h3>
+
+                            <span class="impact-badge high">
+                                HIGH
+                            </span>
+
+                        </div>
+
+                        <p>
+                            Water & Drainage • Main Road
+                        </p>
+
+                        <div class="priority-bar">
+
+                            <div class="priority-bar-fill"
+                                 style="width:92%;">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="priority-score">
+                        <strong>92</strong>
+                        <span>Impact</span>
+                    </div>
+
+                </div>
+
+
+                <!-- Problem 2 -->
+
+                <div class="priority-item">
+
+                    <div class="priority-rank">
+                        02
+                    </div>
+
+                    <div class="priority-info">
+
+                        <div class="priority-title-row">
+
+                            <h3>
+                                Traffic Congestion at Main Junction
+                            </h3>
+
+                            <span class="impact-badge high">
+                                HIGH
+                            </span>
+
+                        </div>
+
+                        <p>
+                            Traffic • Main Junction
+                        </p>
+
+                        <div class="priority-bar">
+
+                            <div class="priority-bar-fill"
+                                 style="width:87%;">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="priority-score">
+                        <strong>87</strong>
+                        <span>Impact</span>
+                    </div>
+
+                </div>
+
+
+                <!-- Problem 3 -->
+
+                <div class="priority-item">
+
+                    <div class="priority-rank">
+                        03
+                    </div>
+
+                    <div class="priority-info">
+
+                        <div class="priority-title-row">
+
+                            <h3>
+                                Damaged Road near Bus Stand
+                            </h3>
+
+                            <span class="impact-badge medium">
+                                MEDIUM
+                            </span>
+
+                        </div>
+
+                        <p>
+                            Roads & Infrastructure • Bus Stand
+                        </p>
+
+                        <div class="priority-bar">
+
+                            <div class="priority-bar-fill"
+                                 style="width:74%;">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="priority-score">
+                        <strong>74</strong>
+                        <span>Impact</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- URBAN IMPACT -->
+
+        <div class="municipality-panel impact-panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <p class="panel-kicker">
+                        CITY ANALYSIS
+                    </p>
+
+                    <h2>Urban Impact</h2>
+
+                    <p>
+                        Current problem distribution by category.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="impact-list">
+
+                <div class="impact-row">
+
+                    <div class="impact-label">
+                        <span>Water & Drainage</span>
+                        <strong>72</strong>
+                    </div>
+
+                    <div class="impact-track">
+                        <div style="width:82%;"></div>
+                    </div>
+
+                </div>
+
+
+                <div class="impact-row">
+
+                    <div class="impact-label">
+                        <span>Roads & Infrastructure</span>
+                        <strong>58</strong>
+                    </div>
+
+                    <div class="impact-track">
+                        <div style="width:66%;"></div>
+                    </div>
+
+                </div>
+
+
+                <div class="impact-row">
+
+                    <div class="impact-label">
+                        <span>Waste Management</span>
+                        <strong>46</strong>
+                    </div>
+
+                    <div class="impact-track">
+                        <div style="width:53%;"></div>
+                    </div>
+
+                </div>
+
+
+                <div class="impact-row">
+
+                    <div class="impact-label">
+                        <span>Traffic</span>
+                        <strong>39</strong>
+                    </div>
+
+                    <div class="impact-track">
+                        <div style="width:45%;"></div>
+                    </div>
+
+                </div>
+
+
+                <div class="impact-row">
+
+                    <div class="impact-label">
+                        <span>Electricity & Lighting</span>
+                        <strong>33</strong>
+                    </div>
+
+                    <div class="impact-track">
+                        <div style="width:38%;"></div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- =========================================
+         AI INSIGHT
+    ========================================== -->
+
+    <section class="municipality-panel ai-insight-panel">
+
+        <div class="ai-insight-header">
+
+            <div class="ai-insight-title">
+
+                <div class="ai-insight-icon">
+                    ✦
+                </div>
+
+                <div>
+
+                    <p class="panel-kicker">
+                        URBANNEXUS AI
+                    </p>
+
+                    <h2>City-Level Dependency Insight</h2>
+
+                </div>
+
+            </div>
+
+            <span class="ai-badge">
+                AI ANALYZED
+            </span>
+
+        </div>
+
+
+        <p class="ai-insight-description">
+
+            Multiple reported problems indicate a cascading dependency
+            originating from poor drainage infrastructure.
+
+        </p>
+
+
+        <!-- DEPENDENCY FLOW -->
+
+        <div class="dependency-flow">
+
+            <div class="dependency-node root">
+
+                <span class="dependency-node-label">
+                    ROOT CAUSE
+                </span>
+
+                <strong>
+                    Poor Drainage
+                </strong>
+
+            </div>
+
+
+            <div class="dependency-arrow">
+                →
+            </div>
+
+
+            <div class="dependency-node">
+
+                <strong>
+                    Waterlogging
+                </strong>
+
+            </div>
+
+
+            <div class="dependency-arrow">
+                →
+            </div>
+
+
+            <div class="dependency-node">
+
+                <strong>
+                    Road Blockage
+                </strong>
+
+            </div>
+
+
+            <div class="dependency-arrow">
+                →
+            </div>
+
+
+            <div class="dependency-node downstream">
+
+                <span class="dependency-node-label">
+                    CASCADING EFFECT
+                </span>
+
+                <strong>
+                    Traffic Congestion
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="ai-recommendation">
+
+            <div class="recommendation-icon">
+                ✓
+            </div>
+
+            <div>
+
+                <strong>
+                    Recommended Intervention
+                </strong>
+
+                <p>
+                    Address the drainage issue first to reduce
+                    downstream waterlogging, road blockage, and
+                    traffic congestion.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================
+         ACTIVE INTERVENTIONS
+    ========================================== -->
+
+    <section class="municipality-panel interventions-panel">
+
+        <div class="panel-header">
+
+            <div>
+
+                <p class="panel-kicker">
+                    MUNICIPAL ACTION
+                </p>
+
+                <h2>Active Interventions</h2>
+
+                <p>
+                    Current interventions across city departments.
+                </p>
+
+            </div>
+
+            <a href="/municipality/interventions"
+               class="panel-link">
+                Manage →
+            </a>
+
+        </div>
+
+
+        <div class="intervention-list">
+
+
+            <div class="intervention-item">
+
+                <div class="intervention-icon">
+                    💧
+                </div>
+
+                <div class="intervention-info">
+
+                    <h3>
+                        Main Road Drainage Improvement
+                    </h3>
+
+                    <p>
+                        Water & Drainage Department
+                    </p>
+
+                </div>
+
+                <div class="intervention-progress">
+
+                    <div class="progress-label">
+                        <span>Progress</span>
+                        <strong>75%</strong>
+                    </div>
+
+                    <div class="progress-track">
+
+                        <div style="width:75%;"></div>
+
+                    </div>
+
+                </div>
+
+                <span class="intervention-status active">
+                    In Progress
+                </span>
+
+            </div>
+
+
+            <div class="intervention-item">
+
+                <div class="intervention-icon">
+                    🛣
+                </div>
+
+                <div class="intervention-info">
+
+                    <h3>
+                        Bus Stand Road Repair
+                    </h3>
+
+                    <p>
+                        Roads & Infrastructure Department
+                    </p>
+
+                </div>
+
+                <div class="intervention-progress">
+
+                    <div class="progress-label">
+                        <span>Progress</span>
+                        <strong>40%</strong>
+                    </div>
+
+                    <div class="progress-track">
+
+                        <div style="width:40%;"></div>
+
+                    </div>
+
+                </div>
+
+                <span class="intervention-status active">
+                    In Progress
+                </span>
+
+            </div>
+
+
+            <div class="intervention-item">
+
+                <div class="intervention-icon">
+                    🚦
+                </div>
+
+                <div class="intervention-info">
+
+                    <h3>
+                        Main Junction Traffic Management
+                    </h3>
+
+                    <p>
+                        Traffic Department
+                    </p>
+
+                </div>
+
+                <div class="intervention-progress">
+
+                    <div class="progress-label">
+                        <span>Progress</span>
+                        <strong>60%</strong>
+                    </div>
+
+                    <div class="progress-track">
+
+                        <div style="width:60%;"></div>
+
+                    </div>
+
+                </div>
+
+                <span class="intervention-status active">
+                    In Progress
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+{% endblock %}

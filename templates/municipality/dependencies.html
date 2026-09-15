@@ -1,0 +1,1667 @@
+{% extends "base.html" %}
+
+{% block title %}
+Dependency Analysis - UrbanNexus
+{% endblock %}
+
+
+{% block extra_css %}
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/municipality-dependencies.css') }}">
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="dependency-page">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="dependency-header">
+
+        <div class="dependency-header-main">
+
+            <p class="dependency-eyebrow">
+                URBAN SYSTEM INTELLIGENCE
+            </p>
+
+            <h1>
+                Dependency Analysis
+            </h1>
+
+            <p class="dependency-subtitle">
+                Trace how real urban problems influence one another,
+                identify upstream causes, and understand cascading effects.
+            </p>
+
+        </div>
+
+
+        <div class="dependency-header-meta">
+
+            <div class="dependency-city-card">
+
+                <span class="dependency-city-icon">
+                    ⌖
+                </span>
+
+                <div>
+                    <strong>Chennai</strong>
+                    <span>City Administration</span>
+                </div>
+
+            </div>
+
+
+            <div class="dependency-ai-status">
+
+                <span></span>
+
+                AI Network Active
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         TOOLBAR
+    ====================================================== -->
+
+    <section class="dependency-toolbar">
+
+        <div class="dependency-search">
+
+            <span>⌕</span>
+
+            <input
+                type="text"
+                id="dependencySearch"
+                placeholder="Search problem or dependency cluster..."
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <select id="dependencyImpactFilter">
+
+            <option value="all">
+                All Impact Levels
+            </option>
+
+            <option value="high">
+                High Impact
+            </option>
+
+            <option value="medium">
+                Medium Impact
+            </option>
+
+            <option value="low">
+                Low Impact
+            </option>
+
+        </select>
+
+
+        <select id="dependencyCategoryFilter">
+
+            <option value="all">
+                All Categories
+            </option>
+
+            <option value="water">
+                Water & Drainage
+            </option>
+
+            <option value="roads">
+                Roads & Infrastructure
+            </option>
+
+            <option value="traffic">
+                Traffic
+            </option>
+
+            <option value="waste">
+                Waste Management
+            </option>
+
+            <option value="electricity">
+                Electricity & Lighting
+            </option>
+
+            <option value="environment">
+                Environment
+            </option>
+
+            <option value="general">
+                General
+            </option>
+
+        </select>
+
+    </section>
+
+
+    <!-- =====================================================
+         MAIN GRID
+    ====================================================== -->
+
+    <div class="dependency-layout">
+
+
+        <!-- =================================================
+             LEFT: REAL DEPENDENCY CLUSTERS
+        ================================================== -->
+
+        <section class="dependency-clusters">
+
+            <div class="dependency-panel-heading">
+
+                <div>
+
+                    <p class="panel-kicker">
+                        PROBLEM NETWORKS
+                    </p>
+
+                    <h2>
+                        Dependency Clusters
+                    </h2>
+
+                </div>
+
+
+                <span
+                    class="cluster-count"
+                    id="clusterCount"
+                >
+                    {{ clusters|length }}
+                    cluster{% if clusters|length != 1 %}s{% endif %}
+                </span>
+
+            </div>
+
+
+            <div
+                class="cluster-list"
+                id="clusterList"
+            >
+
+                {% if clusters %}
+
+                    {% for cluster in clusters %}
+
+                    <button
+                        type="button"
+
+                        class="cluster-item {% if loop.first %}selected{% endif %}"
+
+                        data-cluster-id="{{ loop.index0 }}"
+
+                        data-impact="{{ cluster.impact|lower }}"
+
+                        data-search="
+                            {{ cluster.name }}
+                            {{ cluster.description }}
+                            {% for problem in cluster.problems %}
+                                {{ problem.title }}
+                                {{ problem.description }}
+                                {{ problem.group }}
+                            {% endfor %}
+                        "
+
+                        data-categories="
+                            {% for problem in cluster.problems %}
+                                {{ problem.group|lower }}|
+                            {% endfor %}
+                        "
+                    >
+
+                        <div class="cluster-number">
+
+                            {{ "%02d"|format(loop.index) }}
+
+                        </div>
+
+
+                        <div class="cluster-content">
+
+                            <div class="cluster-title-row">
+
+                                <h3>
+                                    {{ cluster.name }}
+                                </h3>
+
+
+                                <span
+                                    class="cluster-impact {{ cluster.impact|lower }}"
+                                >
+                                    {{ cluster.impact }}
+                                </span>
+
+                            </div>
+
+
+                            <p>
+                                {{ cluster.description }}
+                            </p>
+
+
+                            <div class="cluster-meta">
+
+                                <span>
+                                    {{ cluster.problems|length }}
+                                    linked problems
+                                </span>
+
+                                <span>•</span>
+
+                                <span>
+                                    {{ cluster.departments|length }}
+                                    departments
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <span class="cluster-arrow">
+                            →
+                        </span>
+
+                    </button>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <div style="
+                        padding: 40px 24px;
+                        text-align: center;
+                    ">
+
+                        <h3>
+                            No dependency clusters found
+                        </h3>
+
+                        <p>
+                            UrbanNexus needs at least two related
+                            real complaints to create a dependency cluster.
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             RIGHT: REAL NETWORK ANALYSIS
+        ================================================== -->
+
+        <section class="network-panel">
+
+
+            <!-- =================================================
+                 NETWORK HEADER
+            ================================================== -->
+
+            <div class="network-header">
+
+                <div class="network-title">
+
+                    <div class="network-ai-icon">
+                        ✦
+                    </div>
+
+                    <div>
+
+                        <p class="panel-kicker">
+                            URBANNEXUS AI
+                        </p>
+
+                        <h2>
+                            Dependency Network
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <span
+                    class="network-badge"
+                    id="networkConnections"
+                >
+                    0 CONNECTIONS
+                </span>
+
+            </div>
+
+
+            {% if clusters %}
+
+            <!-- =================================================
+                 SELECTED NETWORK
+            ================================================== -->
+
+            <div class="network-selected">
+
+                <div>
+
+                    <span class="selected-label">
+                        SELECTED NETWORK
+                    </span>
+
+
+                    <h2 id="selectedClusterName">
+                        {{ clusters[0].name }}
+                    </h2>
+
+
+                    <p id="selectedClusterDescription">
+                        {{ clusters[0].description }}
+                    </p>
+
+                </div>
+
+
+                <span
+                    class="selected-impact"
+                    id="selectedClusterImpact"
+                >
+                    {{ clusters[0].impact }} IMPACT
+                </span>
+
+            </div>
+
+
+            <!-- =================================================
+                 LEGEND
+            ================================================== -->
+
+            <div class="network-legend">
+
+                <div>
+
+                    <span class="legend-dot root"></span>
+
+                    Root Cause
+
+                </div>
+
+
+                <div>
+
+                    <span class="legend-dot current"></span>
+
+                    Current Problem
+
+                </div>
+
+
+                <div>
+
+                    <span class="legend-dot downstream"></span>
+
+                    Downstream Effect
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 DEPENDENCY GRAPH
+            ================================================== -->
+
+            <div class="dependency-graph-wrapper">
+
+                <div
+                    class="dependency-graph"
+                    id="dependencyGraph"
+                >
+
+
+                    <!-- ROOT -->
+
+                    <div class="graph-node root-node">
+
+                        <span class="graph-node-label">
+                            ROOT CAUSE
+                        </span>
+
+                        <strong id="rootProblem">
+                            {{ clusters[0].root_cause.title }}
+                        </strong>
+
+                        <small id="rootCategory">
+                            {{ clusters[0].root_cause.group }}
+                        </small>
+
+                    </div>
+
+
+                    <div class="graph-connector">
+                        →
+                    </div>
+
+
+                    <!-- CURRENT -->
+
+                    <div class="graph-node current-node">
+
+                        <span class="graph-node-label">
+                            CURRENT PROBLEM
+                        </span>
+
+                        <strong id="currentProblem">
+
+                            {% if clusters[0].problems|length > 1 %}
+                                {{ clusters[0].problems[1].title }}
+                            {% else %}
+                                Current Problem
+                            {% endif %}
+
+                        </strong>
+
+                        <small id="currentCategory">
+
+                            {% if clusters[0].problems|length > 1 %}
+                                {{ clusters[0].problems[1].group }}
+                            {% else %}
+                                Reported Issue
+                            {% endif %}
+
+                        </small>
+
+                    </div>
+
+
+                    <div class="graph-connector">
+                        →
+                    </div>
+
+
+                    <!-- DOWNSTREAM -->
+
+                    <div class="graph-node downstream-node">
+
+                        <span class="graph-node-label">
+                            DOWNSTREAM
+                        </span>
+
+                        <strong id="downstreamProblem">
+
+                            {% if clusters[0].downstream|length > 0 %}
+                                {{ clusters[0].downstream[0].title }}
+                            {% else %}
+                                No downstream effect
+                            {% endif %}
+
+                        </strong>
+
+                        <small id="downstreamCategory">
+
+                            {% if clusters[0].downstream|length > 0 %}
+                                {{ clusters[0].downstream[0].group }}
+                            {% else %}
+                                —
+                            {% endif %}
+
+                        </small>
+
+                    </div>
+
+
+                    <div class="graph-connector">
+                        →
+                    </div>
+
+
+                    <!-- CASCADING EFFECT -->
+
+                    <div class="graph-node impact-node">
+
+                        <span class="graph-node-label">
+                            CASCADING EFFECT
+                        </span>
+
+                        <strong id="impactProblem">
+
+                            {% if clusters[0].downstream|length > 1 %}
+                                {{ clusters[0].downstream[1].title }}
+                            {% elif clusters[0].downstream|length > 0 %}
+                                {{ clusters[0].downstream[0].title }}
+                            {% else %}
+                                No cascading effect
+                            {% endif %}
+
+                        </strong>
+
+                        <small id="impactCategory">
+
+                            {% if clusters[0].downstream|length > 1 %}
+                                {{ clusters[0].downstream[1].group }}
+                            {% elif clusters[0].downstream|length > 0 %}
+                                {{ clusters[0].downstream[0].group }}
+                            {% else %}
+                                —
+                            {% endif %}
+
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 NETWORK SUMMARY
+            ================================================== -->
+
+            <div class="network-summary-grid">
+
+
+                <div class="network-summary-card">
+
+                    <span class="summary-icon purple">
+                        ◎
+                    </span>
+
+                    <div>
+
+                        <span>
+                            Upstream Causes
+                        </span>
+
+                        <strong id="upstreamCount">
+                            1
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="network-summary-card">
+
+                    <span class="summary-icon blue">
+                        ◈
+                    </span>
+
+                    <div>
+
+                        <span>
+                            Direct Connections
+                        </span>
+
+                        <strong id="directConnections">
+                            {{ clusters[0].connections }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="network-summary-card">
+
+                    <span class="summary-icon orange">
+                        ⇢
+                    </span>
+
+                    <div>
+
+                        <span>
+                            Cascading Effects
+                        </span>
+
+                        <strong id="cascadingCount">
+                            {{ clusters[0].downstream|length }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="network-summary-card">
+
+                    <span class="summary-icon green">
+                        ◉
+                    </span>
+
+                    <div>
+
+                        <span>
+                            Departments
+                        </span>
+
+                        <strong id="departmentCount">
+                            {{ clusters[0].departments|length }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 AI INSIGHT
+            ================================================== -->
+
+            <div class="network-ai-insight">
+
+                <div class="network-ai-insight-icon">
+                    ✦
+                </div>
+
+                <div>
+
+                    <span class="ai-insight-label">
+                        AI NETWORK INSIGHT
+                    </span>
+
+
+                    <h3 id="aiInsightTitle">
+                        Address the upstream problem first
+                    </h3>
+
+
+                    <p id="aiInsightText">
+
+                        UrbanNexus identified a dependency relationship
+                        between the real citizen-reported problems in
+                        this cluster. Addressing the upstream problem
+                        may reduce downstream effects.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 ACTION
+            ================================================== -->
+
+            <div class="network-footer">
+
+                <div class="network-note">
+
+                    <span>
+                        ⓘ
+                    </span>
+
+                    <p>
+                        Dependency relationships are AI-generated
+                        decision-support signals and should be verified
+                        by municipal officers.
+                    </p>
+
+                </div>
+
+
+                <a
+                    href="/municipality/priority"
+                    class="network-priority-btn"
+                >
+                    View Priority →
+                </a>
+
+            </div>
+
+
+            {% else %}
+
+            <!-- =================================================
+                 EMPTY STATE
+            ================================================== -->
+
+            <div style="
+                padding: 70px 30px;
+                text-align: center;
+            ">
+
+                <div style="
+                    font-size: 40px;
+                    margin-bottom: 15px;
+                ">
+                    🔗
+                </div>
+
+                <h2>
+                    No Dependency Network Yet
+                </h2>
+
+                <p>
+                    UrbanNexus has not detected enough related
+                    real complaints to create a dependency network.
+                </p>
+
+            </div>
+
+            {% endif %}
+
+        </section>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     REAL CLUSTER DATA FROM FLASK
+========================================================= -->
+
+<script
+    id="urbannexus-cluster-data"
+    type="application/json"
+>
+{{ clusters | tojson }}
+</script>
+
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        "use strict";
+
+
+        /* =====================================================
+           GET REAL CLUSTER DATA
+        ===================================================== */
+
+        const dataElement =
+            document.getElementById(
+                "urbannexus-cluster-data"
+            );
+
+
+        if (!dataElement) {
+            return;
+        }
+
+
+        let clusters = [];
+
+
+        try {
+
+            clusters =
+                JSON.parse(
+                    dataElement.textContent
+                );
+
+        } catch (error) {
+
+            console.error(
+                "UrbanNexus cluster data error:",
+                error
+            );
+
+            return;
+        }
+
+
+        /* =====================================================
+           ELEMENTS
+        ===================================================== */
+
+        const searchInput =
+            document.getElementById(
+                "dependencySearch"
+            );
+
+
+        const impactFilter =
+            document.getElementById(
+                "dependencyImpactFilter"
+            );
+
+
+        const categoryFilter =
+            document.getElementById(
+                "dependencyCategoryFilter"
+            );
+
+
+        const clusterCount =
+            document.getElementById(
+                "clusterCount"
+            );
+
+
+        const clusterItems =
+            document.querySelectorAll(
+                ".cluster-item"
+            );
+
+
+        /* =====================================================
+           UPDATE SELECTED NETWORK
+        ===================================================== */
+
+        function updateNetwork(index) {
+
+            const cluster =
+                clusters[index];
+
+
+            if (!cluster) {
+                return;
+            }
+
+
+            /* -----------------------------------------------
+               BASIC INFORMATION
+            ------------------------------------------------ */
+
+            const name =
+                document.getElementById(
+                    "selectedClusterName"
+                );
+
+
+            const description =
+                document.getElementById(
+                    "selectedClusterDescription"
+                );
+
+
+            const impact =
+                document.getElementById(
+                    "selectedClusterImpact"
+                );
+
+
+            if (name) {
+
+                name.textContent =
+                    cluster.name;
+
+            }
+
+
+            if (description) {
+
+                description.textContent =
+                    cluster.description;
+
+            }
+
+
+            if (impact) {
+
+                impact.textContent =
+                    cluster.impact +
+                    " IMPACT";
+
+            }
+
+
+            /* -----------------------------------------------
+               CONNECTIONS
+            ------------------------------------------------ */
+
+            const networkConnections =
+                document.getElementById(
+                    "networkConnections"
+                );
+
+
+            if (networkConnections) {
+
+                networkConnections.textContent =
+                    cluster.connections +
+                    " CONNECTION" +
+                    (
+                        cluster.connections === 1
+                            ? ""
+                            : "S"
+                    );
+
+            }
+
+
+            /* -----------------------------------------------
+               ROOT CAUSE
+            ------------------------------------------------ */
+
+            const root =
+                cluster.root_cause;
+
+
+            const rootProblem =
+                document.getElementById(
+                    "rootProblem"
+                );
+
+
+            const rootCategory =
+                document.getElementById(
+                    "rootCategory"
+                );
+
+
+            if (rootProblem) {
+
+                rootProblem.textContent =
+                    root
+                        ? root.title
+                        : "Root Cause";
+
+            }
+
+
+            if (rootCategory) {
+
+                rootCategory.textContent =
+                    root
+                        ? root.group
+                        : "Infrastructure";
+
+            }
+
+
+            /* -----------------------------------------------
+               CURRENT PROBLEM
+            ------------------------------------------------ */
+
+            let currentProblem = null;
+
+
+            if (
+                cluster.problems &&
+                cluster.problems.length > 1
+            ) {
+
+                currentProblem =
+                    cluster.problems[1];
+
+            }
+
+
+            const currentTitle =
+                document.getElementById(
+                    "currentProblem"
+                );
+
+
+            const currentCategory =
+                document.getElementById(
+                    "currentCategory"
+                );
+
+
+            if (currentTitle) {
+
+                currentTitle.textContent =
+                    currentProblem
+                        ? currentProblem.title
+                        : "Current Problem";
+
+            }
+
+
+            if (currentCategory) {
+
+                currentCategory.textContent =
+                    currentProblem
+                        ? currentProblem.group
+                        : "Reported Issue";
+
+            }
+
+
+            /* -----------------------------------------------
+               DOWNSTREAM EFFECT
+            ------------------------------------------------ */
+
+            const downstream =
+                cluster.downstream || [];
+
+
+            const downstreamProblem =
+                document.getElementById(
+                    "downstreamProblem"
+                );
+
+
+            const downstreamCategory =
+                document.getElementById(
+                    "downstreamCategory"
+                );
+
+
+            if (downstreamProblem) {
+
+                if (downstream.length > 0) {
+
+                    downstreamProblem.textContent =
+                        downstream[0].title;
+
+                } else {
+
+                    downstreamProblem.textContent =
+                        "No downstream effect";
+
+                }
+
+            }
+
+
+            if (downstreamCategory) {
+
+                if (downstream.length > 0) {
+
+                    downstreamCategory.textContent =
+                        downstream[0].group;
+
+                } else {
+
+                    downstreamCategory.textContent =
+                        "—";
+
+                }
+
+            }
+
+
+            /* -----------------------------------------------
+               CASCADING EFFECT
+            ------------------------------------------------ */
+
+            const impactProblem =
+                document.getElementById(
+                    "impactProblem"
+                );
+
+
+            const impactCategory =
+                document.getElementById(
+                    "impactCategory"
+                );
+
+
+            if (impactProblem) {
+
+                if (downstream.length > 1) {
+
+                    impactProblem.textContent =
+                        downstream[1].title;
+
+                } else if (
+                    downstream.length === 1
+                ) {
+
+                    impactProblem.textContent =
+                        downstream[0].title;
+
+                } else {
+
+                    impactProblem.textContent =
+                        "No cascading effect";
+
+                }
+
+            }
+
+
+            if (impactCategory) {
+
+                if (downstream.length > 1) {
+
+                    impactCategory.textContent =
+                        downstream[1].group;
+
+                } else if (
+                    downstream.length === 1
+                ) {
+
+                    impactCategory.textContent =
+                        downstream[0].group;
+
+                } else {
+
+                    impactCategory.textContent =
+                        "—";
+
+                }
+
+            }
+
+
+            /* -----------------------------------------------
+               SUMMARY
+            ------------------------------------------------ */
+
+            const directConnections =
+                document.getElementById(
+                    "directConnections"
+                );
+
+
+            const cascadingCount =
+                document.getElementById(
+                    "cascadingCount"
+                );
+
+
+            const departmentCount =
+                document.getElementById(
+                    "departmentCount"
+                );
+
+
+            if (directConnections) {
+
+                directConnections.textContent =
+                    cluster.connections;
+
+            }
+
+
+            if (cascadingCount) {
+
+                cascadingCount.textContent =
+                    downstream.length;
+
+            }
+
+
+            if (departmentCount) {
+
+                departmentCount.textContent =
+                    cluster.departments.length;
+
+            }
+
+
+            /* -----------------------------------------------
+               AI INSIGHT
+            ------------------------------------------------ */
+
+            const aiTitle =
+                document.getElementById(
+                    "aiInsightTitle"
+                );
+
+
+            const aiText =
+                document.getElementById(
+                    "aiInsightText"
+                );
+
+
+            if (aiTitle) {
+
+                if (
+                    root &&
+                    root.title
+                ) {
+
+                    aiTitle.textContent =
+                        "Address the upstream problem first";
+
+                } else {
+
+                    aiTitle.textContent =
+                        "Review connected urban problems";
+
+                }
+
+            }
+
+
+            if (aiText) {
+
+                const rootName =
+                    root
+                        ? root.title
+                        : "the upstream problem";
+
+
+                const downstreamCount =
+                    downstream.length;
+
+
+                if (downstreamCount > 0) {
+
+                    aiText.textContent =
+                        rootName +
+                        " appears to be an upstream problem " +
+                        "within this real complaint cluster. " +
+                        "Addressing it may help reduce " +
+                        downstreamCount +
+                        " downstream effect" +
+                        (
+                            downstreamCount === 1
+                                ? ""
+                                : "s"
+                        ) +
+                        ".";
+
+                } else {
+
+                    aiText.textContent =
+                        "UrbanNexus detected a potential " +
+                        "relationship between the real " +
+                        "citizen-reported problems in this cluster.";
+
+                }
+
+            }
+
+        }
+
+
+        /* =====================================================
+           SELECT CLUSTER
+        ===================================================== */
+
+        function selectCluster(index) {
+
+            clusterItems.forEach(
+                function (item) {
+
+                    item.classList.remove(
+                        "selected"
+                    );
+
+                }
+            );
+
+
+            if (clusterItems[index]) {
+
+                clusterItems[index].classList.add(
+                    "selected"
+                );
+
+            }
+
+
+            updateNetwork(index);
+
+        }
+
+
+        /* =====================================================
+           CLUSTER CLICK
+        ===================================================== */
+
+        clusterItems.forEach(
+            function (item) {
+
+                item.addEventListener(
+                    "click",
+                    function () {
+
+                        const index =
+                            Number(
+                                item.dataset.clusterId
+                            );
+
+
+                        selectCluster(index);
+
+                    }
+                );
+
+            }
+        );
+
+
+        /* =====================================================
+           FILTER CLUSTERS
+        ===================================================== */
+
+        function filterClusters() {
+
+            const search =
+                searchInput
+                    ? searchInput.value
+                        .toLowerCase()
+                        .trim()
+                    : "";
+
+
+            const impact =
+                impactFilter
+                    ? impactFilter.value
+                    : "all";
+
+
+            const category =
+                categoryFilter
+                    ? categoryFilter.value
+                    : "all";
+
+
+            let visible = 0;
+
+            let firstVisibleIndex = -1;
+
+
+            clusterItems.forEach(
+                function (item) {
+
+                    const index =
+                        Number(
+                            item.dataset.clusterId
+                        );
+
+
+                    const cluster =
+                        clusters[index];
+
+
+                    if (!cluster) {
+                        return;
+                    }
+
+
+                    /* -----------------------------------------
+                       SEARCH
+                    ------------------------------------------ */
+
+                    const searchText = (
+
+                        cluster.name
+                        + " "
+                        + cluster.description
+                        + " "
+                        + cluster.problems
+                            .map(
+                                function (problem) {
+
+                                    return (
+                                        problem.title
+                                        + " "
+                                        + problem.description
+                                        + " "
+                                        + problem.group
+                                    );
+
+                                }
+                            )
+                            .join(" ")
+
+                    ).toLowerCase();
+
+
+                    const matchesSearch =
+                        search === ""
+                        ||
+                        searchText.includes(
+                            search
+                        );
+
+
+                    /* -----------------------------------------
+                       IMPACT
+                    ------------------------------------------ */
+
+                    const matchesImpact =
+                        impact === "all"
+                        ||
+                        cluster.impact.toLowerCase()
+                            === impact;
+
+
+                    /* -----------------------------------------
+                       CATEGORY
+                    ------------------------------------------ */
+
+                    let matchesCategory = true;
+
+
+                    if (
+                        category !== "all"
+                    ) {
+
+                        matchesCategory =
+                            cluster.problems.some(
+                                function (problem) {
+
+                                    const group =
+                                        problem.group
+                                            .toLowerCase();
+
+
+                                    if (
+                                        category === "water"
+                                    ) {
+
+                                        return group.includes(
+                                            "water"
+                                        );
+
+                                    }
+
+
+                                    if (
+                                        category === "roads"
+                                    ) {
+
+                                        return group.includes(
+                                            "road"
+                                        );
+
+                                    }
+
+
+                                    if (
+                                        category === "traffic"
+                                    ) {
+
+                                        return group.includes(
+                                            "traffic"
+                                        );
+
+                                    }
+
+
+                                    if (
+                                        category === "waste"
+                                    ) {
+
+                                        return group.includes(
+                                            "waste"
+                                        );
+
+                                    }
+
+
+                                    if (
+                                        category === "electricity"
+                                    ) {
+
+                                        return group.includes(
+                                            "electricity"
+                                        );
+
+                                    }
+
+
+                                    if (
+                                        category === "environment"
+                                    ) {
+
+                                        return group.includes(
+                                            "environment"
+                                        );
+
+                                    }
+
+
+                                    if (
+                                        category === "general"
+                                    ) {
+
+                                        return group.includes(
+                                            "general"
+                                        );
+
+                                    }
+
+
+                                    return false;
+
+                                }
+                            );
+
+                    }
+
+
+                    /* -----------------------------------------
+                       FINAL RESULT
+                    ------------------------------------------ */
+
+                    const show =
+                        matchesSearch
+                        &&
+                        matchesImpact
+                        &&
+                        matchesCategory;
+
+
+                    item.style.display =
+                        show
+                            ? "flex"
+                            : "none";
+
+
+                    if (show) {
+
+                        visible++;
+
+
+                        if (
+                            firstVisibleIndex === -1
+                        ) {
+
+                            firstVisibleIndex =
+                                index;
+
+                        }
+
+                    }
+
+                }
+            );
+
+
+            /* -----------------------------------------------
+               UPDATE COUNT
+            ------------------------------------------------ */
+
+            if (clusterCount) {
+
+                clusterCount.textContent =
+                    visible
+                    + " cluster"
+                    + (
+                        visible === 1
+                            ? ""
+                            : "s"
+                    );
+
+            }
+
+
+            /* -----------------------------------------------
+               SELECT FIRST VISIBLE
+            ------------------------------------------------ */
+
+            if (
+                firstVisibleIndex !== -1
+            ) {
+
+                selectCluster(
+                    firstVisibleIndex
+                );
+
+            }
+
+        }
+
+
+        /* =====================================================
+           SEARCH EVENTS
+        ===================================================== */
+
+        if (searchInput) {
+
+            searchInput.addEventListener(
+                "input",
+                filterClusters
+            );
+
+        }
+
+
+        if (impactFilter) {
+
+            impactFilter.addEventListener(
+                "change",
+                filterClusters
+            );
+
+        }
+
+
+        if (categoryFilter) {
+
+            categoryFilter.addEventListener(
+                "change",
+                filterClusters
+            );
+
+        }
+
+
+        /* =====================================================
+           INITIALIZE FIRST CLUSTER
+        ===================================================== */
+
+        if (clusters.length > 0) {
+
+            updateNetwork(0);
+
+        }
+
+    }
+
+);
+
+</script>
+
+{% endblock %}

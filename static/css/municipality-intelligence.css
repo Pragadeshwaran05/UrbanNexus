@@ -1,0 +1,1724 @@
+/* =========================================================
+   URBANNEXUS
+   MUNICIPALITY - PROBLEM INTELLIGENCE
+========================================================= */
+
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.intelligence-page {
+    width: 100%;
+    min-height: 100vh;
+
+    padding: 30px 36px 45px;
+
+    background: #f7f5fa;
+
+    color: #282230;
+
+    box-sizing: border-box;
+
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.intelligence-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 25px;
+
+    margin-bottom: 25px;
+}
+
+
+.intelligence-eyebrow {
+    margin: 0 0 6px;
+
+    color: #7250a7;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    letter-spacing: 1.1px;
+}
+
+
+.intelligence-header h1 {
+    margin: 0;
+
+    color: #282230;
+
+    font-size: 32px;
+    line-height: 1.15;
+
+    font-weight: 750;
+}
+
+
+.intelligence-subtitle {
+    max-width: 700px;
+
+    margin: 8px 0 0;
+
+    color: #786f83;
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+
+.intelligence-header-meta {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+.city-context {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 9px 13px;
+
+    background: #ffffff;
+
+    border: 1px solid #ded7e6;
+
+    border-radius: 10px;
+}
+
+
+.city-context-icon {
+    color: #7250a7;
+
+    font-size: 18px;
+}
+
+
+.city-context strong {
+    display: block;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+.city-context span:last-child {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #8a8192;
+
+    font-size: 9px;
+}
+
+
+.ai-status {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 11px 13px;
+
+    background: #e7f4eb;
+
+    color: #287044;
+
+    border-radius: 10px;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+.ai-status-dot {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #3e9b5c;
+}
+
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.intelligence-toolbar {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    margin-bottom: 18px;
+}
+
+
+.search-wrapper {
+    position: relative;
+
+    flex: 1;
+
+    min-width: 0;
+}
+
+
+.search-icon {
+    position: absolute;
+
+    left: 14px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: #8b8291;
+
+    font-size: 17px;
+}
+
+
+.search-wrapper input {
+    width: 100%;
+    height: 46px;
+
+    padding: 0 16px 0 42px;
+
+    border: 1px solid #dcd5e5;
+
+    border-radius: 10px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #342b3c;
+
+    font-family: inherit;
+
+    font-size: 12px;
+
+    box-sizing: border-box;
+}
+
+
+.search-wrapper input::placeholder {
+    color: #9b93a2;
+}
+
+
+.search-wrapper input:focus {
+    border-color: #8b68bd;
+
+    box-shadow:
+        0 0 0 3px rgba(114, 80, 167, 0.10);
+}
+
+
+.filter-group {
+    display: flex;
+
+    gap: 10px;
+}
+
+
+.filter-group select {
+    width: 165px;
+    height: 46px;
+
+    padding: 0 34px 0 12px;
+
+    border: 1px solid #dcd5e5;
+
+    border-radius: 10px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #4f4657;
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    cursor: pointer;
+
+    box-sizing: border-box;
+}
+
+
+.filter-group select:focus {
+    border-color: #8b68bd;
+}
+
+
+/* =========================================================
+   MAIN GRID
+========================================================= */
+
+.intelligence-layout {
+    display: grid;
+
+    grid-template-columns:
+        minmax(300px, 0.82fr)
+        minmax(500px, 1.55fr);
+
+    gap: 20px;
+
+    align-items: start;
+}
+
+
+/* =========================================================
+   PANELS
+========================================================= */
+
+.problem-list-panel,
+.analysis-panel {
+    background: #ffffff;
+
+    border: 1px solid #ded7e6;
+
+    border-radius: 15px;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   PROBLEM LIST
+========================================================= */
+
+.problem-list-panel {
+    overflow: hidden;
+}
+
+
+.panel-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    padding: 20px 20px 16px;
+
+    border-bottom: 1px solid #eeeaf1;
+}
+
+
+.panel-kicker {
+    margin: 0 0 5px;
+
+    color: #7250a7;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    letter-spacing: 1px;
+}
+
+
+.panel-heading h2 {
+    margin: 0;
+
+    color: #282230;
+
+    font-size: 18px;
+    font-weight: 750;
+}
+
+
+.problem-count {
+    padding: 5px 8px;
+
+    background: #eee7f7;
+
+    color: #5d3d91;
+
+    border-radius: 6px;
+
+    font-size: 9px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+.problem-list {
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* =========================================================
+   PROBLEM ITEM
+========================================================= */
+
+.problem-item {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+
+    padding: 16px 18px;
+
+    background: #ffffff;
+
+    border: none;
+
+    border-bottom: 1px solid #eeeaf1;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    color: inherit;
+
+    font-family: inherit;
+
+    box-sizing: border-box;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.problem-item:last-child {
+    border-bottom: none;
+}
+
+
+.problem-item:hover {
+    background: #faf8fc;
+}
+
+
+.problem-item.selected {
+    background: #f3eef9;
+
+    box-shadow:
+        inset 3px 0 0 #7250a7;
+}
+
+
+.problem-item-icon {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 10px;
+
+    font-size: 18px;
+
+    font-weight: 700;
+}
+
+
+.water-icon {
+    background: #e5f0f8;
+    color: #4385ae;
+}
+
+
+.traffic-icon {
+    background: #eee7f7;
+    color: #68469d;
+}
+
+
+.road-icon {
+    background: #fff0dc;
+    color: #b16a1d;
+}
+
+
+.waste-icon {
+    background: #e7f1e8;
+    color: #43764c;
+}
+
+
+.light-icon {
+    background: #f2eafa;
+    color: #7852a5;
+}
+
+
+.problem-item-content {
+    min-width: 0;
+
+    flex: 1;
+}
+
+
+.problem-item-title-row {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+}
+
+
+.problem-item-title-row h3 {
+    min-width: 0;
+
+    margin: 0;
+
+    color: #342b3c;
+
+    font-size: 12px;
+    line-height: 1.35;
+
+    font-weight: 700;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+.impact-pill {
+    flex-shrink: 0;
+
+    padding: 4px 6px;
+
+    border-radius: 5px;
+
+    font-size: 7px;
+    line-height: 1;
+
+    font-weight: 800;
+}
+
+
+.impact-pill.high {
+    background: #fde5e3;
+    color: #b83b35;
+}
+
+
+.impact-pill.medium {
+    background: #fff0d9;
+    color: #a76318;
+}
+
+
+.impact-pill.low {
+    background: #e5f1e8;
+    color: #37734a;
+}
+
+
+.problem-item-location {
+    margin: 4px 0 0;
+
+    color: #655c6c;
+
+    font-size: 10px;
+
+    line-height: 1.3;
+}
+
+
+.problem-item-meta {
+    display: flex;
+    align-items: center;
+
+    gap: 5px;
+
+    margin-top: 4px;
+
+    color: #99919f;
+
+    font-size: 8px;
+}
+
+
+.problem-item-arrow {
+    flex-shrink: 0;
+
+    color: #a098a7;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   ANALYSIS PANEL
+========================================================= */
+
+.analysis-panel {
+    padding: 22px;
+
+    overflow: hidden;
+}
+
+
+.analysis-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding-bottom: 18px;
+
+    border-bottom: 1px solid #eeeaf1;
+}
+
+
+.analysis-heading {
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+}
+
+
+.analysis-ai-icon {
+    width: 39px;
+    height: 39px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    background: #eee7f7;
+
+    color: #5d3d91;
+
+    border-radius: 10px;
+
+    font-size: 18px;
+}
+
+
+.analysis-heading h2 {
+    margin: 0;
+
+    color: #282230;
+
+    font-size: 17px;
+    font-weight: 750;
+}
+
+
+.analysis-badge {
+    padding: 6px 8px;
+
+    background: #eee7f7;
+
+    color: #5d3d91;
+
+    border-radius: 6px;
+
+    font-size: 7px;
+    font-weight: 800;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   SELECTED PROBLEM
+========================================================= */
+
+.selected-problem-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 14px;
+
+    padding: 19px 0;
+}
+
+
+.selected-problem-header h2 {
+    margin: 0;
+
+    color: #342b3c;
+
+    font-size: 18px;
+    line-height: 1.25;
+
+    font-weight: 750;
+}
+
+
+.selected-problem-header p {
+    margin: 5px 0 0;
+
+    color: #8a8192;
+
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   ANALYSIS METRICS
+========================================================= */
+
+.analysis-metrics {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 10px;
+
+    margin-bottom: 16px;
+}
+
+
+.analysis-metric {
+    min-width: 0;
+
+    padding: 12px;
+
+    background: #f8f6fa;
+
+    border: 1px solid #ebe6ef;
+
+    border-radius: 10px;
+}
+
+
+.metric-label {
+    display: block;
+
+    color: #8c8392;
+
+    font-size: 7px;
+    font-weight: 800;
+
+    letter-spacing: .7px;
+}
+
+
+.metric-value {
+    display: block;
+
+    margin-top: 7px;
+
+    font-size: 19px;
+    line-height: 1;
+
+    font-weight: 800;
+}
+
+
+.metric-value.purple {
+    color: #5d3d91;
+}
+
+
+.metric-value.red {
+    color: #b83b35;
+}
+
+
+.metric-value.blue {
+    color: #3d78a3;
+}
+
+
+.metric-value.dark {
+    color: #403747;
+
+    font-size: 15px;
+}
+
+
+.metric-note {
+    display: block;
+
+    margin-top: 5px;
+
+    color: #958d9b;
+
+    font-size: 8px;
+}
+
+
+/* =========================================================
+   AI SUMMARY
+========================================================= */
+
+.ai-summary {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 10px;
+
+    padding: 13px;
+
+    margin-bottom: 20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f8f4fc,
+            #fbf9fd
+        );
+
+    border: 1px solid #dfd4eb;
+
+    border-radius: 10px;
+}
+
+
+.ai-summary-icon {
+    width: 28px;
+    height: 28px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    background: #eee7f7;
+
+    color: #5d3d91;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+}
+
+
+.ai-summary strong {
+    display: block;
+
+    color: #473658;
+
+    font-size: 10px;
+    font-weight: 750;
+}
+
+
+.ai-summary p {
+    margin: 4px 0 0;
+
+    color: #675d6d;
+
+    font-size: 10px;
+    line-height: 1.45;
+}
+
+
+/* =========================================================
+   DEPENDENCY SECTION
+========================================================= */
+
+.dependency-section {
+    margin-bottom: 18px;
+}
+
+
+.section-heading-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-bottom: 11px;
+}
+
+
+.section-heading-row h3 {
+    margin: 0;
+
+    color: #342b3c;
+
+    font-size: 14px;
+    font-weight: 750;
+}
+
+
+.connection-count {
+    padding: 5px 7px;
+
+    background: #f1edf5;
+
+    color: #706675;
+
+    border-radius: 5px;
+
+    font-size: 8px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   DEPENDENCY CHAIN
+========================================================= */
+
+.dependency-chain {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    overflow-x: auto;
+
+    padding: 3px 2px 8px;
+}
+
+
+.dependency-card {
+    min-width: 125px;
+
+    min-height: 70px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-direction: column;
+
+    padding: 10px;
+
+    background: #f8f6fa;
+
+    border: 1px solid #ddd6e5;
+
+    border-radius: 10px;
+
+    text-align: center;
+
+    box-sizing: border-box;
+}
+
+
+.dependency-card.root {
+    background: #eee7f7;
+
+    border-color: #cdbbe0;
+}
+
+
+.dependency-card.current {
+    background: #f4eef9;
+
+    border-color: #bfa8d6;
+}
+
+
+.dependency-card.downstream {
+    background: #fcebe8;
+
+    border-color: #e8c7c2;
+}
+
+
+.dependency-label {
+    margin-bottom: 4px;
+
+    color: #7a678b;
+
+    font-size: 6px;
+
+    font-weight: 800;
+
+    letter-spacing: .7px;
+}
+
+
+.dependency-card strong {
+    color: #3e3547;
+
+    font-size: 9px;
+    line-height: 1.3;
+
+    font-weight: 750;
+}
+
+
+.dependency-card > span:last-child {
+    margin-top: 3px;
+
+    color: #98909d;
+
+    font-size: 7px;
+}
+
+
+.chain-arrow {
+    flex-shrink: 0;
+
+    color: #8b68bd;
+
+    font-size: 17px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   ROOT CAUSE
+========================================================= */
+
+.root-cause-card {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 10px;
+
+    padding: 13px;
+
+    margin-bottom: 10px;
+
+    background: #f8f5fc;
+
+    border: 1px solid #ded3e8;
+
+    border-radius: 10px;
+}
+
+
+.root-cause-icon {
+    width: 29px;
+    height: 29px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    background: #e8def2;
+
+    color: #64459a;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+}
+
+
+.root-cause-label,
+.recommendation-label {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #7e7189;
+
+    font-size: 7px;
+
+    font-weight: 800;
+
+    letter-spacing: .8px;
+}
+
+
+.root-cause-card h3,
+.recommendation-card h3 {
+    margin: 0;
+
+    color: #3e3547;
+
+    font-size: 11px;
+    font-weight: 750;
+}
+
+
+.root-cause-card p,
+.recommendation-card p {
+    margin: 4px 0 0;
+
+    color: #736a79;
+
+    font-size: 9px;
+
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   RECOMMENDATION
+========================================================= */
+
+.recommendation-card {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 10px;
+
+    padding: 13px;
+
+    margin-bottom: 18px;
+
+    background: #f1f8f3;
+
+    border: 1px solid #cfe3d4;
+
+    border-radius: 10px;
+}
+
+
+.recommendation-icon {
+    width: 29px;
+    height: 29px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    background: #dcefe2;
+
+    color: #287044;
+
+    border-radius: 50%;
+
+    font-size: 13px;
+
+    font-weight: 800;
+}
+
+
+.recommendation-card .recommendation-label {
+    color: #567460;
+}
+
+
+.recommendation-card h3 {
+    color: #315a3d;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.analysis-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding-top: 14px;
+
+    border-top: 1px solid #eeeaf1;
+}
+
+
+.verification-note {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 7px;
+
+    min-width: 0;
+}
+
+
+.verification-note span {
+    color: #7e7483;
+
+    font-size: 11px;
+}
+
+
+.verification-note p {
+    max-width: 500px;
+
+    margin: 0;
+
+    color: #928996;
+
+    font-size: 8px;
+    line-height: 1.4;
+}
+
+
+.priority-action {
+    flex-shrink: 0;
+
+    padding: 9px 12px;
+
+    background: #34205f;
+
+    color: #ffffff;
+
+    text-decoration: none;
+
+    border-radius: 8px;
+
+    font-size: 9px;
+    font-weight: 700;
+}
+
+
+.priority-action:hover {
+    background: #4a2d78;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1150px) {
+
+    .intelligence-page {
+        padding: 28px 24px 40px;
+    }
+
+
+    .intelligence-layout {
+        grid-template-columns: 1fr;
+    }
+
+
+    .problem-list-panel {
+        max-height: 430px;
+
+        overflow-y: auto;
+    }
+
+}
+
+
+@media (max-width: 800px) {
+
+    .intelligence-page {
+        padding: 22px 16px 35px;
+    }
+
+
+    .intelligence-header {
+        flex-direction: column;
+    }
+
+
+    .intelligence-header h1 {
+        font-size: 28px;
+    }
+
+
+    .intelligence-subtitle {
+        font-size: 12px;
+    }
+
+
+    .intelligence-header-meta {
+        width: 100%;
+    }
+
+
+    .city-context {
+        flex: 1;
+    }
+
+
+    .intelligence-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+
+    .filter-group {
+        display: grid;
+
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+
+    .filter-group select {
+        width: 100%;
+    }
+
+
+    .problem-list-panel {
+        max-height: none;
+
+        overflow: hidden;
+    }
+
+
+    .analysis-panel {
+        padding: 18px;
+    }
+
+
+    .analysis-metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+
+    .selected-problem-header {
+        flex-direction: column;
+    }
+
+
+    .analysis-footer {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    .priority-action {
+        width: 100%;
+
+        text-align: center;
+
+        box-sizing: border-box;
+    }
+
+}
+
+
+@media (max-width: 520px) {
+
+    .intelligence-page {
+        padding: 18px 12px 30px;
+    }
+
+
+    .intelligence-header h1 {
+        font-size: 26px;
+    }
+
+
+    .intelligence-header-meta {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+
+    .ai-status {
+        justify-content: center;
+    }
+
+
+    .filter-group {
+        grid-template-columns: 1fr;
+    }
+
+
+    .problem-item {
+        padding: 14px 13px;
+    }
+
+
+    .problem-item-icon {
+        width: 35px;
+        height: 35px;
+    }
+
+
+    .problem-item-title-row {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 4px;
+    }
+
+
+    .problem-item-title-row h3 {
+        white-space: normal;
+    }
+
+
+    .analysis-heading h2 {
+        font-size: 16px;
+    }
+
+
+    .analysis-metrics {
+        grid-template-columns: 1fr 1fr;
+    }
+
+
+    .dependency-chain {
+        gap: 6px;
+    }
+
+
+    .dependency-card {
+        min-width: 118px;
+    }
+
+}
+
+/* =========================================================
+   PROBLEM INTELLIGENCE
+   IMPROVED TYPOGRAPHY
+========================================================= */
+
+
+/* =========================================================
+   PAGE HEADER
+========================================================= */
+
+.intelligence-eyebrow {
+    font-size: 12px !important;
+    font-weight: 800 !important;
+    letter-spacing: 1.1px;
+}
+
+.intelligence-header h1 {
+    font-size: 36px !important;
+    line-height: 1.15 !important;
+    font-weight: 750 !important;
+}
+
+.intelligence-subtitle {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+}
+
+
+/* =========================================================
+   HEADER META
+========================================================= */
+
+.city-context strong {
+    font-size: 13px !important;
+}
+
+.city-context span:last-child {
+    font-size: 10px !important;
+}
+
+.ai-status {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+}
+
+
+/* =========================================================
+   SEARCH + FILTERS
+========================================================= */
+
+.search-wrapper input {
+    font-size: 13px !important;
+}
+
+.filter-group select {
+    font-size: 12px !important;
+}
+
+
+/* =========================================================
+   PROBLEM LIST HEADER
+========================================================= */
+
+.panel-kicker {
+    font-size: 10px !important;
+}
+
+.panel-heading h2 {
+    font-size: 20px !important;
+}
+
+.problem-count {
+    font-size: 10px !important;
+}
+
+
+/* =========================================================
+   PROBLEM ITEMS
+========================================================= */
+
+.problem-item-title-row h3 {
+    font-size: 14px !important;
+    line-height: 1.35 !important;
+    font-weight: 700 !important;
+}
+
+.problem-item-location {
+    font-size: 11px !important;
+    line-height: 1.35 !important;
+}
+
+.problem-item-meta {
+    font-size: 9px !important;
+    line-height: 1.3 !important;
+}
+
+.impact-pill {
+    font-size: 8px !important;
+    padding: 5px 7px !important;
+}
+
+
+/* =========================================================
+   ANALYSIS HEADER
+========================================================= */
+
+.analysis-heading h2 {
+    font-size: 19px !important;
+    line-height: 1.3 !important;
+}
+
+.analysis-badge {
+    font-size: 8px !important;
+}
+
+
+/* =========================================================
+   SELECTED PROBLEM
+========================================================= */
+
+.selected-problem-header h2 {
+    font-size: 21px !important;
+    line-height: 1.3 !important;
+}
+
+.selected-problem-header p {
+    font-size: 11px !important;
+    line-height: 1.4 !important;
+}
+
+
+/* =========================================================
+   METRICS
+========================================================= */
+
+.metric-label {
+    font-size: 8px !important;
+}
+
+.metric-value {
+    font-size: 22px !important;
+}
+
+.metric-value.dark {
+    font-size: 17px !important;
+}
+
+.metric-note {
+    font-size: 9px !important;
+}
+
+
+/* =========================================================
+   AI SUMMARY
+========================================================= */
+
+.ai-summary strong {
+    font-size: 12px !important;
+}
+
+.ai-summary p {
+    font-size: 11px !important;
+    line-height: 1.5 !important;
+}
+
+
+/* =========================================================
+   DEPENDENCY ANALYSIS
+========================================================= */
+
+.section-heading-row h3 {
+    font-size: 16px !important;
+}
+
+.connection-count {
+    font-size: 9px !important;
+}
+
+.dependency-card strong {
+    font-size: 11px !important;
+    line-height: 1.35 !important;
+}
+
+.dependency-label {
+    font-size: 7px !important;
+}
+
+.dependency-card > span:last-child {
+    font-size: 8px !important;
+}
+
+
+/* =========================================================
+   ROOT CAUSE
+========================================================= */
+
+.root-cause-label,
+.recommendation-label {
+    font-size: 8px !important;
+}
+
+.root-cause-card h3,
+.recommendation-card h3 {
+    font-size: 13px !important;
+    line-height: 1.35 !important;
+}
+
+.root-cause-card p,
+.recommendation-card p {
+    font-size: 10px !important;
+    line-height: 1.5 !important;
+}
+
+
+/* =========================================================
+   RECOMMENDATION
+========================================================= */
+
+.analysis-footer .verification-note p {
+    font-size: 9px !important;
+    line-height: 1.45 !important;
+}
+
+.priority-action {
+    font-size: 10px !important;
+}
+
+
+/* =========================================================
+   BETTER SPACING FOR LARGER TEXT
+========================================================= */
+
+.problem-item {
+    padding-top: 18px !important;
+    padding-bottom: 18px !important;
+}
+
+.selected-problem-header {
+    padding-top: 22px !important;
+    padding-bottom: 20px !important;
+}
+
+.analysis-metric {
+    padding: 14px !important;
+}
+
+
+/* =========================================================
+   MOBILE TYPOGRAPHY
+========================================================= */
+
+@media (max-width: 800px) {
+
+    .intelligence-header h1 {
+        font-size: 30px !important;
+    }
+
+    .intelligence-subtitle {
+        font-size: 13px !important;
+    }
+
+    .panel-heading h2 {
+        font-size: 19px !important;
+    }
+
+    .problem-item-title-row h3 {
+        font-size: 14px !important;
+    }
+
+    .problem-item-location {
+        font-size: 11px !important;
+    }
+
+    .problem-item-meta {
+        font-size: 9px !important;
+    }
+
+    .analysis-heading h2 {
+        font-size: 18px !important;
+    }
+
+    .selected-problem-header h2 {
+        font-size: 20px !important;
+    }
+
+    .selected-problem-header p {
+        font-size: 11px !important;
+    }
+
+    .metric-value {
+        font-size: 21px !important;
+    }
+
+    .ai-summary p {
+        font-size: 11px !important;
+    }
+
+    .section-heading-row h3 {
+        font-size: 15px !important;
+    }
+
+    .dependency-card strong {
+        font-size: 10px !important;
+    }
+
+    .root-cause-card h3,
+    .recommendation-card h3 {
+        font-size: 12px !important;
+    }
+
+}
+
+
+@media (max-width: 520px) {
+
+    .intelligence-header h1 {
+        font-size: 27px !important;
+    }
+
+    .intelligence-subtitle {
+        font-size: 12px !important;
+    }
+
+    .problem-item-title-row h3 {
+        font-size: 13px !important;
+    }
+
+    .selected-problem-header h2 {
+        font-size: 18px !important;
+    }
+
+    .analysis-metrics {
+        gap: 9px !important;
+    }
+
+    .metric-value {
+        font-size: 20px !important;
+    }
+
+}

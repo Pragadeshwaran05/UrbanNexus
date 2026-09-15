@@ -1,0 +1,1852 @@
+{% extends "base.html" %}
+
+{% block title %}
+Problem Intelligence - UrbanNexus
+{% endblock %}
+
+
+{% block extra_css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/municipality-sidebar.css') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/municipality-intelligence.css') }}"
+>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="intelligence-page">
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="intelligence-header">
+
+        <div class="intelligence-header-text">
+
+            <p class="intelligence-eyebrow">
+                MUNICIPAL PROBLEM ANALYSIS
+            </p>
+
+            <h1>
+                Problem Intelligence
+            </h1>
+
+            <p class="intelligence-subtitle">
+                Review citizen-reported problems and understand
+                their AI-detected impact, root causes,
+                dependencies and priority.
+            </p>
+
+        </div>
+
+
+        <div class="intelligence-header-meta">
+
+            <div class="city-context">
+
+                <span class="city-context-icon">
+                    ⌖
+                </span>
+
+                <div>
+
+                    <strong>
+                        Chennai
+                    </strong>
+
+                    <span>
+                        City Administration
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="ai-status">
+
+                <span class="ai-status-dot"></span>
+
+                AI Analysis Active
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         SEARCH + FILTER
+    ====================================================== -->
+
+    <section class="intelligence-toolbar">
+
+        <div class="search-wrapper">
+
+            <span class="search-icon">
+                ⌕
+            </span>
+
+            <input
+                type="text"
+                id="problemSearch"
+                placeholder="Search problems, locations or categories..."
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <div class="filter-group">
+
+            <select id="categoryFilter">
+
+                <option value="all">
+                    All Categories
+                </option>
+
+                <option value="water">
+                    Water & Drainage
+                </option>
+
+                <option value="roads">
+                    Roads & Infrastructure
+                </option>
+
+                <option value="traffic">
+                    Traffic
+                </option>
+
+                <option value="waste">
+                    Waste Management
+                </option>
+
+                <option value="electricity">
+                    Electricity & Lighting
+                </option>
+
+                <option value="general">
+                    General
+                </option>
+
+            </select>
+
+
+            <select id="impactFilter">
+
+                <option value="all">
+                    All Impact Levels
+                </option>
+
+                <option value="high">
+                    High Impact
+                </option>
+
+                <option value="medium">
+                    Medium Impact
+                </option>
+
+                <option value="low">
+                    Low Impact
+                </option>
+
+            </select>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
+    <div class="intelligence-layout">
+
+
+        <!-- =================================================
+             LEFT SIDE
+             REAL CITIZEN REPORTS
+        ================================================== -->
+
+        <section class="problem-list-panel">
+
+
+            <div class="panel-heading">
+
+                <div>
+
+                    <p class="panel-kicker">
+                        CITIZEN REPORTS
+                    </p>
+
+                    <h2>
+                        Problems
+                    </h2>
+
+                </div>
+
+
+                <span
+                    class="problem-count"
+                    id="problemCount"
+                >
+
+                    {{ reports|length }}
+
+                    problem{% if reports|length != 1 %}s{% endif %}
+
+                </span>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 REPORT LIST
+            ================================================== -->
+
+            <div
+                class="problem-list"
+                id="problemList"
+            >
+
+                {% if reports %}
+
+
+                    {% for report in reports %}
+
+
+                    <button
+                        type="button"
+                        class="problem-item {% if loop.first %}selected{% endif %}"
+                        data-index="{{ loop.index0 }}"
+                    >
+
+
+                        <!-- PROBLEM ICON -->
+
+                        <div class="
+                            problem-item-icon
+
+                            {% if 'water' in report.category|lower
+                               or 'drain' in report.category|lower %}
+
+                                water-icon
+
+                            {% elif 'road' in report.category|lower %}
+
+                                road-icon
+
+                            {% elif 'traffic' in report.category|lower %}
+
+                                traffic-icon
+
+                            {% elif 'waste' in report.category|lower %}
+
+                                waste-icon
+
+                            {% elif 'electric' in report.category|lower
+                               or 'light' in report.category|lower %}
+
+                                light-icon
+
+                            {% else %}
+
+                                default-icon
+
+                            {% endif %}
+                        ">
+
+
+                            {% if 'water' in report.category|lower
+                               or 'drain' in report.category|lower %}
+
+                                ≋
+
+
+                            {% elif 'road' in report.category|lower %}
+
+                                ▰
+
+
+                            {% elif 'traffic' in report.category|lower %}
+
+                                ⇄
+
+
+                            {% elif 'waste' in report.category|lower %}
+
+                                ▤
+
+
+                            {% elif 'electric' in report.category|lower
+                               or 'light' in report.category|lower %}
+
+                                ○
+
+
+                            {% else %}
+
+                                ◈
+
+                            {% endif %}
+
+
+                        </div>
+
+
+
+                        <!-- REPORT DETAILS -->
+
+                        <div class="problem-item-content">
+
+
+                            <div class="problem-item-title-row">
+
+                                <h3>
+                                    {{ report.title }}
+                                </h3>
+
+
+                                <span class="
+                                    impact-pill
+
+                                    {% if report.impact == 'HIGH' %}
+                                        high
+
+                                    {% elif report.impact == 'MEDIUM' %}
+                                        medium
+
+                                    {% else %}
+                                        low
+
+                                    {% endif %}
+                                ">
+
+                                    {{ report.impact }}
+
+                                </span>
+
+                            </div>
+
+
+
+                            <p class="problem-item-location">
+
+                                {{ report.address }}
+
+                            </p>
+
+
+
+                            <div class="problem-item-meta">
+
+                                <span>
+                                    {{ report.category }}
+                                </span>
+
+                                <span>
+                                    •
+                                </span>
+
+                                <span>
+                                    {{ report.status }}
+                                </span>
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <span class="problem-item-arrow">
+                            →
+                        </span>
+
+
+                    </button>
+
+
+                    {% endfor %}
+
+
+                {% else %}
+
+
+                    <div class="empty-state">
+
+                        <h2>
+                            No Citizen Reports
+                        </h2>
+
+                        <p>
+                            Citizen reports will appear here
+                            when they are submitted.
+                        </p>
+
+                    </div>
+
+
+                {% endif %}
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             RIGHT SIDE
+             AI ANALYSIS
+        ================================================== -->
+
+        <section class="analysis-panel">
+
+
+            {% if reports %}
+
+
+            <!-- =================================================
+                 AI HEADER
+            ================================================== -->
+
+            <div class="analysis-header">
+
+                <div class="analysis-heading">
+
+                    <div class="analysis-ai-icon">
+                        ✦
+                    </div>
+
+
+                    <div>
+
+                        <p class="panel-kicker">
+                            URBANNEXUS AI
+                        </p>
+
+                        <h2>
+                            AI Impact Analysis
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <span class="analysis-badge">
+
+                    AI ANALYZED
+
+                </span>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 SELECTED REPORT
+            ================================================== -->
+
+            <div class="selected-problem-header">
+
+                <div>
+
+                    <h2 id="detailTitle">
+
+                        {{ reports[0].title }}
+
+                    </h2>
+
+
+                    <p id="detailLocation">
+
+                        {{ reports[0].address }}
+
+                        •
+
+                        {{ reports[0].category }}
+
+                    </p>
+
+                </div>
+
+
+                <span
+                    id="detailImpactBadge"
+                    class="
+                        impact-pill
+
+                        {% if reports[0].impact == 'HIGH' %}
+                            high
+
+                        {% elif reports[0].impact == 'MEDIUM' %}
+                            medium
+
+                        {% else %}
+                            low
+
+                        {% endif %}
+                    "
+                >
+
+                    {{ reports[0].impact }}
+                    IMPACT
+
+                </span>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 METRICS
+            ================================================== -->
+
+            <div class="analysis-metrics">
+
+
+                <!-- IMPACT -->
+
+                <div class="analysis-metric">
+
+                    <span class="metric-label">
+                        IMPACT LEVEL
+                    </span>
+
+
+                    <strong
+                        class="metric-value"
+                        id="detailImpact"
+                    >
+
+                        {{ reports[0].impact }}
+
+                    </strong>
+
+
+                    <span class="metric-note">
+                        AI assessed
+                    </span>
+
+                </div>
+
+
+
+                <!-- PRIORITY -->
+
+                <div class="analysis-metric">
+
+                    <span class="metric-label">
+                        PRIORITY
+                    </span>
+
+
+                    <strong
+                        class="metric-value"
+                        id="detailPriority"
+                    >
+
+                        {{ reports[0].priority }}
+
+                    </strong>
+
+
+                    <span class="metric-note">
+                        Intervention priority
+                    </span>
+
+                </div>
+
+
+
+                <!-- CONNECTED -->
+
+                <div class="analysis-metric">
+
+                    <span class="metric-label">
+                        CONNECTED
+                    </span>
+
+
+                    <strong
+                        class="metric-value"
+                        id="detailConnected"
+                    >
+
+                        {{ reports[0].connected_problems }}
+
+                    </strong>
+
+
+                    <span class="metric-note">
+                        Related problems
+                    </span>
+
+                </div>
+
+
+
+                <!-- STATUS -->
+
+                <div class="analysis-metric">
+
+                    <span class="metric-label">
+                        STATUS
+                    </span>
+
+
+                    <strong
+                        class="metric-value"
+                        id="detailStatus"
+                    >
+
+                        {{ reports[0].status }}
+
+                    </strong>
+
+
+                    <span class="metric-note">
+                        Current status
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 CITIZEN DESCRIPTION
+            ================================================== -->
+
+            <div class="citizen-description">
+
+                <div class="citizen-description-title">
+
+                    Citizen Description
+
+                </div>
+
+
+                <p id="detailDescription">
+
+                    {{ reports[0].description
+                       or "No description provided." }}
+
+                </p>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 AI ASSESSMENT
+            ================================================== -->
+
+            <div class="ai-summary">
+
+                <div class="ai-summary-icon">
+                    ✦
+                </div>
+
+
+                <div>
+
+                    <strong>
+                        AI Assessment
+                    </strong>
+
+
+                    <p id="detailAiExplanation">
+
+                        {{ reports[0].ai_explanation
+                           or "AI analysis not available." }}
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 DEPENDENCY ANALYSIS
+            ================================================== -->
+
+            <div class="dependency-section">
+
+
+                <div class="section-heading-row">
+
+                    <div>
+
+                        <p class="panel-kicker">
+                            DEPENDENCY ANALYSIS
+                        </p>
+
+
+                        <h3>
+                            Problem Relationship
+                        </h3>
+
+                    </div>
+
+
+                    <span
+                        class="connection-count"
+                        id="connectionCount"
+                    >
+
+                        {{ reports[0].connected_problems }}
+
+                        connection{% if reports[0].connected_problems != 1 %}s{% endif %}
+
+                    </span>
+
+                </div>
+
+
+
+                <div
+                    class="dependency-chain"
+                    id="dependencyChain"
+                >
+
+
+                    <!-- ROOT CAUSE -->
+
+                    <div class="dependency-card root">
+
+                        <span class="dependency-label">
+
+                            LIKELY ROOT CAUSE
+
+                        </span>
+
+
+                        <strong id="rootCauseBox">
+
+                            {{ reports[0].root_cause
+                               or "Analysis pending" }}
+
+                        </strong>
+
+
+                        <span>
+                            Upstream factor
+                        </span>
+
+                    </div>
+
+
+
+                    <div class="chain-arrow">
+                        →
+                    </div>
+
+
+
+                    <!-- CURRENT PROBLEM -->
+
+                    <div class="dependency-card current">
+
+                        <span class="dependency-label">
+
+                            CURRENT PROBLEM
+
+                        </span>
+
+
+                        <strong id="currentProblemBox">
+
+                            {{ reports[0].title }}
+
+                        </strong>
+
+
+                        <span>
+                            Citizen reported issue
+                        </span>
+
+                    </div>
+
+
+
+                    <!-- EFFECTS -->
+
+                    {% for effect in reports[0].cascading_effects or [] %}
+
+
+                        <div class="chain-arrow dynamic-effect-arrow">
+
+                            →
+
+                        </div>
+
+
+                        <div class="dependency-card effect dynamic-effect">
+
+                            <strong>
+
+                                {{ effect }}
+
+                            </strong>
+
+
+                            <span>
+                                Cascading Effect
+                            </span>
+
+                        </div>
+
+
+                    {% endfor %}
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 ROOT CAUSE
+            ================================================== -->
+
+            <div class="root-cause-card">
+
+                <div class="root-cause-icon">
+                    ◎
+                </div>
+
+
+                <div>
+
+                    <span class="root-cause-label">
+
+                        AI IDENTIFIED ROOT CAUSE
+
+                    </span>
+
+
+                    <h3 id="rootCauseTitle">
+
+                        {{ reports[0].root_cause
+                           or "Analysis pending" }}
+
+                    </h3>
+
+
+                    <p>
+
+                        UrbanNexus AI identified this
+                        as the likely upstream factor
+                        associated with the reported problem.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 CASCADING EFFECTS
+            ================================================== -->
+
+            <div class="cascading-section">
+
+
+                <div class="cascading-title">
+
+                    AI-DETECTED CASCADING EFFECTS
+
+                </div>
+
+
+                <div
+                    class="cascading-list"
+                    id="cascadingList"
+                >
+
+
+                    {% if reports[0].cascading_effects %}
+
+
+                        {% for effect in reports[0].cascading_effects %}
+
+
+                            <span class="cascading-item">
+
+                                {{ effect }}
+
+                            </span>
+
+
+                            {% if not loop.last %}
+
+                                <span class="cascading-arrow">
+
+                                    →
+
+                                </span>
+
+                            {% endif %}
+
+
+                        {% endfor %}
+
+
+                    {% else %}
+
+
+                        <span class="cascading-item">
+
+                            No cascading effects detected
+
+                        </span>
+
+
+                    {% endif %}
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 RECOMMENDATION
+            ================================================== -->
+
+            <div class="recommendation-card">
+
+
+                <div class="recommendation-icon">
+
+                    ✓
+
+                </div>
+
+
+                <div>
+
+                    <span class="recommendation-label">
+
+                        AI RECOMMENDED PRIORITY
+
+                    </span>
+
+
+                    <h3 id="recommendationTitle">
+
+                        Review this
+                        {{ reports[0].priority|lower }}
+                        priority problem.
+
+                    </h3>
+
+
+                    <p id="recommendationText">
+
+                        {{ reports[0].ai_explanation
+                           or "Municipal officers should verify the AI analysis before assigning an intervention." }}
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 FOOTER
+            ================================================== -->
+
+            <div class="analysis-footer">
+
+
+                <div class="verification-note">
+
+                    <span>
+                        ⓘ
+                    </span>
+
+
+                    <p>
+
+                        AI recommendations are decision-support
+                        suggestions and should be verified by the
+                        responsible municipal officer.
+
+                    </p>
+
+                </div>
+
+
+
+                <a
+                    id="citizenReportLink"
+                    href="/citizen/report/{{ reports[0].id }}"
+                    class="priority-action"
+                >
+
+                    View Citizen Report →
+
+                </a>
+
+
+            </div>
+
+
+            {% else %}
+
+
+            <!-- =================================================
+                 NO REPORTS
+            ================================================== -->
+
+            <div class="empty-state">
+
+                <h2>
+                    No Analysis Available
+                </h2>
+
+
+                <p>
+
+                    Citizen reports will appear here after
+                    they are submitted and analyzed.
+
+                </p>
+
+            </div>
+
+
+            {% endif %}
+
+
+        </section>
+
+
+    </div>
+
+
+</div>
+
+
+
+<!-- ============================================================
+     REAL REPORT DATA
+============================================================= -->
+
+{% if reports %}
+
+
+<script
+    id="urbannexus-report-data"
+    type="application/json"
+>
+{{ reports | tojson }}
+</script>
+
+
+
+<script>
+
+(function () {
+
+    "use strict";
+
+
+    /* ========================================================
+       GET REAL REPORT DATA
+    ======================================================== */
+
+    const reportDataElement =
+        document.getElementById(
+            "urbannexus-report-data"
+        );
+
+
+    if (!reportDataElement) {
+        return;
+    }
+
+
+    const reportData =
+        JSON.parse(
+            reportDataElement.textContent
+        );
+
+
+    /* ========================================================
+       GET PAGE ELEMENTS
+    ======================================================== */
+
+    const searchInput =
+        document.getElementById(
+            "problemSearch"
+        );
+
+
+    const categoryFilter =
+        document.getElementById(
+            "categoryFilter"
+        );
+
+
+    const impactFilter =
+        document.getElementById(
+            "impactFilter"
+        );
+
+
+    const problemItems =
+        document.querySelectorAll(
+            ".problem-item"
+        );
+
+
+    const problemCount =
+        document.getElementById(
+            "problemCount"
+        );
+
+
+    /* ========================================================
+       NORMALIZE
+    ======================================================== */
+
+    function normalize(value) {
+
+        return String(value || "")
+            .toLowerCase()
+            .trim();
+
+    }
+
+
+    /* ========================================================
+       DISPLAY REPORT
+    ======================================================== */
+
+    function displayReport(index) {
+
+        const report =
+            reportData[index];
+
+
+        if (!report) {
+            return;
+        }
+
+
+        /* TITLE */
+
+        document.getElementById(
+            "detailTitle"
+        ).textContent =
+            report.title ||
+            "Untitled Problem";
+
+
+        /* LOCATION */
+
+        document.getElementById(
+            "detailLocation"
+        ).textContent =
+            `${report.address || "Location not provided"} • ${report.category || "General"}`;
+
+
+        /* IMPACT */
+
+        const impact =
+            String(
+                report.impact || "MEDIUM"
+            ).toUpperCase();
+
+
+        const impactBadge =
+            document.getElementById(
+                "detailImpactBadge"
+            );
+
+
+        impactBadge.textContent =
+            `${impact} IMPACT`;
+
+
+        impactBadge.className =
+            `impact-pill ${impact.toLowerCase()}`;
+
+
+        document.getElementById(
+            "detailImpact"
+        ).textContent =
+            impact;
+
+
+        /* PRIORITY */
+
+        const priority =
+            String(
+                report.priority || impact
+            ).toUpperCase();
+
+
+        document.getElementById(
+            "detailPriority"
+        ).textContent =
+            priority;
+
+
+        /* CONNECTED */
+
+        const connected =
+            report.connected_problems ?? 0;
+
+
+        document.getElementById(
+            "detailConnected"
+        ).textContent =
+            connected;
+
+
+        document.getElementById(
+            "connectionCount"
+        ).textContent =
+            `${connected} connection${connected == 1 ? "" : "s"}`;
+
+
+        /* STATUS */
+
+        document.getElementById(
+            "detailStatus"
+        ).textContent =
+            report.status ||
+            "Submitted";
+
+
+        /* DESCRIPTION */
+
+        document.getElementById(
+            "detailDescription"
+        ).textContent =
+            report.description ||
+            "No description provided.";
+
+
+        /* AI EXPLANATION */
+
+        const explanation =
+            report.ai_explanation ||
+            "AI analysis not available.";
+
+
+        document.getElementById(
+            "detailAiExplanation"
+        ).textContent =
+            explanation;
+
+
+        document.getElementById(
+            "recommendationText"
+        ).textContent =
+            explanation;
+
+
+        /* ROOT CAUSE */
+
+        const rootCause =
+            report.root_cause ||
+            "Analysis pending";
+
+
+        document.getElementById(
+            "rootCauseBox"
+        ).textContent =
+            rootCause;
+
+
+        document.getElementById(
+            "rootCauseTitle"
+        ).textContent =
+            rootCause;
+
+
+        /* CURRENT PROBLEM */
+
+        document.getElementById(
+            "currentProblemBox"
+        ).textContent =
+            report.title ||
+            "Current Problem";
+
+
+        /* RECOMMENDATION */
+
+        document.getElementById(
+            "recommendationTitle"
+        ).textContent =
+            `Review this ${priority.toLowerCase()} priority problem.`;
+
+
+        /* REPORT LINK */
+
+        document.getElementById(
+            "citizenReportLink"
+        ).href =
+            `/citizen/report/${report.id}`;
+
+
+        /* CASCADING EFFECTS */
+
+        updateCascadingEffects(
+            report.cascading_effects || []
+        );
+
+
+        /* SELECTED ITEM */
+
+        problemItems.forEach(
+            function (item) {
+
+                item.classList.remove(
+                    "selected"
+                );
+
+            }
+        );
+
+
+        const selectedItem =
+            document.querySelector(
+                `.problem-item[data-index="${index}"]`
+            );
+
+
+        if (selectedItem) {
+
+            selectedItem.classList.add(
+                "selected"
+            );
+
+        }
+
+    }
+
+
+    /* ========================================================
+       UPDATE CASCADING EFFECTS
+    ======================================================== */
+
+    function updateCascadingEffects(
+        effects
+    ) {
+
+        const cascadingList =
+            document.getElementById(
+                "cascadingList"
+            );
+
+
+        const dependencyChain =
+            document.getElementById(
+                "dependencyChain"
+            );
+
+
+        if (!cascadingList || !dependencyChain) {
+            return;
+        }
+
+
+        /* ----------------------------------------------------
+           EFFECT LIST
+        ---------------------------------------------------- */
+
+        cascadingList.innerHTML = "";
+
+
+        if (
+            !effects ||
+            effects.length === 0
+        ) {
+
+            cascadingList.innerHTML = `
+                <span class="cascading-item">
+                    No cascading effects detected
+                </span>
+            `;
+
+        }
+        else {
+
+            effects.forEach(
+                function (effect, index) {
+
+                    const item =
+                        document.createElement(
+                            "span"
+                        );
+
+
+                    item.className =
+                        "cascading-item";
+
+
+                    item.textContent =
+                        effect;
+
+
+                    cascadingList.appendChild(
+                        item
+                    );
+
+
+                    if (
+                        index <
+                        effects.length - 1
+                    ) {
+
+                        const arrow =
+                            document.createElement(
+                                "span"
+                            );
+
+
+                        arrow.className =
+                            "cascading-arrow";
+
+
+                        arrow.textContent =
+                            "→";
+
+
+                        cascadingList.appendChild(
+                            arrow
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* ----------------------------------------------------
+           REMOVE OLD EFFECT CARDS
+        ---------------------------------------------------- */
+
+        dependencyChain
+            .querySelectorAll(
+                ".dynamic-effect"
+            )
+            .forEach(
+                function (element) {
+
+                    element.remove();
+
+                }
+            );
+
+
+        dependencyChain
+            .querySelectorAll(
+                ".dynamic-effect-arrow"
+            )
+            .forEach(
+                function (element) {
+
+                    element.remove();
+
+                }
+            );
+
+
+        /* ----------------------------------------------------
+           ADD NEW EFFECT CARDS
+        ---------------------------------------------------- */
+
+        effects.forEach(
+            function (effect) {
+
+                const arrow =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                arrow.className =
+                    "chain-arrow dynamic-effect-arrow";
+
+
+                arrow.textContent =
+                    "→";
+
+
+                const card =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                card.className =
+                    "dependency-card effect dynamic-effect";
+
+
+                const strong =
+                    document.createElement(
+                        "strong"
+                    );
+
+
+                strong.textContent =
+                    effect;
+
+
+                const span =
+                    document.createElement(
+                        "span"
+                    );
+
+
+                span.textContent =
+                    "Cascading Effect";
+
+
+                card.appendChild(
+                    strong
+                );
+
+
+                card.appendChild(
+                    span
+                );
+
+
+                dependencyChain.appendChild(
+                    arrow
+                );
+
+
+                dependencyChain.appendChild(
+                    card
+                );
+
+            }
+        );
+
+    }
+
+
+    /* ========================================================
+       CATEGORY MATCHING
+    ======================================================== */
+
+    function categoryMatches(
+        reportCategory,
+        selectedCategory
+    ) {
+
+        if (
+            selectedCategory === "all"
+        ) {
+
+            return true;
+
+        }
+
+
+        const category =
+            normalize(
+                reportCategory
+            );
+
+
+        if (
+            selectedCategory === "water"
+        ) {
+
+            return (
+                category.includes("water") ||
+                category.includes("drain")
+            );
+
+        }
+
+
+        if (
+            selectedCategory === "roads"
+        ) {
+
+            return category.includes(
+                "road"
+            );
+
+        }
+
+
+        if (
+            selectedCategory === "traffic"
+        ) {
+
+            return category.includes(
+                "traffic"
+            );
+
+        }
+
+
+        if (
+            selectedCategory === "waste"
+        ) {
+
+            return category.includes(
+                "waste"
+            );
+
+        }
+
+
+        if (
+            selectedCategory === "electricity"
+        ) {
+
+            return (
+                category.includes("electric") ||
+                category.includes("light")
+            );
+
+        }
+
+
+        if (
+            selectedCategory === "general"
+        ) {
+
+            return !(
+                category.includes("water") ||
+                category.includes("drain") ||
+                category.includes("road") ||
+                category.includes("traffic") ||
+                category.includes("waste") ||
+                category.includes("electric") ||
+                category.includes("light")
+            );
+
+        }
+
+
+        return false;
+
+    }
+
+
+    /* ========================================================
+       FILTER
+    ======================================================== */
+
+    function filterReports() {
+
+        const search =
+            normalize(
+                searchInput.value
+            );
+
+
+        const selectedCategory =
+            normalize(
+                categoryFilter.value
+            );
+
+
+        const selectedImpact =
+            normalize(
+                impactFilter.value
+            );
+
+
+        let visibleCount = 0;
+
+
+        problemItems.forEach(
+            function (item) {
+
+                const index =
+                    Number(
+                        item.dataset.index
+                    );
+
+
+                const report =
+                    reportData[index];
+
+
+                if (!report) {
+                    return;
+                }
+
+
+                const searchableText =
+                    normalize(
+                        [
+                            report.title,
+                            report.category,
+                            report.address,
+                            report.description,
+                            report.status,
+                            report.root_cause
+                        ].join(" ")
+                    );
+
+
+                const reportImpact =
+                    normalize(
+                        report.impact
+                    );
+
+
+                const matchesSearch =
+                    searchableText.includes(
+                        search
+                    );
+
+
+                const matchesCategory =
+                    categoryMatches(
+                        report.category,
+                        selectedCategory
+                    );
+
+
+                const matchesImpact =
+                    selectedImpact === "all" ||
+                    reportImpact === selectedImpact;
+
+
+                const visible =
+                    matchesSearch &&
+                    matchesCategory &&
+                    matchesImpact;
+
+
+                item.style.display =
+                    visible
+                        ? "flex"
+                        : "none";
+
+
+                if (visible) {
+
+                    visibleCount++;
+
+                }
+
+            }
+        );
+
+
+        problemCount.textContent =
+            `${visibleCount} problem${visibleCount === 1 ? "" : "s"}`;
+
+    }
+
+
+    /* ========================================================
+       SEARCH EVENT
+    ======================================================== */
+
+    searchInput.addEventListener(
+        "input",
+        filterReports
+    );
+
+
+    /* ========================================================
+       CATEGORY EVENT
+    ======================================================== */
+
+    categoryFilter.addEventListener(
+        "change",
+        filterReports
+    );
+
+
+    /* ========================================================
+       IMPACT EVENT
+    ======================================================== */
+
+    impactFilter.addEventListener(
+        "change",
+        filterReports
+    );
+
+
+    /* ========================================================
+       REPORT CLICK EVENT
+    ======================================================== */
+
+    problemItems.forEach(
+        function (item) {
+
+            item.addEventListener(
+                "click",
+                function () {
+
+                    const index =
+                        Number(
+                            item.dataset.index
+                        );
+
+
+                    displayReport(
+                        index
+                    );
+
+                }
+            );
+
+        }
+    );
+
+
+    /* ========================================================
+       SHOW FIRST REPORT
+    ======================================================== */
+
+    displayReport(0);
+
+
+})();
+
+</script>
+
+
+{% endif %}
+
+{% endblock %}

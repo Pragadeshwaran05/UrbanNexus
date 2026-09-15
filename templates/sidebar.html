@@ -1,0 +1,124 @@
+<aside class="sidebar">
+
+    <!-- BRAND -->
+    <div class="brand">
+
+        <div class="brand-icon">
+            <span>U</span>
+        </div>
+
+        <div class="brand-text">
+            <h2>UrbanNexus</h2>
+            <p>Citizen Portal</p>
+        </div>
+
+    </div>
+
+
+    <!-- NAVIGATION -->
+    <nav class="sidebar-nav">
+
+        <a href="/citizen/dashboard"
+           class="nav-item {% if active_page == 'dashboard' %}active{% endif %}">
+
+            <span class="nav-icon">⌂</span>
+            <span>Dashboard</span>
+
+        </a>
+
+
+        <a href="/citizen/report"
+           class="nav-item {% if active_page == 'report' %}active{% endif %}">
+
+            <span class="nav-icon">＋</span>
+            <span>Report a Problem</span>
+
+        </a>
+
+
+        <a href="/citizen/reports"
+           class="nav-item {% if active_page == 'reports' %}active{% endif %}">
+
+            <span class="nav-icon">▤</span>
+            <span>My Reports</span>
+
+        </a>
+
+
+        <a href="/citizen/nearby"
+           class="nav-item {% if active_page == 'nearby' %}active{% endif %}">
+
+            <span class="nav-icon">⌖</span>
+            <span>Nearby Problems</span>
+
+        </a>
+
+
+        <a href="/citizen/notifications"
+           class="nav-item {% if active_page == 'notifications' %}active{% endif %}">
+
+            <span class="nav-icon">♧</span>
+            <span>Notifications</span>
+
+            <span class="notification-count">3</span>
+
+        </a>
+
+
+        <a href="/citizen/profile"
+           class="nav-item {% if active_page == 'profile' %}active{% endif %}">
+
+            <span class="nav-icon">◉</span>
+            <span>My Profile</span>
+
+        </a>
+
+    </nav>
+
+
+    <!-- BOTTOM -->
+    <div class="sidebar-bottom">
+
+
+        <!-- HELP -->
+        <div class="help-card">
+
+            <div class="help-icon">
+                ?
+            </div>
+
+            <div>
+                <strong>Need Help?</strong>
+
+                <p>
+                    Learn how UrbanNexus works.
+                </p>
+            </div>
+
+        </div>
+
+
+        <!-- USER -->
+        <div class="user-mini">
+
+            <div class="avatar">
+                P
+            </div>
+
+            <div class="user-info">
+
+                <strong>Citizen</strong>
+
+                <span>Resident</span>
+
+            </div>
+
+            <button class="more-btn">
+                •••
+            </button>
+
+        </div>
+
+    </div>
+
+</aside>

@@ -1,0 +1,1858 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+City Problem Map - UrbanNexus
+{% endblock %}
+
+
+{% block extra_css %}
+
+<link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/municipality-map.css'
+    ) }}"
+>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="municipality-map-page">
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="map-page-header">
+
+        <div class="map-header-main">
+
+            <p class="map-eyebrow">
+                CITY-WIDE GEOGRAPHICAL INTELLIGENCE
+            </p>
+
+            <h1>
+                City Problem Map
+            </h1>
+
+            <p class="map-subtitle">
+                Visualize real citizen-reported urban problems
+                across Chennai, identify hotspots, and understand
+                where intervention is needed.
+            </p>
+
+        </div>
+
+
+        <div class="map-header-meta">
+
+            <div class="map-city-card">
+
+                <span class="map-city-icon">
+                    ⌖
+                </span>
+
+                <div>
+
+                    <strong>
+                        Chennai
+                    </strong>
+
+                    <span>
+                        City Administration
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="map-status">
+
+                <span></span>
+
+                Live Map View
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         REAL SUMMARY DATA
+    ====================================================== -->
+
+    <section class="map-summary-grid">
+
+
+        <div class="map-summary-card problems">
+
+            <div class="map-summary-icon">
+                ◈
+            </div>
+
+            <div>
+
+                <span>
+                    Total Problems
+                </span>
+
+                <strong>
+                    {{ total_problems }}
+                </strong>
+
+                <p>
+                    Mapped across city
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="map-summary-card high">
+
+            <div class="map-summary-icon">
+                ⚠
+            </div>
+
+            <div>
+
+                <span>
+                    High Impact
+                </span>
+
+                <strong>
+                    {{ high_impact }}
+                </strong>
+
+                <p>
+                    Priority locations
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="map-summary-card clusters">
+
+            <div class="map-summary-icon">
+                ◎
+            </div>
+
+            <div>
+
+                <span>
+                    Hotspots
+                </span>
+
+                <strong>
+                    {{ hotspot_count }}
+                </strong>
+
+                <p>
+                    Problem clusters
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="map-summary-card departments">
+
+            <div class="map-summary-icon">
+                ◉
+            </div>
+
+            <div>
+
+                <span>
+                    Departments
+                </span>
+
+                <strong>
+                    {{ department_count }}
+                </strong>
+
+                <p>
+                    Areas involved
+                </p>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =====================================================
+         FILTERS
+    ====================================================== -->
+
+    <section class="map-toolbar">
+
+
+        <div class="map-search">
+
+            <span>
+                ⌕
+            </span>
+
+            <input
+                type="text"
+                id="mapSearch"
+                placeholder="Search problems or locations..."
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <select id="mapImpactFilter">
+
+            <option value="all">
+                All Impact Levels
+            </option>
+
+            <option value="HIGH">
+                High Impact
+            </option>
+
+            <option value="MEDIUM">
+                Medium Impact
+            </option>
+
+            <option value="LOW">
+                Low Impact
+            </option>
+
+        </select>
+
+
+        <!-- =================================================
+             CATEGORY FILTER
+             GENERATED FROM REAL DATABASE DATA
+        ================================================== -->
+
+        <select id="mapCategoryFilter">
+
+            <option value="all">
+                All Categories
+            </option>
+
+
+            {% set categories = [] %}
+
+
+            {% for problem in problems %}
+
+                {% if problem.category
+                      and problem.category not in categories %}
+
+                    {% set _ = categories.append(
+                        problem.category
+                    ) %}
+
+                {% endif %}
+
+            {% endfor %}
+
+
+            {% for category in categories %}
+
+                <option value="{{ category }}">
+                    {{ category }}
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+
+    </section>
+
+
+
+    <!-- =====================================================
+         MAP CONTENT
+    ====================================================== -->
+
+    <div class="map-content-layout">
+
+
+        <!-- =================================================
+             REAL PROBLEM LIST
+        ================================================== -->
+
+        <section class="map-problem-panel">
+
+
+            <div class="map-panel-header">
+
+                <div>
+
+                    <p class="panel-kicker">
+                        MAPPED PROBLEMS
+                    </p>
+
+                    <h2>
+                        Problems Around Chennai
+                    </h2>
+
+                </div>
+
+
+                <span
+                    class="mapped-count"
+                    id="mappedCount"
+                >
+
+                    {{ problems|length }}
+                    locations
+
+                </span>
+
+            </div>
+
+
+
+            <div
+                class="mapped-problem-list"
+                id="mappedProblemList"
+            >
+
+
+                {% if problems %}
+
+
+                    {% for problem in problems %}
+
+
+                        <button
+                            type="button"
+
+                            class="
+                                mapped-problem
+                                {% if loop.first %}
+                                    selected
+                                {% endif %}
+                            "
+
+                            data-id="{{ problem.id }}"
+
+                            data-impact="{{ problem.impact|upper }}"
+
+                            data-category="{{ problem.category }}"
+
+                            data-lat="{{ problem.latitude }}"
+
+                            data-lng="{{ problem.longitude }}"
+
+                            data-search="
+                                {{
+                                    (
+                                        problem.title
+                                        ~ ' '
+                                        ~ problem.address
+                                        ~ ' '
+                                        ~ problem.category
+                                        ~ ' '
+                                        ~ problem.description
+                                    )|lower
+                                }}
+                            "
+                        >
+
+
+                            <!-- MARKER ICON -->
+
+                            <div
+                                class="
+                                    mapped-problem-marker
+                                    {{ problem.impact|lower }}
+                                "
+                            >
+
+                                {% if problem.impact == "HIGH" %}
+
+                                    !
+
+                                {% elif problem.impact == "MEDIUM" %}
+
+                                    !
+
+                                {% else %}
+
+                                    ●
+
+                                {% endif %}
+
+                            </div>
+
+
+
+                            <!-- PROBLEM INFORMATION -->
+
+                            <div class="mapped-problem-info">
+
+
+                                <div class="mapped-problem-title">
+
+                                    <h3>
+                                        {{ problem.title }}
+                                    </h3>
+
+
+                                    <span
+                                        class="
+                                            map-impact
+                                            {{ problem.impact|lower }}
+                                        "
+                                    >
+
+                                        {{ problem.impact }}
+
+                                    </span>
+
+                                </div>
+
+
+                                <p>
+                                    {{ problem.address }}
+                                </p>
+
+
+                                <span class="mapped-category">
+
+                                    {{ problem.category }}
+
+                                </span>
+
+
+                            </div>
+
+
+                            <span class="mapped-arrow">
+                                →
+                            </span>
+
+
+                        </button>
+
+
+                    {% endfor %}
+
+
+                {% else %}
+
+
+                    <div class="map-empty-state">
+
+                        <div>
+                            ⌖
+                        </div>
+
+                        <h3>
+                            No mapped problems
+                        </h3>
+
+                        <p>
+                            Citizen reports with valid
+                            coordinates will appear here.
+                        </p>
+
+                    </div>
+
+
+                {% endif %}
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             REAL LEAFLET MAP
+        ================================================== -->
+
+        <section class="real-map-panel">
+
+
+            <div class="real-map-header">
+
+                <div>
+
+                    <p class="panel-kicker">
+                        GEOGRAPHICAL VIEW
+                    </p>
+
+                    <h2>
+                        Chennai Problem Distribution
+                    </h2>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    id="resetMap"
+                    class="reset-map-btn"
+                >
+
+                    ⟳ Reset View
+
+                </button>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 IMPORTANT MAP CONTAINER
+            ================================================== -->
+
+            <div
+                id="chennaiMap"
+                class="chennai-map"
+            >
+            </div>
+
+
+
+            <!-- =================================================
+                 MAP LEGEND
+            ================================================== -->
+
+            <div class="map-legend">
+
+                <span class="legend-title">
+                    IMPACT
+                </span>
+
+
+                <span class="legend-item">
+
+                    <i class="legend-dot high"></i>
+
+                    High
+
+                </span>
+
+
+                <span class="legend-item">
+
+                    <i class="legend-dot medium"></i>
+
+                    Medium
+
+                </span>
+
+
+                <span class="legend-item">
+
+                    <i class="legend-dot low"></i>
+
+                    Low
+
+                </span>
+
+
+                <span class="legend-item">
+
+                    <i class="legend-dot current"></i>
+
+                    Selected
+
+                </span>
+
+            </div>
+
+
+        </section>
+
+
+    </div>
+
+
+
+    <!-- =====================================================
+         SELECTED PROBLEM
+    ====================================================== -->
+
+    <section class="selected-map-problem">
+
+
+        <div class="selected-map-icon">
+            ◈
+        </div>
+
+
+        <div class="selected-map-content">
+
+            <span class="selected-map-label">
+                SELECTED PROBLEM
+            </span>
+
+            <h3 id="selectedProblemTitle">
+                Select a problem
+            </h3>
+
+            <p id="selectedProblemLocation">
+                Click a problem from the list or map.
+            </p>
+
+        </div>
+
+
+        <a
+            href="#"
+            id="viewAnalysisButton"
+            class="view-analysis-btn"
+        >
+
+            View AI Analysis →
+
+        </a>
+
+
+    </section>
+
+
+</div>
+
+
+<!-- ==========================================================
+     REAL MONGODB DATA
+=========================================================== -->
+
+<script
+    id="city-map-data"
+    type="application/json"
+>
+{{ problems | tojson }}
+</script>
+
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+></script>
+
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+
+        /* =====================================================
+           GET REAL DATA FROM FLASK
+        ====================================================== */
+
+        const dataElement =
+            document.getElementById(
+                "city-map-data"
+            );
+
+
+        if (!dataElement) {
+
+            console.error(
+                "UrbanNexus: map data not found."
+            );
+
+            return;
+
+        }
+
+
+        let problems = [];
+
+
+        try {
+
+            problems =
+                JSON.parse(
+                    dataElement.textContent
+                );
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "UrbanNexus: unable to parse map data.",
+                error
+            );
+
+            return;
+
+        }
+
+
+        console.log(
+            "UrbanNexus real map problems:",
+            problems
+        );
+
+
+
+        /* =====================================================
+           DEFAULT CHENNAI CENTER
+        ====================================================== */
+
+        const chennaiCenter = [
+            13.0827,
+            80.2707
+        ];
+
+
+
+        /* =====================================================
+           CREATE LEAFLET MAP
+        ====================================================== */
+
+        const map =
+            L.map(
+                "chennaiMap",
+                {
+                    zoomControl: true
+                }
+            ).setView(
+                chennaiCenter,
+                11
+            );
+
+
+
+        /* =====================================================
+           OPENSTREETMAP
+        ====================================================== */
+
+        L.tileLayer(
+
+            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+
+            {
+
+                maxZoom: 19,
+
+                attribution:
+                    "&copy; OpenStreetMap contributors"
+
+            }
+
+        ).addTo(map);
+
+
+
+        /* =====================================================
+           MARKER STORAGE
+        ====================================================== */
+
+        const markerData = {};
+
+
+
+        /* =====================================================
+           GET IMPACT COLOR
+        ====================================================== */
+
+        function getImpactColor(
+            impact
+        ) {
+
+            impact =
+                String(
+                    impact || "MEDIUM"
+                ).toUpperCase();
+
+
+            if (
+                impact === "HIGH"
+            ) {
+
+                return "#c84f47";
+
+            }
+
+
+            if (
+                impact === "LOW"
+            ) {
+
+                return "#4f8a62";
+
+            }
+
+
+            return "#c58a32";
+
+        }
+
+
+
+        /* =====================================================
+           CREATE MARKER
+        ====================================================== */
+
+        function createMarker(
+            problem
+        ) {
+
+
+            const lat =
+                parseFloat(
+                    problem.latitude
+                );
+
+
+            const lng =
+                parseFloat(
+                    problem.longitude
+                );
+
+
+            if (
+                Number.isNaN(lat)
+                ||
+                Number.isNaN(lng)
+            ) {
+
+                console.warn(
+                    "Skipping report without coordinates:",
+                    problem
+                );
+
+                return null;
+
+            }
+
+
+            const impact =
+                String(
+                    problem.impact || "MEDIUM"
+                ).toUpperCase();
+
+
+            const color =
+                getImpactColor(
+                    impact
+                );
+
+
+            /* ---------------------------------------------
+               Circle marker
+            ---------------------------------------------- */
+
+            const marker =
+                L.circleMarker(
+
+                    [
+                        lat,
+                        lng
+                    ],
+
+                    {
+
+                        radius: 10,
+
+                        color: "#ffffff",
+
+                        weight: 3,
+
+                        fillColor: color,
+
+                        fillOpacity: 0.95
+
+                    }
+
+                );
+
+
+            marker.addTo(
+                map
+            );
+
+
+
+            /* ---------------------------------------------
+               Popup
+            ---------------------------------------------- */
+
+            marker.bindPopup(
+
+                `
+
+                <div class="map-popup">
+
+                    <h3>
+                        ${escapeHtml(
+                            problem.title
+                        )}
+                    </h3>
+
+
+                    <span class="
+                        popup-impact
+                        ${impact.toLowerCase()}
+                    ">
+
+                        ${escapeHtml(
+                            impact
+                        )}
+                        IMPACT
+
+                    </span>
+
+
+                    <p>
+
+                        <strong>
+                            Category:
+                        </strong>
+
+                        ${escapeHtml(
+                            problem.category
+                        )}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Location:
+                        </strong>
+
+                        ${escapeHtml(
+                            problem.address
+                        )}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Status:
+                        </strong>
+
+                        ${escapeHtml(
+                            problem.status
+                        )}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Department:
+                        </strong>
+
+                        ${escapeHtml(
+                            problem.department
+                        )}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Connected Problems:
+                        </strong>
+
+                        ${problem.connected_problems || 0}
+
+                    </p>
+
+
+                    <a
+    href="/municipality/problem/${problem.id}"
+    class="popup-view-button"
+>
+    View Problem →
+</a>
+
+                </div>
+
+                `
+
+            );
+
+
+            return marker;
+
+        }
+
+
+
+        /* =====================================================
+           HTML ESCAPE
+        ====================================================== */
+
+        function escapeHtml(
+            value
+        ) {
+
+            return String(
+                value || ""
+            )
+
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+
+            .replace(
+                /</g,
+                "&lt;"
+            )
+
+            .replace(
+                />/g,
+                "&gt;"
+            )
+
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+
+        }
+
+
+
+        /* =====================================================
+           CREATE ALL REAL MARKERS
+        ====================================================== */
+
+        const bounds = [];
+
+
+        problems.forEach(
+            function (
+                problem
+            ) {
+
+
+                const marker =
+                    createMarker(
+                        problem
+                    );
+
+
+                if (!marker) {
+
+                    return;
+
+                }
+
+
+                markerData[
+                    problem.id
+                ] = marker;
+
+
+                bounds.push(
+                    [
+                        parseFloat(
+                            problem.latitude
+                        ),
+
+                        parseFloat(
+                            problem.longitude
+                        )
+                    ]
+                );
+
+
+                /* -----------------------------------------
+                   Marker click
+                ------------------------------------------ */
+
+                marker.on(
+                    "click",
+                    function () {
+
+                        selectProblem(
+                            problem,
+                            marker
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+
+
+        /* =====================================================
+           FIT MAP TO ALL REAL REPORTS
+        ====================================================== */
+
+        if (
+            bounds.length > 0
+        ) {
+
+            map.fitBounds(
+                bounds,
+                {
+                    padding: [
+                        40,
+                        40
+                    ]
+                }
+            );
+
+        }
+
+        else {
+
+            map.setView(
+                chennaiCenter,
+                11
+            );
+
+        }
+
+
+
+        /* =====================================================
+           PROBLEM LIST
+        ====================================================== */
+
+        const problemItems =
+            document.querySelectorAll(
+                ".mapped-problem"
+            );
+
+
+
+        /* =====================================================
+           SELECT PROBLEM
+        ====================================================== */
+
+        function selectProblem(
+            problem,
+            marker
+        ) {
+
+
+            /* Remove previous selection */
+
+            problemItems.forEach(
+                function (
+                    item
+                ) {
+
+                    item.classList.remove(
+                        "selected"
+                    );
+
+                }
+            );
+
+
+            /* Select matching item */
+
+            const selectedItem =
+                document.querySelector(
+                    `.mapped-problem[data-id="${problem.id}"]`
+                );
+
+
+            if (
+                selectedItem
+            ) {
+
+                selectedItem.classList.add(
+                    "selected"
+                );
+
+            }
+
+
+
+            /* Update bottom section */
+
+            const titleElement =
+                document.getElementById(
+                    "selectedProblemTitle"
+                );
+
+
+            const locationElement =
+                document.getElementById(
+                    "selectedProblemLocation"
+                );
+
+
+            if (
+                titleElement
+            ) {
+
+                titleElement.textContent =
+                    problem.title ||
+                    "Urban Problem";
+
+            }
+
+
+            if (
+                locationElement
+            ) {
+
+                locationElement.textContent =
+                    `${problem.address || "Location not provided"} • ${problem.category || "General"}`;
+
+            }
+
+
+
+            /* Update AI analysis link */
+
+            const analysisButton =
+                document.getElementById(
+                    "viewAnalysisButton"
+                );
+
+
+            if (
+                analysisButton
+            ) {
+
+                analysisButton.href =
+                    `/municipality/intelligence?report=${problem.id}`;
+
+            }
+
+
+
+            /* Move map */
+
+            map.setView(
+
+                [
+                    parseFloat(
+                        problem.latitude
+                    ),
+
+                    parseFloat(
+                        problem.longitude
+                    )
+                ],
+
+                15,
+
+                {
+                    animate: true
+                }
+
+            );
+
+
+            /* Open popup */
+
+            if (
+                marker
+            ) {
+
+                marker.openPopup();
+
+            }
+
+        }
+
+
+
+        /* =====================================================
+           LIST ITEM CLICK
+        ====================================================== */
+
+        problemItems.forEach(
+            function (
+                item
+            ) {
+
+
+                item.addEventListener(
+                    "click",
+                    function () {
+
+
+                        const id =
+                            item.dataset.id;
+
+
+                        const problem =
+                            problems.find(
+                                function (
+                                    p
+                                ) {
+
+                                    return String(
+                                        p.id
+                                    )
+                                    ===
+                                    String(
+                                        id
+                                    );
+
+                                }
+                            );
+
+
+                        const marker =
+                            markerData[id];
+
+
+                        if (
+                            problem
+                            &&
+                            marker
+                        ) {
+
+                            selectProblem(
+                                problem,
+                                marker
+                            );
+
+                        }
+
+                    }
+                );
+
+            }
+        );
+
+
+
+        /* =====================================================
+           FILTER ELEMENTS
+        ====================================================== */
+
+        const searchInput =
+            document.getElementById(
+                "mapSearch"
+            );
+
+
+        const impactFilter =
+            document.getElementById(
+                "mapImpactFilter"
+            );
+
+
+        const categoryFilter =
+            document.getElementById(
+                "mapCategoryFilter"
+            );
+
+
+        const countElement =
+            document.getElementById(
+                "mappedCount"
+            );
+
+
+
+        /* =====================================================
+           FILTER REAL DATA
+        ====================================================== */
+
+        function filterProblems() {
+
+
+            const search =
+                String(
+                    searchInput.value
+                    || ""
+                )
+                .toLowerCase()
+                .trim();
+
+
+            const selectedImpact =
+                String(
+                    impactFilter.value
+                    || "all"
+                )
+                .toUpperCase();
+
+
+            const selectedCategory =
+                String(
+                    categoryFilter.value
+                    || "all"
+                );
+
+
+            let visibleCount = 0;
+
+
+
+            problemItems.forEach(
+                function (
+                    item
+                ) {
+
+
+                    const problemId =
+                        item.dataset.id;
+
+
+                    const problem =
+                        problems.find(
+                            function (
+                                p
+                            ) {
+
+                                return String(
+                                    p.id
+                                )
+                                ===
+                                String(
+                                    problemId
+                                );
+
+                            }
+                        );
+
+
+                    if (!problem) {
+
+                        return;
+
+                    }
+
+
+
+                    const searchableText =
+
+                        (
+
+                            String(
+                                problem.title
+                                || ""
+                            )
+
+                            + " "
+
+                            +
+
+                            String(
+                                problem.description
+                                || ""
+                            )
+
+                            + " "
+
+                            +
+
+                            String(
+                                problem.address
+                                || ""
+                            )
+
+                            + " "
+
+                            +
+
+                            String(
+                                problem.category
+                                || ""
+                            )
+
+                        )
+                        .toLowerCase();
+
+
+
+                    const problemImpact =
+
+                        String(
+                            problem.impact
+                            || "MEDIUM"
+                        )
+                        .toUpperCase();
+
+
+
+                    const problemCategory =
+
+                        String(
+                            problem.category
+                            || ""
+                        );
+
+
+
+                    const matchesSearch =
+
+                        searchableText.includes(
+                            search
+                        );
+
+
+
+                    const matchesImpact =
+
+                        selectedImpact === "ALL"
+
+                        ||
+
+                        problemImpact ===
+                        selectedImpact;
+
+
+
+                    const matchesCategory =
+
+                        selectedCategory === "all"
+
+                        ||
+
+                        problemCategory ===
+                        selectedCategory;
+
+
+
+                    const show =
+
+                        matchesSearch
+                        &&
+                        matchesImpact
+                        &&
+                        matchesCategory;
+
+
+
+                    /* -------------------------------------
+                       Show / hide list item
+                    -------------------------------------- */
+
+                    item.style.display =
+                        show
+                        ? "grid"
+                        : "none";
+
+
+
+                    /* -------------------------------------
+                       Show / hide marker
+                    -------------------------------------- */
+
+                    const marker =
+                        markerData[
+                            problem.id
+                        ];
+
+
+                    if (
+                        marker
+                    ) {
+
+                        if (
+                            show
+                        ) {
+
+                            if (
+                                !map.hasLayer(
+                                    marker
+                                )
+                            ) {
+
+                                marker.addTo(
+                                    map
+                                );
+
+                            }
+
+                        }
+
+                        else {
+
+                            if (
+                                map.hasLayer(
+                                    marker
+                                )
+                            ) {
+
+                                map.removeLayer(
+                                    marker
+                                );
+
+                            }
+
+                        }
+
+                    }
+
+
+
+                    if (
+                        show
+                    ) {
+
+                        visibleCount++;
+
+                    }
+
+                }
+            );
+
+
+
+            /* Update count */
+
+            if (
+                countElement
+            ) {
+
+                countElement.textContent =
+
+                    `${visibleCount} location`
+                    +
+                    (
+                        visibleCount === 1
+                        ? ""
+                        : "s"
+                    );
+
+            }
+
+        }
+
+
+
+        /* =====================================================
+           SEARCH EVENT
+        ====================================================== */
+
+        searchInput.addEventListener(
+            "input",
+            filterProblems
+        );
+
+
+
+        /* =====================================================
+           IMPACT EVENT
+        ====================================================== */
+
+        impactFilter.addEventListener(
+            "change",
+            filterProblems
+        );
+
+
+
+        /* =====================================================
+           CATEGORY EVENT
+        ====================================================== */
+
+        categoryFilter.addEventListener(
+            "change",
+            filterProblems
+        );
+
+
+
+        /* =====================================================
+           RESET MAP
+        ====================================================== */
+
+        const resetButton =
+            document.getElementById(
+                "resetMap"
+            );
+
+
+        if (
+            resetButton
+        ) {
+
+            resetButton.addEventListener(
+                "click",
+                function () {
+
+
+                    /* Clear search */
+
+                    searchInput.value =
+                        "";
+
+
+
+                    /* Reset filters */
+
+                    impactFilter.value =
+                        "all";
+
+
+                    categoryFilter.value =
+                        "all";
+
+
+
+                    /* Show all */
+
+                    filterProblems();
+
+
+
+                    /* Reset map */
+
+                    if (
+                        bounds.length > 0
+                    ) {
+
+                        map.fitBounds(
+                            bounds,
+                            {
+                                padding: [
+                                    40,
+                                    40
+                                ]
+                            }
+                        );
+
+                    }
+
+                    else {
+
+                        map.setView(
+                            chennaiCenter,
+                            11
+                        );
+
+                    }
+
+
+                    map.closePopup();
+
+                }
+            );
+
+        }
+
+
+
+        /* =====================================================
+           INITIAL SELECTION
+        ====================================================== */
+
+        if (
+            problems.length > 0
+        ) {
+
+
+            const firstProblem =
+                problems.find(
+                    function (
+                        problem
+                    ) {
+
+                        return (
+                            typeof problem.latitude
+                            ===
+                            "number"
+
+                            &&
+
+                            typeof problem.longitude
+                            ===
+                            "number"
+                        );
+
+                    }
+                );
+
+
+            if (
+                firstProblem
+            ) {
+
+
+                const firstMarker =
+                    markerData[
+                        firstProblem.id
+                    ];
+
+
+                if (
+                    firstMarker
+                ) {
+
+                    selectProblem(
+                        firstProblem,
+                        firstMarker
+                    );
+
+                }
+
+            }
+
+        }
+
+
+
+        /* =====================================================
+           FIX MAP SIZE AFTER PAGE LOAD
+        ====================================================== */
+
+        setTimeout(
+            function () {
+
+                map.invalidateSize();
+
+            },
+            300
+        );
+
+
+    }
+
+);
+
+</script>
+
+
+{% endblock %}

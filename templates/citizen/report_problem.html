@@ -1,0 +1,2416 @@
+{% extends "base.html" %}
+
+{% block title %}Report a Problem | UrbanNexus{% endblock %}
+
+
+{% block extra_css %}
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/citizen-dashboard.css') }}">
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/report-problem.css') }}">
+
+<!-- Leaflet Map -->
+<link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+{% endblock %}
+
+
+{% block content %}
+
+<!-- Top Right User -->
+<div class="top-user">
+
+    <div class="top-user-info">
+        <strong>Citizen</strong>
+        <span>Resident</span>
+    </div>
+
+    <div class="top-user-avatar">
+        P
+    </div>
+
+</div>
+
+
+<div class="report-page">
+
+    <!-- Back to Dashboard -->
+    <a href="{{ url_for('citizen_dashboard') }}" class="back-link">
+        ← Back to Dashboard
+    </a>
+
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <div class="report-header">
+
+        <span class="eyebrow">
+            CITIZEN REPORT
+        </span>
+
+        <h1>
+            Report a Problem
+        </h1>
+
+        <p>
+            Help improve your city by reporting an urban problem.
+            Provide as much information as possible.
+        </p>
+
+    </div>
+
+
+    <!-- =====================================================
+         PROGRESS STEPS
+    ====================================================== -->
+
+    <div class="progress-card">
+
+        <div class="progress-step active">
+
+            <div class="step-number">
+                1
+            </div>
+
+            <div class="step-info">
+                <strong>Problem</strong>
+                <span>What happened?</span>
+            </div>
+
+        </div>
+
+
+        <div class="progress-line"></div>
+
+
+        <div class="progress-step">
+
+            <div class="step-number">
+                2
+            </div>
+
+            <div class="step-info">
+                <strong>Location</strong>
+                <span>Where is it?</span>
+            </div>
+
+        </div>
+
+
+        <div class="progress-line"></div>
+
+
+        <div class="progress-step">
+
+            <div class="step-number">
+                3
+            </div>
+
+            <div class="step-info">
+                <strong>Evidence</strong>
+                <span>Add details</span>
+            </div>
+
+        </div>
+
+
+        <div class="progress-line"></div>
+
+
+        <div class="progress-step">
+
+            <div class="step-number">
+                4
+            </div>
+
+            <div class="step-info">
+                <strong>Submit</strong>
+                <span>Send report</span>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MAIN LAYOUT
+    ====================================================== -->
+
+    <div class="report-layout">
+
+
+        <!-- =================================================
+             LEFT FORM
+        ================================================== -->
+
+        <div class="report-form-card">
+
+            <form
+                method="POST"
+                action="{{ url_for('report_problem') }}"
+                enctype="multipart/form-data"
+                id="problemReportForm"
+            >
+
+
+                <!-- =========================================
+                     PROBLEM SECTION
+                ========================================== -->
+
+                <section class="form-section">
+
+                    <div class="section-heading">
+
+                        <div class="section-icon">
+                            !
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                What is the problem?
+                            </h2>
+
+                            <p>
+                                Select the category that best describes the issue.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Category -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Problem Category
+                            <span class="required">*</span>
+                        </label>
+
+
+                        <div class="category-grid">
+
+
+                            <label class="category-card">
+
+                                <input
+                                    type="checkbox"
+                                    name="categories"
+                                    value="Water & Drainage"
+                                >
+
+                                <div class="category-content">
+
+                                    <div class="category-icon water">
+                                        ≋
+                                    </div>
+
+                                    <strong>
+                                        Water & Drainage
+                                    </strong>
+
+                                    <span>
+                                        Waterlogging, drainage
+                                    </span>
+
+                                </div>
+
+                            </label>
+
+
+                            <label class="category-card">
+
+                                <input
+                                    type="checkbox"
+                                    name="categories"
+                                    value="Roads & Infrastructure"
+                                >
+
+                                <div class="category-content">
+
+                                    <div class="category-icon roads">
+                                        ▰
+                                    </div>
+
+                                    <strong>
+                                        Roads & Infrastructure
+                                    </strong>
+
+                                    <span>
+                                        Potholes, damaged roads
+                                    </span>
+
+                                </div>
+
+                            </label>
+
+
+                            <label class="category-card">
+
+                                <input
+                                    type="checkbox"
+                                    name="categories"
+                                    value="Traffic"
+                                >
+
+                                <div class="category-content">
+
+                                    <div class="category-icon traffic">
+                                        ◎
+                                    </div>
+
+                                    <strong>
+                                        Traffic
+                                    </strong>
+
+                                    <span>
+                                        Congestion, signals
+                                    </span>
+
+                                </div>
+
+                            </label>
+
+
+                            <label class="category-card">
+
+                                <input
+                                    type="checkbox"
+                                    name="categories"
+                                    value="Waste Management"
+                                >
+
+                                <div class="category-content">
+
+                                    <div class="category-icon waste">
+                                        ▣
+                                    </div>
+
+                                    <strong>
+                                        Waste Management
+                                    </strong>
+
+                                    <span>
+                                        Garbage, waste dumping
+                                    </span>
+
+                                </div>
+
+                            </label>
+
+
+                            <label class="category-card">
+
+                                <input
+                                    type="checkbox"
+                                    name="categories"
+                                    value="Electricity & Lighting"
+                                >
+
+                                <div class="category-content">
+
+                                    <div class="category-icon electricity">
+                                        ☼
+                                    </div>
+
+                                    <strong>
+                                        Electricity & Lighting
+                                    </strong>
+
+                                    <span>
+                                        Streetlights, electrical issues
+                                    </span>
+
+                                </div>
+
+                            </label>
+
+
+                            <label class="category-card">
+
+                                <input
+                                    type="checkbox"
+                                    name="categories"
+                                    value="Parks & Environment"
+                                >
+
+                                <div class="category-content">
+
+                                    <div class="category-icon environment">
+                                        ♧
+                                    </div>
+
+                                    <strong>
+                                        Parks & Environment
+                                    </strong>
+
+                                    <span>
+                                        Public spaces, environment
+                                    </span>
+
+                                </div>
+
+                            </label>
+
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Title -->
+
+                    <div class="form-group">
+
+                        <label for="title">
+
+                            Problem Title
+
+                            <span class="required">
+                                *
+                            </span>
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="title"
+                            name="title"
+                            placeholder="Example: Waterlogging near Main Road"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Description -->
+
+                    <div class="form-group">
+
+                        <label for="description">
+
+                            Describe the problem
+
+                            <span class="required">
+                                *
+                            </span>
+
+                        </label>
+
+                        <textarea
+                            id="description"
+                            name="description"
+                            rows="5"
+                            placeholder="Describe what you observed, how long it has been happening, and how it is affecting people..."
+                            required
+                        ></textarea>
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- =========================================
+                     LOCATION SECTION
+                ========================================== -->
+
+                <section class="form-section">
+
+                    <div class="section-heading">
+
+                        <div class="section-icon">
+                            ⌖
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Where is the problem?
+                            </h2>
+
+                            <p>
+                                Select the location where the problem actually exists.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =====================================
+                         LOCATION OPTIONS
+                    ====================================== -->
+
+                    <div class="location-actions">
+
+
+                        <!-- Current Location -->
+
+                        <button
+                            type="button"
+                            class="location-button"
+                            id="currentLocationBtn"
+                        >
+
+                            📍 Use Current Location
+
+                        </button>
+
+
+                        <span class="location-or">
+                            OR
+                        </span>
+
+
+                        <!-- Search -->
+
+                        <div class="location-search-container">
+
+                            <div class="location-search-row">
+
+                                <input
+                                    type="text"
+                                    id="locationSearch"
+                                    placeholder="Search / Add Location"
+                                    autocomplete="off"
+                                >
+
+                                <button
+                                    type="button"
+                                    id="searchLocationBtn"
+                                    class="search-location-button"
+                                >
+                                    Search
+                                </button>
+
+                            </div>
+
+
+                            <!-- Search Results -->
+
+                            <div
+                                id="locationSearchResults"
+                                class="location-search-results"
+                            ></div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =====================================
+                         LOCATION STATUS
+                    ====================================== -->
+
+                    <div
+                        id="locationStatus"
+                        class="location-status"
+                    >
+
+                        <span>
+                            📍
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                Location not selected
+                            </strong>
+
+                            <p>
+                                Use your current location or search
+                                for the problem location.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =====================================
+                         SELECTED LOCATION
+                    ====================================== -->
+
+                    <div
+                        id="selectedLocationBox"
+                        class="selected-location-box"
+                        style="display: none;"
+                    >
+
+                        <div class="selected-location-icon">
+                            ✓
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Selected Problem Location
+                            </strong>
+
+                            <p id="selectedAddress">
+                                Location selected
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =====================================
+                         HIDDEN LOCATION VALUES
+
+                         Citizen does NOT enter coordinates.
+                    ====================================== -->
+
+                    <input
+                        type="hidden"
+                        id="latitude"
+                        name="latitude"
+                    >
+
+                    <input
+                        type="hidden"
+                        id="longitude"
+                        name="longitude"
+                    >
+
+                    <input
+                        type="hidden"
+                        id="address"
+                        name="address"
+                    >
+
+
+
+                    <!-- =====================================
+                         MAP
+                    ====================================== -->
+
+                    <div class="map-preview">
+
+                        <div
+                            id="problemMap"
+                            style="
+                                width: 100%;
+                                height: 380px;
+                                border-radius: 16px;
+                            "
+                        ></div>
+
+                    </div>
+
+
+
+                    <!-- =====================================
+                         NEARBY PROBLEMS
+                    ====================================== -->
+
+                    <div
+                        id="nearbyProblemsSection"
+                        class="nearby-problems-section"
+                        style="display: none;"
+                    >
+
+                        <div class="nearby-problems-header">
+
+                            <div>
+
+                                <span class="eyebrow">
+                                    URBANNEXUS INTELLIGENCE
+                                </span>
+
+                                <h3>
+                                    Problems Nearby
+                                </h3>
+
+                                <p>
+                                    Existing reports found around
+                                    this location.
+                                </p>
+
+                            </div>
+
+
+                            <div
+                                id="nearbyProblemCount"
+                                class="nearby-problem-count"
+                            >
+                                0
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            id="nearbyProblemsList"
+                            class="nearby-problems-list"
+                        ></div>
+
+                    </div>
+
+
+                </section>
+
+
+
+                <!-- =========================================
+                     EVIDENCE SECTION
+                ========================================== -->
+
+                <section class="form-section">
+
+                    <div class="section-heading">
+
+                        <div class="section-icon">
+                            ◈
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Add Evidence
+                            </h2>
+
+                            <p>
+                                Photos or videos can help verify
+                                and understand the problem.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="upload-box">
+
+                        <div class="upload-icon">
+                            ↑
+                        </div>
+
+                        <h3>
+                            Upload photos or videos
+                        </h3>
+
+                        <p>
+                            Add clear photos or a short video
+                            showing the problem.
+                        </p>
+
+                        <label
+                            for="evidence"
+                            class="upload-button"
+                        >
+                            Choose Files
+                        </label>
+
+                        <input
+                            type="file"
+                            id="evidence"
+                            name="evidence"
+                            accept="image/*,video/*"
+                            multiple
+                            hidden
+                        >
+
+                        <span class="upload-note">
+                            JPG, PNG, MP4 • Max 10 MB each
+                        </span>
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- =========================================
+                     ADDITIONAL INFORMATION
+                ========================================== -->
+
+                <section class="form-section">
+
+                    <div class="section-heading">
+
+                        <div class="section-icon">
+                            +
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Additional Information
+                            </h2>
+
+                            <p>
+                                Optional details that may help UrbanNexus
+                                understand the issue.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Frequency -->
+
+                    <div class="form-group">
+
+                        <label for="frequency">
+                            How often does this happen?
+                        </label>
+
+                        <select
+                            id="frequency"
+                            name="frequency"
+                        >
+
+                            <option value="">
+                                Select frequency
+                            </option>
+
+                            <option value="Once">
+                                Once
+                            </option>
+
+                            <option value="Occasionally">
+                                Occasionally
+                            </option>
+
+                            <option value="Frequently">
+                                Frequently
+                            </option>
+
+                            <option value="Daily">
+                                Daily
+                            </option>
+
+                            <option value="Constant">
+                                Constant problem
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Impact -->
+
+                    <div class="form-group">
+
+                        <label for="impact">
+                            How is it affecting people?
+                        </label>
+
+                        <textarea
+                            id="impact"
+                            name="impact"
+                            rows="4"
+                            placeholder="Example: Vehicles are unable to pass and pedestrians are forced onto the road."
+                        ></textarea>
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- =========================================
+                     BUTTONS
+                ========================================== -->
+
+                <div class="form-actions">
+
+                    <a
+                        href="{{ url_for('citizen_dashboard') }}"
+                        class="cancel-button"
+                    >
+                        Cancel
+                    </a>
+
+
+                    <button
+                        type="submit"
+                        class="submit-button"
+                        id="submitReportBtn"
+                    >
+                        Submit Report →
+                    </button>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+
+
+        <!-- =================================================
+             RIGHT INFORMATION PANEL
+        ================================================== -->
+
+        <aside class="report-info">
+
+
+            <!-- How UrbanNexus Works -->
+
+            <div class="info-card purple">
+
+                <div class="info-card-icon">
+                    ✦
+                </div>
+
+                <h2>
+                    How UrbanNexus works
+                </h2>
+
+                <p>
+                    Your report is analyzed to understand its impact
+                    and possible connections with other urban problems.
+                </p>
+
+
+                <div class="info-step">
+
+                    <div class="info-number">
+                        1
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Submit
+                        </strong>
+
+                        <span>
+                            Report the problem you observed.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="info-step">
+
+                    <div class="info-number">
+                        2
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            AI Analysis
+                        </strong>
+
+                        <span>
+                            UrbanNexus analyzes the report.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="info-step">
+
+                    <div class="info-number">
+                        3
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Department Assignment
+                        </strong>
+
+                        <span>
+                            The issue is directed to the appropriate department.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="info-step">
+
+                    <div class="info-number">
+                        4
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Track Progress
+                        </strong>
+
+                        <span>
+                            Follow the report until resolution.
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Reporting Tip -->
+
+            <div class="tip-card">
+
+                <div class="tip-icon">
+                    💡
+                </div>
+
+                <div>
+
+                    <h3>
+                        Reporting tip
+                    </h3>
+
+                    <p>
+                        Include landmarks, approximate duration,
+                        and photos whenever possible.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Privacy -->
+
+            <div class="privacy-card">
+
+                <div class="privacy-icon">
+                    🔒
+                </div>
+
+                <div>
+
+                    <h3>
+                        Your information
+                    </h3>
+
+                    <p>
+                        Your report is used only to understand,
+                        verify, assign, and resolve the reported issue.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </aside>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     LEAFLET MAP
+========================================================== -->
+
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        "use strict";
+
+
+        /* =====================================================
+           ELEMENTS
+        ===================================================== */
+
+        const currentLocationBtn =
+            document.getElementById(
+                "currentLocationBtn"
+            );
+
+        const searchLocationBtn =
+            document.getElementById(
+                "searchLocationBtn"
+            );
+
+        const locationSearch =
+            document.getElementById(
+                "locationSearch"
+            );
+
+        const searchResults =
+            document.getElementById(
+                "locationSearchResults"
+            );
+
+        const latitudeInput =
+            document.getElementById(
+                "latitude"
+            );
+
+        const longitudeInput =
+            document.getElementById(
+                "longitude"
+            );
+
+        const addressInput =
+            document.getElementById(
+                "address"
+            );
+
+        const locationStatus =
+            document.getElementById(
+                "locationStatus"
+            );
+
+        const selectedLocationBox =
+            document.getElementById(
+                "selectedLocationBox"
+            );
+
+        const selectedAddress =
+            document.getElementById(
+                "selectedAddress"
+            );
+
+        const nearbySection =
+            document.getElementById(
+                "nearbyProblemsSection"
+            );
+
+        const nearbyList =
+            document.getElementById(
+                "nearbyProblemsList"
+            );
+
+        const nearbyCount =
+            document.getElementById(
+                "nearbyProblemCount"
+            );
+
+        const form =
+            document.getElementById(
+                "problemReportForm"
+            );
+
+        const submitButton =
+            document.getElementById(
+                "submitReportBtn"
+            );
+
+
+        /* =====================================================
+           DEFAULT MAP LOCATION
+           Chennai
+        ===================================================== */
+
+        const DEFAULT_LAT =
+            13.0827;
+
+        const DEFAULT_LNG =
+            80.2707;
+
+
+        /* =====================================================
+           CREATE MAP
+        ===================================================== */
+
+        const map =
+            L.map(
+                "problemMap"
+            ).setView(
+                [
+                    DEFAULT_LAT,
+                    DEFAULT_LNG
+                ],
+                12
+            );
+
+
+        /* =====================================================
+           OPENSTREETMAP
+        ===================================================== */
+
+        L.tileLayer(
+            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            {
+                maxZoom: 19,
+
+                attribution:
+                    "&copy; OpenStreetMap contributors"
+            }
+        ).addTo(map);
+
+
+        /* =====================================================
+           MARKERS
+        ===================================================== */
+
+        let selectedMarker = null;
+
+        let nearbyMarkers = [];
+
+
+        /* =====================================================
+           ESCAPE HTML
+        ===================================================== */
+
+        function escapeHtml(value) {
+
+            return String(
+                value || ""
+            )
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+            .replace(
+                /</g,
+                "&lt;"
+            )
+            .replace(
+                />/g,
+                "&gt;"
+            )
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+
+        }
+
+
+        /* =====================================================
+           SET SELECTED LOCATION
+           
+           BOTH:
+           1. Current Location
+           2. Search / Add Location
+           
+           come through this same function.
+        ===================================================== */
+
+        function setSelectedLocation(
+            latitude,
+            longitude,
+            address
+        ) {
+
+            latitude =
+                Number(latitude);
+
+            longitude =
+                Number(longitude);
+
+
+            if (
+                Number.isNaN(latitude) ||
+                Number.isNaN(longitude)
+            ) {
+
+                alert(
+                    "Invalid location selected."
+                );
+
+                return;
+
+            }
+
+
+            address =
+                String(
+                    address ||
+                    `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`
+                );
+
+
+            /* =================================================
+               SAVE LOCATION TO FORM
+            ================================================= */
+
+            latitudeInput.value =
+                latitude;
+
+            longitudeInput.value =
+                longitude;
+
+            addressInput.value =
+                address;
+
+
+            /* =================================================
+               UPDATE LOCATION STATUS
+            ================================================= */
+
+            locationStatus.innerHTML = `
+
+                <span>✓</span>
+
+                <div>
+
+                    <strong>
+                        Location selected
+                    </strong>
+
+                    <p>
+                        ${escapeHtml(address)}
+                    </p>
+
+                </div>
+
+            `;
+
+
+            /* =================================================
+               SHOW SELECTED LOCATION BOX
+            ================================================= */
+
+            selectedLocationBox.style.display =
+                "flex";
+
+
+            selectedAddress.textContent =
+                address;
+
+
+            /* =================================================
+               MOVE MAP
+            ================================================= */
+
+            map.setView(
+                [
+                    latitude,
+                    longitude
+                ],
+                16
+            );
+
+
+            /* =================================================
+               REMOVE OLD SELECTED MARKER
+            ================================================= */
+
+            if (selectedMarker) {
+
+                map.removeLayer(
+                    selectedMarker
+                );
+
+            }
+
+
+            /* =================================================
+               ADD NEW SELECTED MARKER
+            ================================================= */
+
+            selectedMarker =
+                L.marker(
+                    [
+                        latitude,
+                        longitude
+                    ]
+                )
+                .addTo(map);
+
+
+            selectedMarker.bindPopup(`
+
+                <div>
+
+                    <strong>
+                        Selected Problem Location
+                    </strong>
+
+                    <br><br>
+
+                    ${escapeHtml(address)}
+
+                </div>
+
+            `);
+
+
+            selectedMarker.openPopup();
+
+
+            /* =================================================
+               FIND NEARBY PROBLEMS
+            ================================================= */
+
+            loadNearbyProblems(
+                latitude,
+                longitude
+            );
+
+        }
+
+
+        /* =====================================================
+           USE CURRENT LOCATION
+        ===================================================== */
+
+        currentLocationBtn.addEventListener(
+            "click",
+            function () {
+
+                if (
+                    !navigator.geolocation
+                ) {
+
+                    alert(
+                        "Geolocation is not supported by your browser. Please search for the problem location."
+                    );
+
+                    return;
+
+                }
+
+
+                currentLocationBtn.disabled =
+                    true;
+
+
+                currentLocationBtn.textContent =
+                    "⏳ Detecting Location...";
+
+
+                navigator.geolocation.getCurrentPosition(
+
+                    async function (position) {
+
+                        const latitude =
+                            position.coords.latitude;
+
+                        const longitude =
+                            position.coords.longitude;
+
+
+                        let address =
+                            `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
+
+
+                        /* =====================================
+                           REVERSE GEOCODING
+                        ===================================== */
+
+                        try {
+
+                            const response =
+                                await fetch(
+                                    `/api/reverse-geocode?latitude=${encodeURIComponent(latitude)}&longitude=${encodeURIComponent(longitude)}`
+                                );
+
+
+                            if (
+                                response.ok
+                            ) {
+
+                                const data =
+                                    await response.json();
+
+
+                                if (
+                                    data.address
+                                ) {
+
+                                    address =
+                                        data.address;
+
+                                }
+
+                            }
+
+                        }
+                        catch (error) {
+
+                            console.error(
+                                "Reverse geocoding error:",
+                                error
+                            );
+
+                        }
+
+
+                        /* =====================================
+                           USE COMMON LOCATION FUNCTION
+                        ===================================== */
+
+                        setSelectedLocation(
+                            latitude,
+                            longitude,
+                            address
+                        );
+
+
+                        currentLocationBtn.textContent =
+                            "✓ Location Selected";
+
+
+                        currentLocationBtn.disabled =
+                            false;
+
+
+                        setTimeout(
+                            function () {
+
+                                currentLocationBtn.textContent =
+                                    "📍 Use Current Location";
+
+                            },
+                            2000
+                        );
+
+                    },
+
+
+                    function (error) {
+
+                        console.error(
+                            "Geolocation error:",
+                            error
+                        );
+
+
+                        currentLocationBtn.disabled =
+                            false;
+
+
+                        currentLocationBtn.textContent =
+                            "📍 Use Current Location";
+
+
+                        alert(
+                            "Unable to access your current location. You can use Search / Add Location instead."
+                        );
+
+                    },
+
+
+                    {
+                        enableHighAccuracy: true,
+
+                        timeout: 15000,
+
+                        maximumAge: 60000
+                    }
+
+                );
+
+            }
+        );
+
+
+        /* =====================================================
+           SEARCH BUTTON
+        ===================================================== */
+
+        searchLocationBtn.addEventListener(
+            "click",
+            searchLocation
+        );
+
+
+        /* =====================================================
+           ENTER KEY SEARCH
+        ===================================================== */
+
+        locationSearch.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (
+                    event.key === "Enter"
+                ) {
+
+                    event.preventDefault();
+
+                    searchLocation();
+
+                }
+
+            }
+        );
+
+
+        /* =====================================================
+           SEARCH / ADD LOCATION
+        ===================================================== */
+
+        async function searchLocation() {
+
+            const query =
+                locationSearch.value.trim();
+
+
+            if (!query) {
+
+                alert(
+                    "Please enter a location to search."
+                );
+
+                return;
+
+            }
+
+
+            searchLocationBtn.disabled =
+                true;
+
+
+            searchLocationBtn.textContent =
+                "Searching...";
+
+
+            searchResults.innerHTML = `
+
+                <div class="location-no-result">
+
+                    🔎 Searching for locations...
+
+                </div>
+
+            `;
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `/api/geocode?q=${encodeURIComponent(query)}`
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Location search failed"
+                    );
+
+                }
+
+
+                const results =
+                    await response.json();
+
+
+                searchResults.innerHTML =
+                    "";
+
+
+                if (
+                    !Array.isArray(results) ||
+                    results.length === 0
+                ) {
+
+                    searchResults.innerHTML = `
+
+                        <div class="location-no-result">
+
+                            ❌ No matching location found.
+
+                            <br><br>
+
+                            Try a road name,
+                            area, landmark or city.
+
+                        </div>
+
+                    `;
+
+                    return;
+
+                }
+
+
+                /* =================================================
+                   SHOW SEARCH RESULTS
+                ================================================= */
+
+                results.forEach(
+                    function (result) {
+
+                        const latitude =
+                            Number(
+                                result.latitude
+                            );
+
+                        const longitude =
+                            Number(
+                                result.longitude
+                            );
+
+
+                        if (
+                            Number.isNaN(latitude) ||
+                            Number.isNaN(longitude)
+                        ) {
+
+                            return;
+
+                        }
+
+
+                        const resultButton =
+                            document.createElement(
+                                "button"
+                            );
+
+
+                        resultButton.type =
+                            "button";
+
+
+                        resultButton.className =
+                            "location-result";
+
+
+                        resultButton.innerHTML = `
+
+                            <span>
+                                📍
+                            </span>
+
+                            <span>
+                                ${escapeHtml(
+                                    result.address
+                                )}
+                            </span>
+
+                        `;
+
+
+                        /* =========================================
+                           SELECT SEARCH RESULT
+                        ========================================== */
+
+                        resultButton.addEventListener(
+                            "click",
+                            function () {
+
+                                setSelectedLocation(
+                                    latitude,
+                                    longitude,
+                                    result.address
+                                );
+
+
+                                locationSearch.value =
+                                    result.address;
+
+
+                                searchResults.innerHTML =
+                                    "";
+
+
+                                searchLocationBtn.textContent =
+                                    "✓ Location Selected";
+
+
+                                setTimeout(
+                                    function () {
+
+                                        searchLocationBtn.textContent =
+                                            "Search";
+
+                                    },
+                                    2000
+                                );
+
+                            }
+                        );
+
+
+                        searchResults.appendChild(
+                            resultButton
+                        );
+
+                    }
+                );
+
+            }
+            catch (error) {
+
+                console.error(
+                    "Location search error:",
+                    error
+                );
+
+
+                searchResults.innerHTML = `
+
+                    <div class="location-no-result">
+
+                        ❌ Unable to search for this location.
+
+                        <br><br>
+
+                        Please try again.
+
+                    </div>
+
+                `;
+
+            }
+            finally {
+
+                searchLocationBtn.disabled =
+                    false;
+
+
+                if (
+                    searchLocationBtn.textContent ===
+                    "Searching..."
+                ) {
+
+                    searchLocationBtn.textContent =
+                        "Search";
+
+                }
+
+            }
+
+        }
+
+
+        /* =====================================================
+           MAP CLICK = ADD LOCATION
+           
+           This gives the citizen a THIRD option:
+           click directly on the map.
+        ===================================================== */
+
+        map.on(
+            "click",
+            async function (event) {
+
+                const latitude =
+                    event.latlng.lat;
+
+                const longitude =
+                    event.latlng.lng;
+
+
+                let address =
+                    `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
+
+
+                try {
+
+                    const response =
+                        await fetch(
+                            `/api/reverse-geocode?latitude=${encodeURIComponent(latitude)}&longitude=${encodeURIComponent(longitude)}`
+                        );
+
+
+                    if (
+                        response.ok
+                    ) {
+
+                        const data =
+                            await response.json();
+
+
+                        if (
+                            data.address
+                        ) {
+
+                            address =
+                                data.address;
+
+                        }
+
+                    }
+
+                }
+                catch (error) {
+
+                    console.error(
+                        "Map reverse geocoding error:",
+                        error
+                    );
+
+                }
+
+
+                setSelectedLocation(
+                    latitude,
+                    longitude,
+                    address
+                );
+
+
+                locationSearch.value =
+                    address;
+
+            }
+        );
+
+
+        /* =====================================================
+           LOAD NEARBY PROBLEMS
+        ===================================================== */
+
+        async function loadNearbyProblems(
+            latitude,
+            longitude
+        ) {
+
+            nearbySection.style.display =
+                "block";
+
+
+            nearbyList.innerHTML = `
+
+                <div class="nearby-loading">
+
+                    🔎 Finding existing problems near
+                    this location...
+
+                </div>
+
+            `;
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `/citizen/nearby-problems?latitude=${encodeURIComponent(latitude)}&longitude=${encodeURIComponent(longitude)}`
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Nearby problems request failed"
+                    );
+
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                displayNearbyProblems(
+                    data.problems || []
+                );
+
+            }
+            catch (error) {
+
+                console.error(
+                    "Nearby problems error:",
+                    error
+                );
+
+
+                nearbyCount.textContent =
+                    "0";
+
+
+                nearbyList.innerHTML = `
+
+                    <div class="nearby-empty">
+
+                        Nearby problem information
+                        is currently unavailable.
+
+                    </div>
+
+                `;
+
+            }
+
+        }
+
+
+        /* =====================================================
+           DISPLAY NEARBY PROBLEMS
+        ===================================================== */
+
+        function displayNearbyProblems(
+            problems
+        ) {
+
+            nearbyList.innerHTML =
+                "";
+
+
+            /* =================================================
+               REMOVE OLD PROBLEM MARKERS
+            ================================================= */
+
+            nearbyMarkers.forEach(
+                function (marker) {
+
+                    map.removeLayer(
+                        marker
+                    );
+
+                }
+            );
+
+
+            nearbyMarkers =
+                [];
+
+
+            nearbyCount.textContent =
+                problems.length;
+
+
+            /* =================================================
+               NO PROBLEMS
+            ================================================= */
+
+            if (
+                problems.length === 0
+            ) {
+
+                nearbyList.innerHTML = `
+
+                    <div class="nearby-empty">
+
+                        <strong>
+                            No nearby problems found
+                        </strong>
+
+                        <p>
+                            No existing citizen reports
+                            were found around this location.
+                        </p>
+
+                    </div>
+
+                `;
+
+                return;
+
+            }
+
+
+            /* =================================================
+               DISPLAY EVERY NEARBY PROBLEM
+            ================================================= */
+
+            problems.forEach(
+                function (problem) {
+
+                    const impact =
+                        String(
+                            problem.impact_level ||
+                            "MEDIUM"
+                        ).toUpperCase();
+
+
+                    const item =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    item.className =
+                        "nearby-problem-item";
+
+
+                    item.innerHTML = `
+
+                        <div class="nearby-problem-icon">
+                            ${getProblemIcon(
+                                problem.category
+                            )}
+                        </div>
+
+
+                        <div class="nearby-problem-content">
+
+                            <strong>
+                                ${escapeHtml(
+                                    problem.title ||
+                                    "Urban Problem"
+                                )}
+                            </strong>
+
+                            <p>
+
+                                ${escapeHtml(
+                                    problem.distance ||
+                                    "Nearby"
+                                )}
+
+                                • 
+
+                                ${escapeHtml(
+                                    problem.category ||
+                                    "General"
+                                )}
+
+                                • 
+
+                                ${escapeHtml(
+                                    problem.status ||
+                                    "Submitted"
+                                )}
+
+                            </p>
+
+                        </div>
+
+
+                        <span class="
+                            nearby-impact
+                            ${impact.toLowerCase()}
+                        ">
+
+                            ${impact}
+
+                        </span>
+
+                    `;
+
+
+                    /* =========================================
+                       CLICK REPORT → MAP MARKER
+                    ========================================== */
+
+                    item.addEventListener(
+                        "click",
+                        function () {
+
+                            if (
+                                problem.latitude === undefined ||
+                                problem.longitude === undefined
+                            ) {
+
+                                return;
+
+                            }
+
+
+                            map.setView(
+                                [
+                                    Number(
+                                        problem.latitude
+                                    ),
+
+                                    Number(
+                                        problem.longitude
+                                    )
+                                ],
+                                17
+                            );
+
+
+                            nearbyMarkers.forEach(
+                                function (marker) {
+
+                                    const position =
+                                        marker.getLatLng();
+
+
+                                    if (
+                                        Math.abs(
+                                            position.lat -
+                                            Number(
+                                                problem.latitude
+                                            )
+                                        ) < 0.000001
+                                        &&
+                                        Math.abs(
+                                            position.lng -
+                                            Number(
+                                                problem.longitude
+                                            )
+                                        ) < 0.000001
+                                    ) {
+
+                                        marker.openPopup();
+
+                                    }
+
+                                }
+                            );
+
+                        }
+                    );
+
+
+                    nearbyList.appendChild(
+                        item
+                    );
+
+
+                    /* =========================================
+                       ADD PROBLEM TO MAP
+                    ========================================== */
+
+                    if (
+                        problem.latitude !== undefined &&
+                        problem.longitude !== undefined
+                    ) {
+
+                        const marker =
+                            L.circleMarker(
+                                [
+                                    Number(
+                                        problem.latitude
+                                    ),
+
+                                    Number(
+                                        problem.longitude
+                                    )
+                                ],
+                                {
+                                    radius: 9,
+
+                                    weight: 3,
+
+                                    opacity: 1,
+
+                                    fillOpacity: 0.85
+                                }
+                            )
+                            .addTo(map);
+
+
+                        marker.bindPopup(`
+
+                            <div>
+
+                                <strong>
+                                    ${escapeHtml(
+                                        problem.title ||
+                                        "Urban Problem"
+                                    )}
+                                </strong>
+
+                                <br><br>
+
+                                ${escapeHtml(
+                                    problem.category ||
+                                    "General"
+                                )}
+
+                                <br>
+
+                                <strong>
+                                    Impact:
+                                </strong>
+
+                                ${impact}
+
+                                <br>
+
+                                <strong>
+                                    Distance:
+                                </strong>
+
+                                ${escapeHtml(
+                                    problem.distance ||
+                                    "Nearby"
+                                )}
+
+                            </div>
+
+                        `);
+
+
+                        nearbyMarkers.push(
+                            marker
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           PROBLEM ICON
+        ===================================================== */
+
+        function getProblemIcon(
+            category
+        ) {
+
+            const value =
+                String(
+                    category || ""
+                ).toLowerCase();
+
+
+            if (
+                value.includes("water") ||
+                value.includes("drain")
+            ) {
+
+                return "≋";
+
+            }
+
+
+            if (
+                value.includes("road") ||
+                value.includes("infrastructure")
+            ) {
+
+                return "▰";
+
+            }
+
+
+            if (
+                value.includes("traffic")
+            ) {
+
+                return "◎";
+
+            }
+
+
+            if (
+                value.includes("waste") ||
+                value.includes("garbage")
+            ) {
+
+                return "♻";
+
+            }
+
+
+            if (
+                value.includes("electric") ||
+                value.includes("lighting")
+            ) {
+
+                return "◉";
+
+            }
+
+
+            if (
+                value.includes("park") ||
+                value.includes("environment")
+            ) {
+
+                return "♧";
+
+            }
+
+
+            return "!";
+
+        }
+
+
+        /* =====================================================
+           FORM VALIDATION
+        ===================================================== */
+
+        form.addEventListener(
+            "submit",
+            function (event) {
+
+                const latitude =
+                    latitudeInput.value.trim();
+
+
+                const longitude =
+                    longitudeInput.value.trim();
+
+
+                const address =
+                    addressInput.value.trim();
+
+
+                /* =============================================
+                   LOCATION REQUIRED
+                ============================================== */
+
+                if (
+                    !latitude ||
+                    !longitude ||
+                    !address
+                ) {
+
+                    event.preventDefault();
+
+
+                    alert(
+                        "Please select the problem location using Current Location, Search / Add Location, or by clicking on the map."
+                    );
+
+
+                    return;
+
+                }
+
+
+                /* =============================================
+                   PREVENT DOUBLE SUBMISSION
+                ============================================== */
+
+                submitButton.disabled =
+                    true;
+
+
+                submitButton.textContent =
+                    "Submitting & Analyzing...";
+
+            }
+        );
+
+
+        /* =====================================================
+           INITIAL MAP SIZE
+        ===================================================== */
+
+        setTimeout(
+            function () {
+
+                map.invalidateSize();
+
+            },
+            300
+        );
+
+    }
+);
+
+</script>
+
+{% endblock %}

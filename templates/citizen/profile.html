@@ -1,0 +1,334 @@
+{% extends "base.html" %}
+
+{% block title %}
+My Profile - UrbanNexus
+{% endblock %}
+
+{% block extra_css %}
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/citizen-dashboard.css') }}">
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/profile.css') }}">
+
+{% endblock %}
+
+{% block content %}
+
+
+<div class="profile-page">
+
+    <!-- Top Bar -->
+    
+
+    <!-- Header -->
+    <div class="profile-header">
+
+        <div>
+            <span class="page-kicker">ACCOUNT</span>
+
+            <h1>My Profile</h1>
+
+            <p>
+                Manage your UrbanNexus citizen profile and preferences.
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- Profile Overview -->
+    <div class="profile-overview">
+
+        <div class="profile-avatar-large">
+            P
+        </div>
+
+        <div class="profile-main-info">
+
+            <h2>Pragadeshwaran</h2>
+
+            <p class="profile-role">
+                Citizen · UrbanNexus Resident
+            </p>
+
+            <p class="profile-location">
+                📍 Chennai, Tamil Nadu
+            </p>
+
+        </div>
+
+        <button class="edit-profile-btn">
+            ✎ Edit Profile
+        </button>
+
+    </div>
+
+
+    <!-- Main Grid -->
+    <div class="profile-grid">
+
+
+        <!-- Personal Information -->
+        <section class="profile-card">
+
+            <div class="card-heading">
+
+                <div class="heading-icon">
+                    👤
+                </div>
+
+                <div>
+                    <h3>Personal Information</h3>
+                    <p>Your basic citizen information</p>
+                </div>
+
+            </div>
+
+
+            <div class="info-grid">
+
+                <div class="info-item">
+                    <span>Full Name</span>
+                    <strong>Pragadeshwaran</strong>
+                </div>
+
+                <div class="info-item">
+                    <span>Email Address</span>
+                    <strong>citizen@urbannexus.in</strong>
+                </div>
+
+                <div class="info-item">
+                    <span>Mobile Number</span>
+                    <strong>+91 XXXXX XXXXX</strong>
+                </div>
+
+                <div class="info-item">
+                    <span>Account Type</span>
+                    <strong>Citizen</strong>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Location -->
+        <section class="profile-card">
+
+            <div class="card-heading">
+
+                <div class="heading-icon">
+                    📍
+                </div>
+
+                <div>
+                    <h3>Location</h3>
+                    <p>Your registered area</p>
+                </div>
+
+            </div>
+
+
+            <div class="location-box">
+
+                <div class="location-icon">
+                    📍
+                </div>
+
+                <div>
+                    <strong>Chennai</strong>
+                    <span>Tamil Nadu, India</span>
+                </div>
+
+            </div>
+
+            <p class="location-note">
+                Your location helps UrbanNexus show nearby
+                urban problems and relevant updates.
+            </p>
+
+        </section>
+
+
+        <!-- Reporting Statistics -->
+        <section class="profile-card">
+
+            <div class="card-heading">
+
+                <div class="heading-icon">
+                    📊
+                </div>
+
+                <div>
+                    <h3>Reporting Activity</h3>
+                    <p>Your contribution to the city</p>
+                </div>
+
+            </div>
+
+
+            <div class="activity-grid">
+
+                <div class="activity-item">
+                    <strong>12</strong>
+                    <span>Total Reports</span>
+                </div>
+
+                <div class="activity-item">
+                    <strong>4</strong>
+                    <span>Active</span>
+                </div>
+
+                <div class="activity-item">
+                    <strong>8</strong>
+                    <span>Resolved</span>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Notification Preferences -->
+        <section class="profile-card">
+
+            <div class="card-heading">
+
+                <div class="heading-icon">
+                    🔔
+                </div>
+
+                <div>
+                    <h3>Notification Preferences</h3>
+                    <p>Choose how UrbanNexus updates you</p>
+                </div>
+
+            </div>
+
+
+            <div class="preference-row">
+
+                <div>
+                    <strong>Report Updates</strong>
+                    <span>
+                        Assignment, progress and resolution updates
+                    </span>
+                </div>
+
+                <label class="toggle">
+                    <input type="checkbox" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+
+            </div>
+
+
+            <div class="preference-row">
+
+                <div>
+                    <strong>AI Analysis Updates</strong>
+                    <span>
+                        Receive updates when AI analysis is completed
+                    </span>
+                </div>
+
+                <label class="toggle">
+                    <input type="checkbox" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+
+            </div>
+
+
+            <div class="preference-row">
+
+                <div>
+                    <strong>Nearby Problem Alerts</strong>
+                    <span>
+                        Get alerts about important nearby problems
+                    </span>
+                </div>
+
+                <label class="toggle">
+                    <input type="checkbox" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+
+            </div>
+
+        </section>
+
+
+        <!-- Privacy -->
+        <section class="profile-card">
+
+            <div class="card-heading">
+
+                <div class="heading-icon">
+                    🔐
+                </div>
+
+                <div>
+                    <h3>Privacy & Data</h3>
+                    <p>How your information is used</p>
+                </div>
+
+            </div>
+
+
+            <div class="privacy-item">
+                <strong>Report Information</strong>
+
+                <p>
+                    Information submitted in reports is used to
+                    analyze and resolve urban problems.
+                </p>
+            </div>
+
+
+            <div class="privacy-item">
+                <strong>Location Information</strong>
+
+                <p>
+                    Location is used to identify nearby problems
+                    and route reports to relevant departments.
+                </p>
+            </div>
+
+        </section>
+
+
+        <!-- Account -->
+        <section class="profile-card account-card">
+
+            <div class="card-heading">
+
+                <div class="heading-icon">
+                    ⚙
+                </div>
+
+                <div>
+                    <h3>Account</h3>
+                    <p>Manage your account</p>
+                </div>
+
+            </div>
+
+
+            <button class="account-action">
+                Change Password
+            </button>
+
+            <button class="account-action danger">
+                Log Out
+            </button>
+
+        </section>
+
+    </div>
+
+</div>
+
+{% endblock %}

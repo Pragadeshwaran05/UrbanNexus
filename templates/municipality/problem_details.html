@@ -1,0 +1,323 @@
+{% extends "base.html" %}
+
+{% block title %}
+Problem Details - UrbanNexus
+{% endblock %}
+
+
+{% block extra_css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/municipality-intelligence.css'
+    ) }}"
+>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="municipality-map-page">
+
+    <div style="
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 30px;
+    ">
+
+
+        <!-- HEADER -->
+
+        <div style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        ">
+
+            <div>
+
+                <p style="
+                    color: #7250a7;
+                    font-weight: 700;
+                    letter-spacing: 1px;
+                    margin-bottom: 8px;
+                ">
+                    MUNICIPAL PROBLEM DETAILS
+                </p>
+
+                <h1 style="
+                    margin: 0;
+                    color: #282230;
+                ">
+                    {{ problem.get("title", "Urban Problem") }}
+                </h1>
+
+            </div>
+
+
+            <a
+                href="/municipality/map"
+                style="
+                    text-decoration: none;
+                    padding: 12px 18px;
+                    border-radius: 10px;
+                    background: #34205f;
+                    color: white;
+                    font-weight: 600;
+                "
+            >
+                ← Back to Map
+            </a>
+
+        </div>
+
+
+
+        <!-- PROBLEM CARD -->
+
+        <div style="
+            background: white;
+            border: 1px solid #e1d9eb;
+            border-radius: 18px;
+            padding: 30px;
+        ">
+
+
+            <!-- STATUS -->
+
+            <div style="
+                display: flex;
+                gap: 12px;
+                flex-wrap: wrap;
+                margin-bottom: 25px;
+            ">
+
+                <span>
+                    <strong>Impact:</strong>
+                    {{ problem.get("impact_level", "MEDIUM") }}
+                </span>
+
+                <span>
+                    <strong>Priority:</strong>
+                    {{ problem.get("priority", "MEDIUM") }}
+                </span>
+
+                <span>
+                    <strong>Status:</strong>
+                    {{ problem.get("status", "Submitted") }}
+                </span>
+
+            </div>
+
+
+
+            <!-- CATEGORY -->
+
+            <div style="margin-bottom: 25px;">
+
+                <h3>
+                    Category
+                </h3>
+
+                <p>
+                    {{ problem.get(
+                        "category",
+                        "General"
+                    ) }}
+                </p>
+
+            </div>
+
+
+
+            <!-- LOCATION -->
+
+            <div style="margin-bottom: 25px;">
+
+                <h3>
+                    Location
+                </h3>
+
+                <p>
+                    {{ problem.get(
+                        "address",
+                        "Location not provided"
+                    ) }}
+                </p>
+
+            </div>
+
+
+
+            <!-- DESCRIPTION -->
+
+            <div style="margin-bottom: 25px;">
+
+                <h3>
+                    Problem Description
+                </h3>
+
+                <p>
+                    {{ problem.get(
+                        "description",
+                        "No description provided."
+                    ) }}
+                </p>
+
+            </div>
+
+
+
+            <!-- AI ANALYSIS -->
+
+            <div style="
+                background: #f4eefb;
+                border-radius: 14px;
+                padding: 22px;
+                margin-top: 25px;
+            ">
+
+                <h3>
+                    🤖 UrbanNexus AI Analysis
+                </h3>
+
+
+                <p>
+                    <strong>
+                        Root Cause
+                    </strong>
+                </p>
+
+                <p>
+                    {{ problem.get(
+                        "root_cause",
+                        "Analysis pending"
+                    ) }}
+                </p>
+
+
+                <p>
+                    <strong>
+                        Connected Problems
+                    </strong>
+                </p>
+
+                <p>
+                    {{ problem.get(
+                        "connected_problems",
+                        0
+                    ) }}
+                </p>
+
+
+                <p>
+                    <strong>
+                        Cascading Effects
+                    </strong>
+                </p>
+
+
+                {% set effects = problem.get(
+                    "cascading_effects",
+                    []
+                ) %}
+
+
+                {% if effects %}
+
+                    <ul>
+
+                        {% for effect in effects %}
+
+                            <li>
+                                {{ effect }}
+                            </li>
+
+                        {% endfor %}
+
+                    </ul>
+
+                {% else %}
+
+                    <p>
+                        No cascading effects identified.
+                    </p>
+
+                {% endif %}
+
+
+                <p>
+                    <strong>
+                        AI Explanation
+                    </strong>
+                </p>
+
+                <p>
+                    {{ problem.get(
+                        "ai_explanation",
+                        "AI analysis not available."
+                    ) }}
+                </p>
+
+            </div>
+
+
+
+            <!-- DEPARTMENT -->
+
+            <div style="
+                margin-top: 25px;
+                padding-top: 20px;
+                border-top: 1px solid #e5deeb;
+            ">
+
+                <h3>
+                    Assigned Department
+                </h3>
+
+                <p>
+                    {{ problem.get(
+                        "department",
+                        "Awaiting Assignment"
+                    ) }}
+                </p>
+
+            </div>
+
+
+
+            <!-- COORDINATES -->
+
+            {% if problem.get("latitude") is not none
+                  and problem.get("longitude") is not none %}
+
+                <div style="
+                    margin-top: 20px;
+                ">
+
+                    <h3>
+                        Geographic Coordinates
+                    </h3>
+
+                    <p>
+                        {{ problem.get("latitude") }},
+                        {{ problem.get("longitude") }}
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

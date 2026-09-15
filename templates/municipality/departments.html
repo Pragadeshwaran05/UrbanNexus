@@ -1,0 +1,1137 @@
+{% extends "base.html" %}
+
+{% block title %}
+Departments - UrbanNexus
+{% endblock %}
+
+
+{% block extra_css %}
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/municipality-departments.css') }}">
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="departments-page">
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="departments-header">
+
+        <div class="departments-header-main">
+
+            <p class="departments-eyebrow">
+                MUNICIPAL DEPARTMENT COORDINATION
+            </p>
+
+            <h1>
+                Departments
+            </h1>
+
+            <p class="departments-subtitle">
+                Monitor department workloads, assigned problems,
+                active interventions, and resolution progress across Chennai.
+            </p>
+
+        </div>
+
+
+        <div class="departments-header-meta">
+
+            <div class="departments-city-card">
+
+                <span class="departments-city-icon">
+                    ⌖
+                </span>
+
+                <div>
+                    <strong>Chennai</strong>
+                    <span>City Administration</span>
+                </div>
+
+            </div>
+
+
+            <div class="departments-status">
+
+                <span></span>
+
+                Coordination Active
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         SUMMARY
+    ====================================================== -->
+
+    <section class="department-summary-grid">
+
+        <div class="department-summary-card purple">
+
+            <div class="summary-icon">
+                ◉
+            </div>
+
+            <div>
+                <span>Departments</span>
+                <strong>6</strong>
+                <p>Currently involved</p>
+            </div>
+
+        </div>
+
+
+        <div class="department-summary-card blue">
+
+            <div class="summary-icon">
+                ◈
+            </div>
+
+            <div>
+                <span>Assigned Problems</span>
+                <strong>59</strong>
+                <p>Across departments</p>
+            </div>
+
+        </div>
+
+
+        <div class="department-summary-card orange">
+
+            <div class="summary-icon">
+                ⇄
+            </div>
+
+            <div>
+                <span>Active Interventions</span>
+                <strong>41</strong>
+                <p>Currently in progress</p>
+            </div>
+
+        </div>
+
+
+        <div class="department-summary-card green">
+
+            <div class="summary-icon">
+                ✓
+            </div>
+
+            <div>
+                <span>Completed</span>
+                <strong>27</strong>
+                <p>Successfully resolved</p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         TOOLBAR
+    ====================================================== -->
+
+    <section class="departments-toolbar">
+
+        <div class="departments-search">
+
+            <span>⌕</span>
+
+            <input
+                type="text"
+                id="departmentSearch"
+                placeholder="Search departments or responsibilities..."
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <select id="departmentStatusFilter">
+
+            <option value="all">
+                All Status
+            </option>
+
+            <option value="active">
+                Active
+            </option>
+
+            <option value="attention">
+                Needs Attention
+            </option>
+
+            <option value="stable">
+                Stable
+            </option>
+
+        </select>
+
+    </section>
+
+
+    <!-- =====================================================
+         MAIN GRID
+    ====================================================== -->
+
+    <div class="departments-layout">
+
+
+        <!-- =================================================
+             DEPARTMENT LIST
+        ================================================== -->
+
+        <section class="department-list-panel">
+
+
+            <div class="department-list-header">
+
+                <div>
+
+                    <p class="panel-kicker">
+                        DEPARTMENT OVERVIEW
+                    </p>
+
+                    <h2>
+                        City Departments
+                    </h2>
+
+                </div>
+
+
+                <span
+                    class="department-count"
+                    id="departmentCount">
+
+                    6 departments
+
+                </span>
+
+            </div>
+
+
+            <div
+                class="department-items"
+                id="departmentItems">
+
+
+                <!-- =================================================
+                     WATER & DRAINAGE
+                ================================================== -->
+
+                <button
+                    type="button"
+                    class="department-card selected"
+                    data-status="active"
+                    data-search="water drainage waterlogging flooding drainage channels">
+
+                    <div class="department-card-icon water">
+                        💧
+                    </div>
+
+
+                    <div class="department-card-main">
+
+                        <div class="department-card-title">
+
+                            <h3>
+                                Water & Drainage Department
+                            </h3>
+
+                            <span class="department-status active">
+                                ACTIVE
+                            </span>
+
+                        </div>
+
+
+                        <p class="department-responsibility">
+                            Drainage systems, flooding, waterlogging,
+                            and storm-water infrastructure.
+                        </p>
+
+
+                        <div class="department-metrics">
+
+                            <div>
+                                <span>Problems</span>
+                                <strong>18</strong>
+                            </div>
+
+                            <div>
+                                <span>High Impact</span>
+                                <strong>5</strong>
+                            </div>
+
+                            <div>
+                                <span>Interventions</span>
+                                <strong>7</strong>
+                            </div>
+
+                        </div>
+
+
+                        <div class="department-progress">
+
+                            <div class="progress-header">
+                                <span>Resolution Progress</span>
+                                <strong>72%</strong>
+                            </div>
+
+                            <div class="progress-track">
+
+                                <div style="width:72%;"></div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <span class="department-arrow">
+                        →
+                    </span>
+
+                </button>
+
+
+                <!-- =================================================
+                     ROADS
+                ================================================== -->
+
+                <button
+                    type="button"
+                    class="department-card"
+                    data-status="active"
+                    data-search="roads infrastructure potholes repair roads bus stand">
+
+                    <div class="department-card-icon roads">
+                        🛣
+                    </div>
+
+
+                    <div class="department-card-main">
+
+                        <div class="department-card-title">
+
+                            <h3>
+                                Roads & Infrastructure Department
+                            </h3>
+
+                            <span class="department-status active">
+                                ACTIVE
+                            </span>
+
+                        </div>
+
+
+                        <p class="department-responsibility">
+                            Roads, potholes, damaged surfaces,
+                            repairs, and road infrastructure.
+                        </p>
+
+
+                        <div class="department-metrics">
+
+                            <div>
+                                <span>Problems</span>
+                                <strong>14</strong>
+                            </div>
+
+                            <div>
+                                <span>High Impact</span>
+                                <strong>4</strong>
+                            </div>
+
+                            <div>
+                                <span>Interventions</span>
+                                <strong>6</strong>
+                            </div>
+
+                        </div>
+
+
+                        <div class="department-progress">
+
+                            <div class="progress-header">
+                                <span>Resolution Progress</span>
+                                <strong>61%</strong>
+                            </div>
+
+                            <div class="progress-track">
+
+                                <div style="width:61%;"></div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <span class="department-arrow">
+                        →
+                    </span>
+
+                </button>
+
+
+                <!-- =================================================
+                     TRAFFIC
+                ================================================== -->
+
+                <button
+                    type="button"
+                    class="department-card"
+                    data-status="active"
+                    data-search="traffic congestion junction signals transport">
+
+                    <div class="department-card-icon traffic">
+                        🚦
+                    </div>
+
+
+                    <div class="department-card-main">
+
+                        <div class="department-card-title">
+
+                            <h3>
+                                Traffic Department
+                            </h3>
+
+                            <span class="department-status active">
+                                ACTIVE
+                            </span>
+
+                        </div>
+
+
+                        <p class="department-responsibility">
+                            Traffic congestion, junction management,
+                            signals, and traffic flow.
+                        </p>
+
+
+                        <div class="department-metrics">
+
+                            <div>
+                                <span>Problems</span>
+                                <strong>11</strong>
+                            </div>
+
+                            <div>
+                                <span>High Impact</span>
+                                <strong>3</strong>
+                            </div>
+
+                            <div>
+                                <span>Interventions</span>
+                                <strong>5</strong>
+                            </div>
+
+                        </div>
+
+
+                        <div class="department-progress">
+
+                            <div class="progress-header">
+                                <span>Resolution Progress</span>
+                                <strong>68%</strong>
+                            </div>
+
+                            <div class="progress-track">
+
+                                <div style="width:68%;"></div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <span class="department-arrow">
+                        →
+                    </span>
+
+                </button>
+
+
+                <!-- =================================================
+                     WASTE
+                ================================================== -->
+
+                <button
+                    type="button"
+                    class="department-card"
+                    data-status="attention"
+                    data-search="waste garbage dumping sanitation market cleaning">
+
+                    <div class="department-card-icon waste">
+                        ♻
+                    </div>
+
+
+                    <div class="department-card-main">
+
+                        <div class="department-card-title">
+
+                            <h3>
+                                Waste Management Department
+                            </h3>
+
+                            <span class="department-status attention">
+                                NEEDS ATTENTION
+                            </span>
+
+                        </div>
+
+
+                        <p class="department-responsibility">
+                            Waste collection, illegal dumping,
+                            sanitation, and disposal management.
+                        </p>
+
+
+                        <div class="department-metrics">
+
+                            <div>
+                                <span>Problems</span>
+                                <strong>9</strong>
+                            </div>
+
+                            <div>
+                                <span>High Impact</span>
+                                <strong>2</strong>
+                            </div>
+
+                            <div>
+                                <span>Interventions</span>
+                                <strong>4</strong>
+                            </div>
+
+                        </div>
+
+
+                        <div class="department-progress">
+
+                            <div class="progress-header">
+                                <span>Resolution Progress</span>
+                                <strong>54%</strong>
+                            </div>
+
+                            <div class="progress-track">
+
+                                <div style="width:54%;"></div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <span class="department-arrow">
+                        →
+                    </span>
+
+                </button>
+
+
+                <!-- =================================================
+                     ELECTRICITY
+                ================================================== -->
+
+                <button
+                    type="button"
+                    class="department-card"
+                    data-status="stable"
+                    data-search="electricity lighting streetlight power">
+
+                    <div class="department-card-icon electricity">
+                        ◉
+                    </div>
+
+
+                    <div class="department-card-main">
+
+                        <div class="department-card-title">
+
+                            <h3>
+                                Electricity & Lighting Department
+                            </h3>
+
+                            <span class="department-status stable">
+                                STABLE
+                            </span>
+
+                        </div>
+
+
+                        <p class="department-responsibility">
+                            Streetlights, public lighting,
+                            electrical infrastructure, and repairs.
+                        </p>
+
+
+                        <div class="department-metrics">
+
+                            <div>
+                                <span>Problems</span>
+                                <strong>7</strong>
+                            </div>
+
+                            <div>
+                                <span>High Impact</span>
+                                <strong>1</strong>
+                            </div>
+
+                            <div>
+                                <span>Interventions</span>
+                                <strong>3</strong>
+                            </div>
+
+                        </div>
+
+
+                        <div class="department-progress">
+
+                            <div class="progress-header">
+                                <span>Resolution Progress</span>
+                                <strong>81%</strong>
+                            </div>
+
+                            <div class="progress-track">
+
+                                <div style="width:81%;"></div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <span class="department-arrow">
+                        →
+                    </span>
+
+                </button>
+
+
+                <!-- =================================================
+                     PUBLIC SAFETY
+                ================================================== -->
+
+                <button
+                    type="button"
+                    class="department-card"
+                    data-status="stable"
+                    data-search="public safety emergency response civic safety">
+
+                    <div class="department-card-icon safety">
+                        ◇
+                    </div>
+
+
+                    <div class="department-card-main">
+
+                        <div class="department-card-title">
+
+                            <h3>
+                                Public Safety Department
+                            </h3>
+
+                            <span class="department-status stable">
+                                STABLE
+                            </span>
+
+                        </div>
+
+
+                        <p class="department-responsibility">
+                            Public safety coordination, emergency
+                            support, and civic response operations.
+                        </p>
+
+
+                        <div class="department-metrics">
+
+                            <div>
+                                <span>Problems</span>
+                                <strong>6</strong>
+                            </div>
+
+                            <div>
+                                <span>High Impact</span>
+                                <strong>1</strong>
+                            </div>
+
+                            <div>
+                                <span>Interventions</span>
+                                <strong>3</strong>
+                            </div>
+
+                        </div>
+
+
+                        <div class="department-progress">
+
+                            <div class="progress-header">
+                                <span>Resolution Progress</span>
+                                <strong>76%</strong>
+                            </div>
+
+                            <div class="progress-track">
+
+                                <div style="width:76%;"></div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <span class="department-arrow">
+                        →
+                    </span>
+
+                </button>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             RIGHT DETAIL PANEL
+        ================================================== -->
+
+        <section class="department-detail-panel">
+
+
+            <div class="department-detail-header">
+
+                <div class="detail-department-title">
+
+                    <div class="detail-department-icon">
+                        💧
+                    </div>
+
+                    <div>
+
+                        <p class="panel-kicker">
+                            DEPARTMENT PERFORMANCE
+                        </p>
+
+                        <h2>
+                            Water & Drainage
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <span class="detail-department-status">
+                    ACTIVE
+                </span>
+
+            </div>
+
+
+            <!-- Department description -->
+
+            <div class="department-detail-intro">
+
+                <h2>
+                    Water & Drainage Department
+                </h2>
+
+                <p>
+                    Responsible for drainage infrastructure,
+                    flooding prevention, and waterlogging-related
+                    interventions across the city.
+                </p>
+
+            </div>
+
+
+            <!-- Metrics -->
+
+            <div class="department-detail-metrics">
+
+                <div class="detail-metric-card">
+
+                    <span>
+                        OPEN PROBLEMS
+                    </span>
+
+                    <strong>
+                        18
+                    </strong>
+
+                    <p>
+                        5 high impact
+                    </p>
+
+                </div>
+
+
+                <div class="detail-metric-card">
+
+                    <span>
+                        INTERVENTIONS
+                    </span>
+
+                    <strong>
+                        7
+                    </strong>
+
+                    <p>
+                        5 in progress
+                    </p>
+
+                </div>
+
+
+                <div class="detail-metric-card">
+
+                    <span>
+                        COMPLETION
+                    </span>
+
+                    <strong>
+                        72%
+                    </strong>
+
+                    <p>
+                        Current progress
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Performance -->
+
+            <div class="department-performance">
+
+                <div class="performance-header">
+
+                    <div>
+
+                        <p class="panel-kicker">
+                            CURRENT WORKLOAD
+                        </p>
+
+                        <h3>
+                            Resolution Progress
+                        </h3>
+
+                    </div>
+
+                    <strong>
+                        72%
+                    </strong>
+
+                </div>
+
+
+                <div class="large-progress-track">
+
+                    <div style="width:72%;"></div>
+
+                </div>
+
+
+                <div class="performance-info">
+
+                    <span>
+                        13 of 18 problems progressing
+                    </span>
+
+                    <span>
+                        5 require attention
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Current assignments -->
+
+            <div class="department-assignments">
+
+                <div class="assignments-heading">
+
+                    <div>
+
+                        <p class="panel-kicker">
+                            CURRENT ASSIGNMENTS
+                        </p>
+
+                        <h3>
+                            Active Work
+                        </h3>
+
+                    </div>
+
+                    <span>
+                        5 active
+                    </span>
+
+                </div>
+
+
+                <div class="assignment-row">
+
+                    <div class="assignment-icon">
+                        💧
+                    </div>
+
+                    <div class="assignment-info">
+
+                        <h4>
+                            Main Road Drainage Improvement
+                        </h4>
+
+                        <p>
+                            Waterlogging near Main Road
+                        </p>
+
+                    </div>
+
+                    <strong>
+                        75%
+                    </strong>
+
+                </div>
+
+
+                <div class="assignment-row">
+
+                    <div class="assignment-icon">
+                        🔧
+                    </div>
+
+                    <div class="assignment-info">
+
+                        <h4>
+                            Sector 4 Drain Clearing
+                        </h4>
+
+                        <p>
+                            Blocked drainage channel
+                        </p>
+
+                    </div>
+
+                    <strong>
+                        55%
+                    </strong>
+
+                </div>
+
+
+                <div class="assignment-row">
+
+                    <div class="assignment-icon">
+                        🛠
+                    </div>
+
+                    <div class="assignment-info">
+
+                        <h4>
+                            Stormwater Inspection
+                        </h4>
+
+                        <p>
+                            North Zone drainage review
+                        </p>
+
+                    </div>
+
+                    <strong>
+                        30%
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- Coordination note -->
+
+            <div class="department-coordination-note">
+
+                <div class="coordination-icon">
+                    ✦
+                </div>
+
+                <div>
+
+                    <span>
+                        URBANNEXUS COORDINATION INSIGHT
+                    </span>
+
+                    <h3>
+                        This department is handling an upstream problem.
+                    </h3>
+
+                    <p>
+                        Resolving drainage issues may reduce downstream
+                        waterlogging, road blockage, and traffic congestion.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Footer -->
+
+            <div class="department-detail-footer">
+
+                <p>
+                    Department workload and progress are
+                    decision-support indicators.
+                </p>
+
+                <a href="/municipality/interventions">
+                    View Interventions →
+                </a>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const searchInput =
+        document.getElementById("departmentSearch");
+
+    const statusFilter =
+        document.getElementById("departmentStatusFilter");
+
+    const items =
+        document.querySelectorAll(".department-card");
+
+    const count =
+        document.getElementById("departmentCount");
+
+
+    function filterDepartments() {
+
+        const search =
+            searchInput.value.toLowerCase().trim();
+
+        const status =
+            statusFilter.value;
+
+        let visible = 0;
+
+
+        items.forEach(function (item) {
+
+            const searchText =
+                item.dataset.search.toLowerCase();
+
+            const itemStatus =
+                item.dataset.status;
+
+
+            const matchesSearch =
+                searchText.includes(search);
+
+            const matchesStatus =
+                status === "all" ||
+                itemStatus === status;
+
+
+            const show =
+                matchesSearch &&
+                matchesStatus;
+
+
+            item.style.display =
+                show ? "grid" : "none";
+
+
+            if (show) {
+                visible++;
+            }
+
+        });
+
+
+        count.textContent =
+            `${visible} department${visible === 1 ? "" : "s"}`;
+    }
+
+
+    searchInput.addEventListener(
+        "input",
+        filterDepartments
+    );
+
+
+    statusFilter.addEventListener(
+        "change",
+        filterDepartments
+    );
+
+
+    items.forEach(function (item) {
+
+        item.addEventListener(
+            "click",
+            function () {
+
+                items.forEach(function (other) {
+
+                    other.classList.remove("selected");
+
+                });
+
+
+                item.classList.add("selected");
+
+            }
+        );
+
+    });
+
+});
+
+</script>
+
+{% endblock %}

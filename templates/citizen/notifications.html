@@ -1,0 +1,435 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+
+<!-- Common UrbanNexus layout/sidebar/mobile CSS -->
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/citizen-dashboard.css') }}">
+
+<!-- Notifications page CSS -->
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/notifications.css') }}">
+
+{% endblock %}
+{% block content %}
+
+<div class="notifications-page">
+
+    
+
+
+    <!-- Page Header -->
+    <div class="notifications-header">
+
+        <div>
+            <span class="page-kicker">UPDATES & ACTIVITY</span>
+
+            <h1>Notifications</h1>
+
+            <p>
+                Stay updated about your reported problems and UrbanNexus activities.
+            </p>
+        </div>
+
+        <button class="mark-all-btn" id="markAllBtn">
+            ✓ Mark all as read
+        </button>
+
+    </div>
+
+
+    <!-- Notification Summary -->
+    <div class="notification-summary">
+
+        <div class="summary-card unread-summary">
+            <div class="summary-icon">●</div>
+            <div>
+                <strong id="unreadCount">3</strong>
+                <span>Unread notifications</span>
+            </div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-icon">◷</div>
+            <div>
+                <strong>12</strong>
+                <span>Total notifications</span>
+            </div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-icon">✓</div>
+            <div>
+                <strong>8</strong>
+                <span>Reports resolved</span>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Filters -->
+    <div class="notification-toolbar">
+
+        <div class="notification-tabs">
+
+            <button class="notification-tab active" data-filter="all">
+                All
+            </button>
+
+            <button class="notification-tab" data-filter="unread">
+                Unread
+            </button>
+
+            <button class="notification-tab" data-filter="reports">
+                My Reports
+            </button>
+
+            <button class="notification-tab" data-filter="system">
+                UrbanNexus
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- Notification List -->
+    <div class="notifications-list" id="notificationsList">
+
+
+        <!-- Notification 1 -->
+        <div class="notification-item unread"
+             data-type="reports"
+             data-read="false">
+
+            <div class="notification-icon high">
+                ⚠
+            </div>
+
+            <div class="notification-content">
+
+                <div class="notification-top">
+
+                    <h3>High-impact problem identified</h3>
+
+                    <span class="notification-time">
+                        15 min ago
+                    </span>
+
+                </div>
+
+                <p>
+                    UrbanNexus identified your <strong>Waterlogging near Main Road</strong>
+                    report as a high-impact problem connected to road blockage and
+                    traffic congestion.
+                </p>
+
+                <a href="{{ url_for('report_details', report_id=1) }}"
+                   class="notification-action">
+                    View Report →
+                </a>
+
+            </div>
+
+            <span class="unread-dot"></span>
+
+        </div>
+
+
+        <!-- Notification 2 -->
+        <div class="notification-item unread"
+             data-type="reports"
+             data-read="false">
+
+            <div class="notification-icon analysis">
+                ✦
+            </div>
+
+            <div class="notification-content">
+
+                <div class="notification-top">
+
+                    <h3>AI analysis completed</h3>
+
+                    <span class="notification-time">
+                        1 hour ago
+                    </span>
+
+                </div>
+
+                <p>
+                    UrbanNexus has completed the AI analysis for your
+                    <strong>Damaged Road near Bus Stand</strong> report.
+                </p>
+
+                <a href="{{ url_for('report_details', report_id=2) }}"
+                   class="notification-action">
+                    View Analysis →
+                </a>
+
+            </div>
+
+            <span class="unread-dot"></span>
+
+        </div>
+
+
+        <!-- Notification 3 -->
+        <div class="notification-item unread"
+             data-type="reports"
+             data-read="false">
+
+            <div class="notification-icon assigned">
+                👷
+            </div>
+
+            <div class="notification-content">
+
+                <div class="notification-top">
+
+                    <h3>Department assigned</h3>
+
+                    <span class="notification-time">
+                        3 hours ago
+                    </span>
+
+                </div>
+
+                <p>
+                    Your <strong>Waterlogging near Main Road</strong> report
+                    has been assigned to the <strong>Drainage Department</strong>.
+                </p>
+
+                <a href="{{ url_for('report_details', report_id=1) }}"
+                   class="notification-action">
+                    Track Report →
+                </a>
+
+            </div>
+
+            <span class="unread-dot"></span>
+
+        </div>
+
+
+        <!-- Notification 4 -->
+        <div class="notification-item"
+             data-type="reports"
+             data-read="true">
+
+            <div class="notification-icon progress">
+                🔧
+            </div>
+
+            <div class="notification-content">
+
+                <div class="notification-top">
+
+                    <h3>Work has started</h3>
+
+                    <span class="notification-time">
+                        Yesterday
+                    </span>
+
+                </div>
+
+                <p>
+                    The department has started working on your
+                    <strong>Waterlogging near Main Road</strong> report.
+                </p>
+
+                <a href="{{ url_for('report_details', report_id=1) }}"
+                   class="notification-action">
+                    View Progress →
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- Notification 5 -->
+        <div class="notification-item"
+             data-type="reports"
+             data-read="true">
+
+            <div class="notification-icon resolved">
+                ✓
+            </div>
+
+            <div class="notification-content">
+
+                <div class="notification-top">
+
+                    <h3>Problem resolved</h3>
+
+                    <span class="notification-time">
+                        2 days ago
+                    </span>
+
+                </div>
+
+                <p>
+                    Your <strong>Streetlight Not Working</strong> report
+                    has been marked as resolved.
+                </p>
+
+                <a href="{{ url_for('report_details', report_id=3) }}"
+                   class="notification-action">
+                    View Report →
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- Notification 6 -->
+        <div class="notification-item"
+             data-type="system"
+             data-read="true">
+
+            <div class="notification-icon system">
+                ✦
+            </div>
+
+            <div class="notification-content">
+
+                <div class="notification-top">
+
+                    <h3>UrbanNexus insight available</h3>
+
+                    <span class="notification-time">
+                        3 days ago
+                    </span>
+
+                </div>
+
+                <p>
+                    A new urban problem dependency insight is available
+                    for problems reported around your area.
+                </p>
+
+                <a href="{{ url_for('nearby_problems') }}"
+                   class="notification-action">
+                    Explore Nearby Problems →
+                </a>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- Empty State -->
+    <div class="notifications-empty" id="notificationsEmpty">
+
+        <div class="empty-icon">✓</div>
+
+        <h3>No notifications found</h3>
+
+        <p>
+            There are no notifications matching the selected filter.
+        </p>
+
+    </div>
+
+
+</div>
+
+
+<script>
+
+const tabs = document.querySelectorAll(".notification-tab");
+const notifications = document.querySelectorAll(".notification-item");
+const emptyState = document.getElementById("notificationsEmpty");
+const unreadCount = document.getElementById("unreadCount");
+const markAllBtn = document.getElementById("markAllBtn");
+
+
+function applyFilter(filter) {
+
+    let visibleCount = 0;
+
+    notifications.forEach(notification => {
+
+        const type = notification.dataset.type;
+        const read = notification.dataset.read === "true";
+
+        let show = false;
+
+        if (filter === "all") {
+            show = true;
+        }
+
+        if (filter === "unread") {
+            show = !read;
+        }
+
+        if (filter === "reports") {
+            show = type === "reports";
+        }
+
+        if (filter === "system") {
+            show = type === "system";
+        }
+
+        notification.style.display = show ? "flex" : "none";
+
+        if (show) {
+            visibleCount++;
+        }
+
+    });
+
+    emptyState.style.display =
+        visibleCount === 0 ? "flex" : "none";
+}
+
+
+tabs.forEach(tab => {
+
+    tab.addEventListener("click", () => {
+
+        tabs.forEach(item =>
+            item.classList.remove("active")
+        );
+
+        tab.classList.add("active");
+
+        applyFilter(tab.dataset.filter);
+
+    });
+
+});
+
+
+markAllBtn.addEventListener("click", () => {
+
+    notifications.forEach(notification => {
+
+        notification.classList.remove("unread");
+
+        notification.dataset.read = "true";
+
+        const dot = notification.querySelector(".unread-dot");
+
+        if (dot) {
+            dot.remove();
+        }
+
+    });
+
+    unreadCount.textContent = "0";
+
+});
+
+
+applyFilter("all");
+
+</script>
+
+{% endblock %}

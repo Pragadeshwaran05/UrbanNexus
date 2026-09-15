@@ -1,0 +1,997 @@
+/* =========================================================
+   URBANNEXUS - MY REPORTS
+   ========================================================= */
+
+
+/* =========================================================
+   MAIN PAGE
+   ========================================================= */
+
+.reports-page {
+    position: relative;
+
+    width: 100%;
+    max-width: 1280px;
+
+    margin: 0 auto;
+
+    padding: 40px 46px 60px;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   BACK TO DASHBOARD
+   ========================================================= */
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 10px 16px;
+
+    margin-bottom: 30px;
+
+    background: #ffffff;
+    color: #4a2879;
+
+    border: 1.5px solid #cbb9dc;
+    border-radius: 8px;
+
+    text-decoration: none;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.back-link:hover {
+    background: #4a2879;
+    color: #ffffff;
+    border-color: #4a2879;
+
+    text-decoration: none;
+}
+
+
+/* =========================================================
+   TOP RIGHT USER
+   ========================================================= */
+
+.top-user {
+    position: absolute;
+
+    top: 34px;
+    right: 42px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+
+    z-index: 10;
+}
+
+.top-user-info {
+    display: flex;
+    flex-direction: column;
+
+    align-items: flex-end;
+
+    gap: 2px;
+}
+
+.top-user-info strong {
+    color: #241638;
+
+    font-size: 13px;
+    font-weight: 750;
+}
+
+.top-user-info span {
+    color: #786b84;
+
+    font-size: 11px;
+}
+
+.top-user-avatar {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #eee6f8;
+    color: #4a2879;
+
+    border: 1.5px solid #cbb9dc;
+
+    font-size: 15px;
+    font-weight: 750;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.reports-header {
+    margin-bottom: 28px;
+}
+
+.reports-header .eyebrow {
+    display: block;
+
+    color: #68429b;
+
+    font-size: 13px;
+    font-weight: 800;
+
+    letter-spacing: 1.4px;
+
+    margin-bottom: 8px;
+}
+
+.reports-header h1 {
+    margin: 0 0 9px;
+
+    color: #20133b;
+
+    font-size: 38px;
+    line-height: 1.15;
+    font-weight: 750;
+}
+
+.reports-header p {
+    margin: 0;
+
+    color: #625572;
+
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   SUMMARY CARDS
+   ========================================================= */
+
+.report-summary-grid {
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 14px;
+
+    margin-bottom: 24px;
+}
+
+.summary-card {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    min-height: 92px;
+
+    padding: 16px 18px;
+
+    box-sizing: border-box;
+
+    background: #ffffff;
+
+    border: 1.5px solid #000000;
+
+    border-radius: 12px;
+}
+
+.summary-icon {
+    width: 42px;
+    height: 42px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.summary-icon.total {
+    background: #e5d8f8;
+    color: #5c3590;
+}
+
+.summary-icon.active {
+    background: #fde6ce;
+    color: #c76b20;
+}
+
+.summary-icon.analysis {
+    background: #dcebf8;
+    color: #3e78a7;
+}
+
+.summary-icon.resolved {
+    background: #dcefe6;
+    color: #31805c;
+}
+
+.summary-card span {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #71647d;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.summary-card strong {
+    display: block;
+
+    color: #241638;
+
+    font-size: 27px;
+    line-height: 1;
+
+    font-weight: 750;
+}
+
+
+/* =========================================================
+   SEARCH + FILTER
+   ========================================================= */
+
+.reports-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 14px;
+
+    margin-bottom: 26px;
+}
+
+.search-box {
+    flex: 1;
+
+    max-width: 600px;
+
+    height: 46px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 0 14px;
+
+    box-sizing: border-box;
+
+    background: #ffffff;
+
+    border: 1.5px solid #cfc4d8;
+
+    border-radius: 9px;
+}
+
+.search-icon {
+    color: #79658c;
+
+    font-size: 20px;
+}
+
+.search-box input {
+    width: 100%;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    color: #281a3a;
+
+    font-family: inherit;
+
+    font-size: 13px;
+}
+
+.search-box input::placeholder {
+    color: #9b90a5;
+}
+
+.filter-box select {
+    height: 46px;
+
+    min-width: 160px;
+
+    padding: 0 35px 0 14px;
+
+    border: 1.5px solid #cfc4d8;
+
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    color: #352347;
+
+    font-family: inherit;
+
+    font-size: 13px;
+    font-weight: 650;
+
+    outline: none;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   SECTION TITLE
+   ========================================================= */
+
+.section-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 16px;
+}
+
+.section-title-row h2 {
+    margin: 0 0 4px;
+
+    color: #25183a;
+
+    font-size: 21px;
+    font-weight: 750;
+}
+
+.section-title-row p {
+    margin: 0;
+
+    color: #786d82;
+
+    font-size: 12px;
+}
+
+.new-report-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 42px;
+
+    padding: 0 17px;
+
+    border-radius: 8px;
+
+    background: #452575;
+    color: #ffffff;
+
+    text-decoration: none;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    transition: background 0.2s ease;
+}
+
+.new-report-button:hover {
+    background: #321956;
+
+    text-decoration: none;
+}
+
+
+/* =========================================================
+   REPORT LIST
+   ========================================================= */
+
+.reports-list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 15px;
+}
+
+
+/* =========================================================
+   REPORT CARD - COMPACT
+   ========================================================= */
+.report-card {
+    width: 100%;
+
+    background: #ffffff;
+
+    border: 1.5px solid #000000;
+    border-radius: 14px;
+
+    padding: 24px 26px;
+
+    box-sizing: border-box;
+
+    min-height: 250px;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.report-card:hover {
+    transform: translateY(-1px);
+
+    box-shadow: 0 6px 18px rgba(49, 31, 72, 0.08);
+}
+/* =========================================================
+   CARD TOP
+   ========================================================= */
+
+.report-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 20px;
+}
+
+.report-main {
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+}
+
+.report-category-icon {
+    width: 38px;
+    height: 38px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.report-category-icon.water {
+    background: #e5f2fb;
+    color: #4d8db7;
+}
+
+.report-category-icon.roads {
+    background: #fceddf;
+    color: #d87932;
+}
+
+.report-category-icon.electricity {
+    background: #fff0dc;
+    color: #df8830;
+}
+
+.report-category-icon.waste {
+    background: #e5f3eb;
+    color: #30966a;
+}
+
+
+/* =========================================================
+   REPORT TITLE
+   ========================================================= */
+
+.report-title-row {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    margin-bottom: 3px;
+}
+
+.report-title-row h3 {
+    margin: 0;
+
+    color: #241638;
+
+    font-size: 14px;
+    font-weight: 750;
+}
+
+.report-category {
+    color: #776a82;
+
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   PRIORITY
+   ========================================================= */
+
+.priority {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 4px 8px;
+
+    border-radius: 5px;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    letter-spacing: 0.4px;
+}
+
+.priority.high {
+    background: #fbe3e5;
+    color: #bd4051;
+}
+
+.priority.medium {
+    background: #fff0dc;
+    color: #b66a1d;
+}
+
+.priority.low {
+    background: #e3f2e9;
+    color: #31805a;
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 6px 10px;
+
+    border-radius: 6px;
+
+    white-space: nowrap;
+
+    font-size: 9px;
+    font-weight: 750;
+}
+
+.status-badge.in-progress {
+    background: #e9e0f7;
+    color: #5b368d;
+}
+
+.status-badge.analysis {
+    background: #dcebf8;
+    color: #3d719c;
+}
+
+.status-badge.resolved {
+    background: #dcefe6;
+    color: #317b56;
+}
+
+.status-badge.submitted {
+    background: #eee8f5;
+    color: #695579;
+}
+
+
+/* =========================================================
+   REPORT DETAILS
+   ========================================================= */
+
+.report-details {
+    display: flex;
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 15px;
+
+    padding:14px 0;
+
+    border-top: 1px solid #ebe5ef;
+    border-bottom: 1px solid #ebe5ef;
+
+    margin-bottom: 16px;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+
+    gap: 5px;
+
+    color: #6e6279;
+
+    font-size: 10px;
+}
+
+.detail-icon {
+    color: #74509c;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   PROGRESS
+   ========================================================= */
+
+.report-progress {
+    margin-bottom: 16px;
+}
+
+.progress-track {
+    width: 100%;
+    height: 5px;
+
+    overflow: hidden;
+
+    background: #e9e2ee;
+
+    border-radius: 20px;
+
+    margin-bottom: 6px;
+}
+
+.progress-fill {
+    height: 100%;
+
+    background: #513080;
+
+    border-radius: 20px;
+}
+
+.progress-labels {
+    display: flex;
+    justify-content: space-between;
+
+    gap: 8px;
+
+    color: #9a8ea3;
+
+    font-size: 8px;
+}
+
+.progress-labels .completed {
+    color: #5b3a86;
+
+    font-weight: 700;
+}
+
+.progress-labels .current {
+    color: #442673;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   CARD FOOTER
+   ========================================================= */
+
+.report-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 3px;
+
+    gap: 10px;
+}
+
+.ai-note,
+.resolved-note {
+    color: #6f5a86;
+
+    font-size: 9px;
+    font-weight: 650;
+}
+
+.resolved-note {
+    color: #36805a;
+}
+
+.view-report-button {
+    display: inline-flex;
+    align-items: center;
+
+    color: #4c2a7d;
+
+    text-decoration: none;
+
+    font-size: 10px;
+    font-weight: 750;
+}
+
+.view-report-button:hover {
+    text-decoration: none;
+
+    color: #2e1750;
+}
+
+
+/* =========================================================
+   NO REPORTS
+   ========================================================= */
+
+.no-reports {
+    padding: 50px 20px;
+
+    text-align: center;
+
+    background: #ffffff;
+
+    border: 1.5px solid #cfc4d8;
+
+    border-radius: 14px;
+}
+
+.no-reports-icon {
+    font-size: 30px;
+
+    color: #74509c;
+
+    margin-bottom: 10px;
+}
+
+.no-reports h3 {
+    margin: 0 0 6px;
+
+    color: #281a3b;
+
+    font-size: 17px;
+}
+
+.no-reports p {
+    margin: 0;
+
+    color: #7c7085;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+    .reports-page {
+        padding: 30px;
+    }
+
+    .report-summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+    .reports-page {
+        padding: 24px 18px 40px;
+    }
+
+    .back-link {
+        margin-bottom: 26px;
+    }
+
+    .top-user {
+        top: 20px;
+        right: 20px;
+    }
+
+    .reports-header {
+        padding-top: 0;
+    }
+
+    .reports-header h1 {
+        font-size: 30px;
+    }
+
+    .reports-header p {
+        font-size: 14px;
+    }
+
+
+    /* Summary */
+
+    .report-summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+
+        gap: 10px;
+    }
+
+    .summary-card {
+        min-height: 82px;
+
+        padding: 12px;
+    }
+
+    .summary-icon {
+        width: 36px;
+        height: 36px;
+    }
+
+    .summary-card strong {
+        font-size: 23px;
+    }
+
+
+    /* Search */
+
+    .reports-toolbar {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+    .search-box {
+        max-width: none;
+    }
+
+    .filter-box select {
+        width: 100%;
+    }
+
+
+    /* Section */
+
+    .section-title-row {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .new-report-button {
+        width: 100%;
+    }
+
+
+    /* Report Card */
+
+    .report-card {
+        padding: 15px;
+    }
+
+    .report-card-top {
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+    .status-badge {
+        align-self: flex-start;
+    }
+
+    .report-title-row {
+        flex-wrap: wrap;
+    }
+
+    .report-details {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 9px;
+    }
+
+    .progress-labels {
+        font-size: 8px;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 500px) {
+
+    .reports-page {
+        padding: 20px 12px 30px;
+    }
+
+    .back-link {
+        padding: 9px 14px;
+
+        font-size: 12px;
+
+        margin-bottom: 24px;
+    }
+
+    .top-user {
+        right: 14px;
+    }
+
+    .top-user-info {
+        display: none;
+    }
+
+    .reports-header {
+        padding-top: 42px;
+    }
+
+    .report-summary-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .summary-card {
+        gap: 8px;
+    }
+
+    .summary-icon {
+        width: 32px;
+        height: 32px;
+
+        font-size: 14px;
+    }
+
+    .summary-card span {
+        font-size: 10px;
+    }
+
+    .summary-card strong {
+        font-size: 21px;
+    }
+
+    .report-main {
+        gap: 10px;
+    }
+
+    .report-category-icon {
+        width: 38px;
+        height: 38px;
+
+        font-size: 16px;
+    }
+
+    .report-title-row h3 {
+        font-size: 14px;
+    }
+
+    .report-card-footer {
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+    .view-report-button {
+        align-self: flex-end;
+    }
+
+}

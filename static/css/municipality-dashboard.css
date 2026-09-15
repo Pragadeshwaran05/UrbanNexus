@@ -1,0 +1,1121 @@
+/* =========================================================
+   MUNICIPAL DASHBOARD - NO OUTER GAPS
+========================================================= */
+
+html,
+body {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.municipality-dashboard {
+    margin: 0 !important;
+}
+/* =========================================================
+   MUNICIPALITY DASHBOARD BASE
+========================================================= */
+
+.municipality-dashboard {
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+}
+/* =========================================
+   MUNICIPALITY DASHBOARD
+========================================= */
+
+.municipality-dashboard {
+    min-height: 100vh;
+    box-sizing: border-box;
+    padding: 30px 36px 45px;    background: #f7f5fa;
+    color: #282230;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.municipality-dashboard-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 28px;
+}
+
+.municipality-eyebrow {
+    margin: 0 0 7px;
+    color: #7250a7;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+}
+
+.municipality-dashboard-header h1 {
+    margin: 0;
+    color: #282230;
+    font-size: 32px;
+    font-weight: 750;
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+}
+.municipality-subtitle {
+    max-width: 650px;
+    margin: 8px 0 0;
+    color: #786f83;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.municipality-header-status {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.city-location {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 9px 13px;
+    background: #ffffff;
+    border: 1px solid #ded7e6;
+    border-radius: 10px;
+}
+
+.location-icon {
+    color: #7250a7;
+    font-size: 19px;
+}
+
+.city-location strong {
+    display: block;
+    font-size: 12px;
+}
+
+.city-location span {
+    display: block;
+    margin-top: 2px;
+    color: #8a8192;
+    font-size: 9px;
+}
+
+.system-status {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 13px;
+    background: #e7f4eb;
+    color: #287044;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #3e9b5c;
+}
+
+
+/* =========================================
+   STATS
+========================================= */
+
+.municipality-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.municipality-stat-card {
+    min-height: 150px;
+    padding: 18px 20px;
+    box-sizing: border-box;
+    background: #ffffff;
+    border: 1.5px solid #000000;
+    border-radius: 14px;
+}
+
+.municipality-stat-card.problems {
+    background: #e5d8f8;
+}
+
+.municipality-stat-card.impact {
+    background: #fde6ce;
+}
+
+.municipality-stat-card.analysis {
+    background: #dcebf8;
+}
+
+.municipality-stat-card.interventions {
+    background: #dcefe6;
+}
+
+.municipality-stat-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.municipality-stat-icon {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    background: rgba(255,255,255,0.65);
+    color: #34205f;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.stat-trend {
+    padding: 4px 7px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.55);
+    color: #7250a7;
+    font-size: 9px;
+    font-weight: 800;
+}
+
+.stat-trend.positive {
+    color: #287044;
+}
+
+.stat-trend.warning {
+    color: #a55d16;
+}
+
+.municipality-stat-value {
+    margin-top: 10px;
+    font-size: 30px;
+    line-height: 1;
+    font-weight: 750;
+}
+
+.municipality-stat-label {
+    margin-top: 6px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.municipality-stat-card p {
+    margin: 4px 0 0;
+    color: #786f83;
+    font-size: 10px;
+}
+
+
+/* =========================================
+   COMMON PANEL
+========================================= */
+
+.municipality-panel {
+    background: #ffffff;
+    border: 1px solid #ded7e6;
+    border-radius: 15px;
+    padding: 22px;
+    box-sizing: border-box;
+}
+
+.panel-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 18px;
+}
+
+.panel-kicker {
+    margin: 0 0 5px;
+    color: #7250a7;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.panel-header h2,
+.ai-insight-title h2 {
+    margin: 0;
+    color: #282230;
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.panel-header p {
+    margin: 5px 0 0;
+    color: #8a8192;
+    font-size: 10px;
+}
+
+.panel-link {
+    flex-shrink: 0;
+    color: #5d3d91;
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 750;
+}
+
+.panel-link:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================================
+   MAIN GRID
+========================================= */
+
+.municipality-dashboard-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(300px, 1fr);
+    gap: 22px;
+    margin-bottom: 22px;
+}
+
+
+/* =========================================
+   PRIORITY PROBLEMS
+========================================= */
+
+.priority-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.priority-item {
+    display: grid;
+    grid-template-columns: 38px minmax(0, 1fr) 55px;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 0;
+    border-bottom: 1px solid #eeeaf1;
+}
+
+.priority-item:last-child {
+    border-bottom: none;
+    padding-bottom: 2px;
+}
+
+.priority-rank {
+    color: #a69eac;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.priority-info {
+    min-width: 0;
+}
+
+.priority-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.priority-title-row h3 {
+    margin: 0;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #342b3c;
+    font-size: 12px;
+    font-weight: 750;
+}
+
+.priority-info > p {
+    margin: 4px 0 8px;
+    color: #8a8192;
+    font-size: 9px;
+}
+
+.impact-badge {
+    flex-shrink: 0;
+    padding: 4px 6px;
+    border-radius: 5px;
+    font-size: 8px;
+    font-weight: 800;
+}
+
+.impact-badge.high {
+    background: #fde5e3;
+    color: #b83b35;
+}
+
+.impact-badge.medium {
+    background: #fff0d9;
+    color: #a76318;
+}
+
+.priority-bar {
+    width: 100%;
+    height: 5px;
+    overflow: hidden;
+    background: #eeeaf1;
+    border-radius: 10px;
+}
+
+.priority-bar-fill {
+    height: 100%;
+    background: #7250a7;
+    border-radius: inherit;
+}
+
+.priority-score {
+    text-align: right;
+}
+
+.priority-score strong {
+    display: block;
+    color: #34205f;
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.priority-score span {
+    color: #99919f;
+    font-size: 8px;
+}
+
+
+/* =========================================
+   URBAN IMPACT
+========================================= */
+
+.impact-list {
+    display: flex;
+    flex-direction: column;
+    gap: 19px;
+    padding-top: 5px;
+}
+
+.impact-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 7px;
+}
+
+.impact-label span {
+    color: #544b5d;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.impact-label strong {
+    color: #34205f;
+    font-size: 10px;
+}
+
+.impact-track {
+    width: 100%;
+    height: 7px;
+    overflow: hidden;
+    background: #eeeaf1;
+    border-radius: 10px;
+}
+
+.impact-track div {
+    height: 100%;
+    background: #8b68bd;
+    border-radius: inherit;
+}
+
+
+/* =========================================
+   AI INSIGHT
+========================================= */
+
+.ai-insight-panel {
+    margin-bottom: 22px;
+    background: linear-gradient(
+        135deg,
+        #ffffff 0%,
+        #faf7fd 100%
+    );
+    border-color: #cfc0df;
+}
+
+.ai-insight-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.ai-insight-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ai-insight-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: #eee7f7;
+    color: #5d3d91;
+    border-radius: 11px;
+    font-size: 19px;
+}
+
+.ai-badge {
+    padding: 6px 9px;
+    background: #eee7f7;
+    color: #5d3d91;
+    border-radius: 6px;
+    font-size: 8px;
+    font-weight: 800;
+}
+
+.ai-insight-description {
+    margin: 17px 0;
+    color: #655c6c;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.dependency-flow {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    overflow-x: auto;
+    padding: 3px 0 9px;
+}
+
+.dependency-node {
+    min-width: 145px;
+    min-height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 10px;
+    box-sizing: border-box;
+    background: #f7f5fa;
+    border: 1px solid #dcd4e5;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.dependency-node strong {
+    color: #3d3446;
+    font-size: 10px;
+}
+
+.dependency-node.root {
+    background: #eee7f7;
+    border-color: #c8b5dc;
+}
+
+.dependency-node.downstream {
+    background: #fcebe8;
+    border-color: #e8c7c2;
+}
+
+.dependency-node-label {
+    margin-bottom: 4px;
+    color: #7c6a90;
+    font-size: 7px;
+    font-weight: 800;
+    letter-spacing: .7px;
+}
+
+.dependency-arrow {
+    flex-shrink: 0;
+    color: #8b68bd;
+    font-size: 19px;
+    font-weight: 700;
+}
+
+.ai-recommendation {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 15px;
+    padding: 13px;
+    background: #f1f8f3;
+    border: 1px solid #cfe3d4;
+    border-radius: 10px;
+}
+
+.recommendation-icon {
+    width: 27px;
+    height: 27px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: #dcefe2;
+    color: #287044;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.ai-recommendation strong {
+    display: block;
+    color: #315a3d;
+    font-size: 10px;
+}
+
+.ai-recommendation p {
+    margin: 4px 0 0;
+    color: #607566;
+    font-size: 9px;
+    line-height: 1.4;
+}
+
+
+/* =========================================
+   INTERVENTIONS
+========================================= */
+
+.interventions-panel {
+    margin-bottom: 0;
+}
+
+.intervention-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.intervention-item {
+    display: grid;
+    grid-template-columns: 40px minmax(180px, 1fr) minmax(130px, 220px) 90px;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 0;
+    border-bottom: 1px solid #eeeaf1;
+}
+
+.intervention-item:last-child {
+    border-bottom: none;
+}
+
+.intervention-icon {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eee7f7;
+    border-radius: 10px;
+    font-size: 17px;
+}
+
+.intervention-info h3 {
+    margin: 0;
+    color: #3d3446;
+    font-size: 11px;
+    font-weight: 750;
+}
+
+.intervention-info p {
+    margin: 4px 0 0;
+    color: #8a8192;
+    font-size: 9px;
+}
+
+.intervention-progress {
+    min-width: 0;
+}
+
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.progress-label span {
+    color: #8a8192;
+    font-size: 8px;
+}
+
+.progress-label strong {
+    color: #5d3d91;
+    font-size: 9px;
+}
+
+.progress-track {
+    height: 6px;
+    overflow: hidden;
+    background: #eeeaf1;
+    border-radius: 10px;
+}
+
+.progress-track div {
+    height: 100%;
+    background: #7250a7;
+    border-radius: inherit;
+}
+
+.intervention-status {
+    justify-self: end;
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 8px;
+    font-weight: 750;
+}
+
+.intervention-status.active {
+    background: #eee7f7;
+    color: #5d3d91;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1100px) {
+
+    .municipality-dashboard {
+        padding: 28px 24px 40px;
+    }
+
+    .municipality-stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .municipality-dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+@media (max-width: 800px) {
+
+    .municipality-dashboard {
+        padding: 22px 16px 35px;
+    }
+
+    .municipality-dashboard-header {
+        flex-direction: column;
+        margin-bottom: 22px;
+    }
+
+    .municipality-dashboard-header h1 {
+        font-size: 27px;
+    }
+
+    .municipality-header-status {
+        width: 100%;
+    }
+
+    .city-location {
+        flex: 1;
+    }
+
+    .system-status {
+        white-space: nowrap;
+    }
+
+    .municipality-stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 11px;
+    }
+
+    .municipality-stat-card {
+        min-height: 135px;
+        padding: 15px;
+    }
+
+    .municipality-stat-value {
+        font-size: 27px;
+    }
+
+    .municipality-panel {
+        padding: 17px;
+    }
+
+    .intervention-item {
+        grid-template-columns: 38px minmax(0, 1fr);
+    }
+
+    .intervention-progress {
+        grid-column: 2;
+    }
+
+    .intervention-status {
+        grid-column: 2;
+        justify-self: start;
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    .municipality-dashboard {
+        padding: 18px 12px 30px;
+    }
+
+    .municipality-stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .municipality-stat-card {
+        min-height: 120px;
+    }
+
+    .municipality-header-status {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .system-status {
+        justify-content: center;
+    }
+
+    .priority-item {
+        grid-template-columns: 28px minmax(0, 1fr) 45px;
+        gap: 7px;
+    }
+
+    .priority-title-row {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .priority-title-row h3 {
+        white-space: normal;
+    }
+
+    .dependency-flow {
+        padding-bottom: 12px;
+    }
+
+    .dependency-node {
+        min-width: 130px;
+    }
+
+    .ai-insight-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .intervention-item {
+        grid-template-columns: 38px minmax(0, 1fr);
+    }
+
+}
+
+/* =========================================================
+   FORCE MODERN DASHBOARD TYPOGRAPHY
+========================================================= */
+
+.municipality-dashboard h1,
+.municipality-dashboard h2,
+.municipality-dashboard h3,
+.municipality-dashboard p,
+.municipality-dashboard span,
+.municipality-dashboard strong,
+.municipality-dashboard a {
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+}
+/* =========================================================
+   MUNICIPALITY DASHBOARD
+   CLEAN TYPOGRAPHY
+========================================================= */
+
+/* Main dashboard font */
+.municipality-dashboard {
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.municipality-eyebrow {
+    font-size: 11px;
+    font-weight: 750;
+    letter-spacing: 1.1px;
+}
+
+.municipality-dashboard-header h1 {
+    margin: 0;
+
+    font-size: 32px;
+    line-height: 1.15;
+    font-weight: 750;
+}
+
+.municipality-subtitle {
+    margin-top: 8px;
+
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 400;
+}
+
+
+/* =========================================================
+   HEADER STATUS
+========================================================= */
+
+.city-location strong {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.city-location span {
+    font-size: 10px;
+    font-weight: 400;
+}
+
+.system-status {
+    font-size: 11px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   STAT CARDS
+========================================================= */
+
+.municipality-stat-value {
+    font-size: 30px;
+    line-height: 1;
+    font-weight: 750;
+}
+
+.municipality-stat-label {
+    margin-top: 7px;
+
+    font-size: 13px;
+    line-height: 1.25;
+    font-weight: 700;
+}
+
+.municipality-stat-card p {
+    margin-top: 5px;
+
+    font-size: 11px;
+    line-height: 1.35;
+    font-weight: 400;
+}
+
+.stat-trend {
+    font-size: 9px;
+    font-weight: 750;
+}
+
+
+/* =========================================================
+   PANEL HEADINGS
+========================================================= */
+
+.panel-kicker {
+    margin-bottom: 5px;
+
+    font-size: 10px;
+    line-height: 1.2;
+    font-weight: 750;
+    letter-spacing: 1px;
+}
+
+.panel-header h2,
+.ai-insight-title h2 {
+    font-size: 18px;
+    line-height: 1.25;
+    font-weight: 750;
+}
+
+.panel-header p {
+    margin-top: 5px;
+
+    font-size: 11px;
+    line-height: 1.4;
+    font-weight: 400;
+}
+
+.panel-link {
+    font-size: 11px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   PRIORITY PROBLEMS
+========================================================= */
+
+.priority-rank {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.priority-title-row h3 {
+    font-size: 13px;
+    line-height: 1.3;
+    font-weight: 700;
+}
+
+.priority-info > p {
+    margin-top: 4px;
+    margin-bottom: 8px;
+
+    font-size: 10px;
+    line-height: 1.3;
+    font-weight: 400;
+}
+
+.impact-badge {
+    font-size: 8px;
+    font-weight: 750;
+}
+
+.priority-score strong {
+    font-size: 19px;
+    line-height: 1;
+    font-weight: 750;
+}
+
+.priority-score span {
+    font-size: 9px;
+    font-weight: 400;
+}
+
+
+/* =========================================================
+   URBAN IMPACT
+========================================================= */
+
+.impact-label span {
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.impact-label strong {
+    font-size: 11px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   AI INSIGHT
+========================================================= */
+
+.ai-insight-description {
+    margin: 16px 0;
+
+    font-size: 12px;
+    line-height: 1.5;
+    font-weight: 400;
+}
+
+.ai-badge {
+    font-size: 8px;
+    font-weight: 750;
+}
+
+.dependency-node strong {
+    font-size: 10px;
+    line-height: 1.3;
+    font-weight: 700;
+}
+
+.dependency-node-label {
+    font-size: 7px;
+    font-weight: 750;
+    letter-spacing: 0.7px;
+}
+
+.ai-recommendation strong {
+    font-size: 11px;
+    line-height: 1.3;
+    font-weight: 700;
+}
+
+.ai-recommendation p {
+    margin-top: 4px;
+
+    font-size: 10px;
+    line-height: 1.45;
+    font-weight: 400;
+}
+
+
+/* =========================================================
+   ACTIVE INTERVENTIONS
+========================================================= */
+
+.intervention-info h3 {
+    font-size: 12px;
+    line-height: 1.3;
+    font-weight: 700;
+}
+
+.intervention-info p {
+    margin-top: 4px;
+
+    font-size: 10px;
+    line-height: 1.3;
+    font-weight: 400;
+}
+
+.progress-label span {
+    font-size: 9px;
+    font-weight: 400;
+}
+
+.progress-label strong {
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.intervention-status {
+    font-size: 9px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   FORCE CONSISTENT FONT
+========================================================= */
+
+.municipality-dashboard h1,
+.municipality-dashboard h2,
+.municipality-dashboard h3,
+.municipality-dashboard p,
+.municipality-dashboard span,
+.municipality-dashboard strong,
+.municipality-dashboard a,
+.municipality-dashboard div {
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+}

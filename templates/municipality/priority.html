@@ -1,0 +1,1352 @@
+{% extends "base.html" %}
+
+{% block title %}
+Priority Problems - UrbanNexus
+{% endblock %}
+
+
+{% block extra_css %}
+
+<link rel="stylesheet"
+      href="{{ url_for(
+          'static',
+          filename='css/municipality-priority.css'
+      ) }}">
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="priority-page">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="priority-header">
+
+        <div class="priority-header-main">
+
+            <p class="priority-eyebrow">
+                AI-BASED MUNICIPAL PRIORITIZATION
+            </p>
+
+            <h1>
+                Priority Problems
+            </h1>
+
+            <p class="priority-subtitle">
+                Identify which urban problems should be addressed first
+                using impact, severity, connectivity, affected area,
+                and cascading effects.
+            </p>
+
+        </div>
+
+
+        <div class="priority-header-meta">
+
+            <div class="priority-city-card">
+
+                <span class="priority-city-icon">
+                    ⌖
+                </span>
+
+                <div>
+                    <strong>Chennai</strong>
+                    <span>City Administration</span>
+                </div>
+
+            </div>
+
+
+            <div class="priority-status">
+
+                <span></span>
+
+                Priority Engine Active
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         SUMMARY CARDS
+    ====================================================== -->
+
+    <section class="priority-summary-grid">
+
+
+        <div class="priority-summary-card critical">
+
+            <div class="priority-summary-icon">
+                ⚠
+            </div>
+
+            <div>
+
+                <span>Critical</span>
+
+                <strong>
+                    {{ critical_count }}
+                </strong>
+
+                <p>
+                    Immediate attention
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="priority-summary-card high">
+
+            <div class="priority-summary-icon">
+                ↑
+            </div>
+
+            <div>
+
+                <span>High Priority</span>
+
+                <strong>
+                    {{ high_count }}
+                </strong>
+
+                <p>
+                    Should be addressed soon
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="priority-summary-card connected">
+
+            <div class="priority-summary-icon">
+                ◈
+            </div>
+
+            <div>
+
+                <span>Interconnected</span>
+
+                <strong>
+                    {{ interconnected_count }}
+                </strong>
+
+                <p>
+                    Multiple linked problems
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="priority-summary-card city">
+
+            <div class="priority-summary-icon">
+                ◎
+            </div>
+
+            <div>
+
+                <span>City Impact</span>
+
+                <strong>
+                    {{ high_impact_count }}
+                </strong>
+
+                <p>
+                    High-impact problems
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         FILTER BAR
+    ====================================================== -->
+
+    <section class="priority-toolbar">
+
+        <div class="priority-search">
+
+            <span>⌕</span>
+
+            <input
+                type="text"
+                id="prioritySearch"
+                placeholder="Search problems or locations..."
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <select id="priorityLevelFilter">
+
+            <option value="all">
+                All Priority Levels
+            </option>
+
+            <option value="critical">
+                Critical
+            </option>
+
+            <option value="high">
+                High
+            </option>
+
+            <option value="medium">
+                Medium
+            </option>
+
+            <option value="low">
+                Low
+            </option>
+
+        </select>
+
+
+        <select id="priorityCategoryFilter">
+
+            <option value="all">
+                All Categories
+            </option>
+
+            {% set categories = [] %}
+
+            {% for problem in problems %}
+
+                {% if problem.category not in categories %}
+
+                    {% set _ = categories.append(
+                        problem.category
+                    ) %}
+
+                {% endif %}
+
+            {% endfor %}
+
+
+            {% for category in categories %}
+
+                <option value="{{ category|lower }}">
+                    {{ category }}
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         MAIN AREA
+    ====================================================== -->
+
+    <div class="priority-layout">
+
+
+        <!-- =================================================
+             PRIORITY LIST
+        ================================================== -->
+
+        <section class="priority-list-panel">
+
+            <div class="priority-list-header">
+
+                <div>
+
+                    <p class="panel-kicker">
+                        RANKED INTERVENTION QUEUE
+                    </p>
+
+                    <h2>
+                        Problems Requiring Attention
+                    </h2>
+
+                </div>
+
+                <span
+                    class="priority-list-count"
+                    id="priorityCount"
+                >
+                    {{ problems|length }}
+                    problems
+                </span>
+
+            </div>
+
+
+            <div
+                class="priority-items"
+                id="priorityItems"
+            >
+
+
+                {% if problems %}
+
+
+                    {% for problem in problems %}
+
+
+                        <button
+                            type="button"
+
+                            class="
+                                priority-problem-item
+                                {% if loop.first %}
+                                    selected
+                                {% endif %}
+                            "
+
+                            data-id="{{ problem.id }}"
+
+                            data-priority="
+                                {{ problem.priority|lower }}
+                            "
+
+                            data-category="
+                                {{ problem.category|lower }}
+                            "
+
+                            data-search="
+                                {{ (
+                                    problem.title
+                                    ~ ' '
+                                    ~ problem.description
+                                    ~ ' '
+                                    ~ problem.address
+                                    ~ ' '
+                                    ~ problem.category
+                                )|lower }}
+                        ">
+
+
+                            <div class="rank-number">
+
+                                {{ "%02d"|format(
+                                    problem.rank
+                                ) }}
+
+                            </div>
+
+
+                            <div class="priority-problem-main">
+
+                                <div class="priority-problem-title">
+
+                                    <h3>
+                                        {{ problem.title }}
+                                    </h3>
+
+
+                                    <span
+                                        class="
+                                            priority-level
+                                            {{ problem.priority|lower }}
+                                        "
+                                    >
+                                        {{ problem.priority }}
+                                    </span>
+
+                                </div>
+
+
+                                <p class="problem-location">
+
+                                    {{ problem.address }}
+
+                                </p>
+
+
+                                <div class="priority-factor-row">
+
+                                    <span>
+                                        {{ problem.category }}
+                                    </span>
+
+                                    <span>•</span>
+
+                                    <span>
+                                        {{ problem.connected_problems }}
+                                        connected problems
+                                    </span>
+
+                                    <span>•</span>
+
+                                    <span>
+                                        {{ problem.nearby_problems }}
+                                        nearby
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="priority-score">
+
+                                <strong>
+                                    {{ problem.priority_score }}
+                                </strong>
+
+                                <span>
+                                    Priority
+                                </span>
+
+                            </div>
+
+
+                        </button>
+
+
+                    {% endfor %}
+
+
+                {% else %}
+
+
+                    <div class="empty-state">
+
+                        <h3>
+                            No problems found
+                        </h3>
+
+                        <p>
+                            Citizen reports will appear here
+                            after they are submitted.
+                        </p>
+
+                    </div>
+
+
+                {% endif %}
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             PRIORITY DETAILS
+        ================================================== -->
+
+        <section class="priority-detail-panel">
+
+
+            <div class="priority-detail-header">
+
+                <div class="detail-ai-heading">
+
+                    <div class="detail-ai-icon">
+                        ✦
+                    </div>
+
+                    <div>
+
+                        <p class="panel-kicker">
+                            URBANNEXUS AI
+                        </p>
+
+                        <h2>
+                            Priority Assessment
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <span class="detail-ai-badge">
+                    AI RANKED
+                </span>
+
+            </div>
+
+
+            {% if problems %}
+
+
+                {% set selected = problems[0] %}
+
+
+                <div
+                    id="priorityDetail"
+                    data-problem-id="{{ selected.id }}"
+                >
+
+
+                    <!-- SELECTED PROBLEM -->
+
+                    <div class="detail-problem-header">
+
+                        <div>
+
+                            <span class="detail-rank">
+                                PRIORITY #{{ "%02d"|format(
+                                    selected.rank
+                                ) }}
+                            </span>
+
+                            <h2 id="detailTitle">
+                                {{ selected.title }}
+                            </h2>
+
+                            <p id="detailLocation">
+                                {{ selected.address }}
+                                •
+                                {{ selected.category }}
+                            </p>
+
+                        </div>
+
+
+                        <div class="detail-score">
+
+                            <strong id="detailScore">
+                                {{ selected.priority_score }}
+                            </strong>
+
+                            <span>
+                                Priority Score
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- PRIORITY BANNER -->
+
+                    <div class="priority-level-banner">
+
+                        <div class="banner-icon">
+                            ⚠
+                        </div>
+
+                        <div>
+
+                            <strong id="detailPriority">
+                                {{ selected.priority }}
+                                Priority
+                            </strong>
+
+                            <p id="detailPriorityText">
+                                {% if selected.priority == "CRITICAL" %}
+                                    This problem should be considered
+                                    for immediate municipal intervention.
+                                {% elif selected.priority == "HIGH" %}
+                                    This problem should be addressed
+                                    soon by the responsible department.
+                                {% elif selected.priority == "MEDIUM" %}
+                                    This problem should be monitored
+                                    and scheduled for intervention.
+                                {% else %}
+                                    This problem can be handled through
+                                    routine municipal maintenance.
+                                {% endif %}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- SCORE BREAKDOWN -->
+
+                    <div class="score-section">
+
+                        <div class="section-heading">
+
+                            <div>
+
+                                <p class="panel-kicker">
+                                    SCORE BREAKDOWN
+                                </p>
+
+                                <h3>
+                                    Why this problem is highly ranked
+                                </h3>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="score-list">
+
+
+                            {% for label, value, css_class in [
+
+                                (
+                                    "Impact",
+                                    selected.impact_score,
+                                    "impact-fill"
+                                ),
+
+                                (
+                                    "Severity",
+                                    selected.severity_score,
+                                    "severity-fill"
+                                ),
+
+                                (
+                                    "Connectivity",
+                                    selected.connectivity_score,
+                                    "connectivity-fill"
+                                ),
+
+                                (
+                                    "Affected Area",
+                                    selected.area_score,
+                                    "area-fill"
+                                ),
+
+                                (
+                                    "Urgency",
+                                    selected.urgency_score,
+                                    "urgency-fill"
+                                )
+
+                            ] %}
+
+
+                                <div class="score-row">
+
+                                    <div class="score-row-label">
+
+                                        <span>
+                                            {{ label }}
+                                        </span>
+
+                                        <strong>
+                                            {{ value }}
+                                        </strong>
+
+                                    </div>
+
+
+                                    <div class="score-track">
+
+                                        <div
+                                            class="
+                                                score-fill
+                                                {{ css_class }}
+                                            "
+                                            data-score="{{ value }}"
+                                        >
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                            {% endfor %}
+
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- AI REASON -->
+
+                    <div class="priority-reason">
+
+                        <div class="reason-icon">
+                            ✦
+                        </div>
+
+                        <div>
+
+                            <span>
+                                AI PRIORITY REASON
+                            </span>
+
+                            <h3 id="detailReasonTitle">
+                                {% if selected.priority == "CRITICAL" %}
+                                    Critical municipal priority
+                                {% elif selected.priority == "HIGH" %}
+                                    High municipal priority
+                                {% elif selected.priority == "MEDIUM" %}
+                                    Moderate municipal priority
+                                {% else %}
+                                    Lower municipal priority
+                                {% endif %}
+                            </h3>
+
+                            <p id="detailReason">
+                                {{ selected.reason }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- RECOMMENDED ACTION -->
+
+                    <div class="recommended-action">
+
+                        <div class="action-icon">
+                            ✓
+                        </div>
+
+                        <div>
+
+                            <span>
+                                RECOMMENDED FIRST ACTION
+                            </span>
+
+                            <h3 id="detailAction">
+                                {{ selected.recommended_action }}
+                            </h3>
+
+                            <p>
+                                Responsible Department:
+                                <strong>
+                                    {{ selected.department }}
+                                </strong>
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- CONNECTIONS -->
+
+                    <div class="detail-connections">
+
+
+                        <div class="connection-item">
+
+                            <span class="connection-icon purple">
+                                ◎
+                            </span>
+
+                            <div>
+
+                                <span>
+                                    Root Cause
+                                </span>
+
+                                <strong>
+                                    {% if selected.cascading_effects %}
+                                        1
+                                    {% else %}
+                                        0
+                                    {% endif %}
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="connection-item">
+
+                            <span class="connection-icon blue">
+                                ◈
+                            </span>
+
+                            <div>
+
+                                <span>
+                                    Connected Problems
+                                </span>
+
+                                <strong>
+                                    {{ selected.connected_problems }}
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="connection-item">
+
+                            <span class="connection-icon orange">
+                                ⇢
+                            </span>
+
+                            <div>
+
+                                <span>
+                                    Downstream Effects
+                                </span>
+
+                                <strong>
+                                    {{ selected.cascading_effects|length }}
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="connection-item">
+
+                            <span class="connection-icon green">
+                                ◉
+                            </span>
+
+                            <div>
+
+                                <span>
+                                    Department
+                                </span>
+
+                                <strong>
+                                    1
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- FOOTER -->
+
+                    <div class="priority-detail-footer">
+
+                        <div class="priority-note">
+
+                            <span>ⓘ</span>
+
+                            <p>
+                                Priority scores are calculated from
+                                real citizen reports and stored AI
+                                analysis. Municipal officers should
+                                verify field conditions before making
+                                final intervention decisions.
+                            </p>
+
+                        </div>
+
+
+                        <a
+                            href="/municipality/interventions"
+                            class="intervention-btn"
+                        >
+                            Create Intervention →
+                        </a>
+
+                    </div>
+
+
+                </div>
+
+
+            {% else %}
+
+
+                <div class="empty-state">
+
+                    <h3>
+                        No priority problems available
+                    </h3>
+
+                    <p>
+                        Submit citizen reports to generate
+                        municipal priority assessments.
+                    </p>
+
+                </div>
+
+
+            {% endif %}
+
+
+        </section>
+
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================================
+     REAL PROBLEM DATA FOR JAVASCRIPT
+=========================================================== -->
+
+<script id="priority-data" type="application/json">
+
+{{ problems | tojson }}
+
+</script>
+
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const dataElement =
+            document.getElementById(
+                "priority-data"
+            );
+
+        if (!dataElement) {
+            return;
+        }
+
+
+        const problems =
+            JSON.parse(
+                dataElement.textContent
+            );
+
+
+        const searchInput =
+            document.getElementById(
+                "prioritySearch"
+            );
+
+
+        const levelFilter =
+            document.getElementById(
+                "priorityLevelFilter"
+            );
+
+
+        const categoryFilter =
+            document.getElementById(
+                "priorityCategoryFilter"
+            );
+
+
+        const items =
+            document.querySelectorAll(
+                ".priority-problem-item"
+            );
+
+
+        const count =
+            document.getElementById(
+                "priorityCount"
+            );
+
+
+        /*
+        ========================================================
+        FILTER
+        ========================================================
+        */
+
+        function filterProblems() {
+
+            const search =
+                searchInput.value
+                    .toLowerCase()
+                    .trim();
+
+
+            const level =
+                levelFilter.value;
+
+
+            const category =
+                categoryFilter.value;
+
+
+            let visibleCount = 0;
+
+
+            items.forEach(
+                function (item) {
+
+                    const text =
+                        item.dataset.search
+                            .toLowerCase();
+
+
+                    const itemLevel =
+                        item.dataset.priority;
+
+
+                    const itemCategory =
+                        item.dataset.category;
+
+
+                    const matchesSearch =
+                        text.includes(
+                            search
+                        );
+
+
+                    const matchesLevel =
+                        level === "all"
+                        ||
+                        itemLevel === level;
+
+
+                    const matchesCategory =
+                        category === "all"
+                        ||
+                        itemCategory === category;
+
+
+                    const show =
+                        matchesSearch
+                        &&
+                        matchesLevel
+                        &&
+                        matchesCategory;
+
+
+                    item.style.display =
+                        show
+                        ? "grid"
+                        : "none";
+
+
+                    if (show) {
+                        visibleCount++;
+                    }
+
+                }
+            );
+
+
+            count.textContent =
+                visibleCount
+                + " problem"
+                + (
+                    visibleCount === 1
+                    ? ""
+                    : "s"
+                );
+
+        }
+
+
+        searchInput.addEventListener(
+            "input",
+            filterProblems
+        );
+
+
+        levelFilter.addEventListener(
+            "change",
+            filterProblems
+        );
+
+
+        categoryFilter.addEventListener(
+            "change",
+            filterProblems
+        );
+
+
+        /*
+        ========================================================
+        SCORE BAR
+        ========================================================
+        */
+
+        document
+            .querySelectorAll(
+                ".score-fill"
+            )
+            .forEach(
+                function (bar) {
+
+                    const score =
+                        Number(
+                            bar.dataset.score
+                        );
+
+
+                    bar.style.width =
+                        Math.max(
+                            0,
+                            Math.min(
+                                100,
+                                score
+                            )
+                        )
+                        + "%";
+
+                }
+            );
+
+
+        /*
+        ========================================================
+        CLICK PROBLEM
+        ========================================================
+        */
+
+        items.forEach(
+            function (item) {
+
+                item.addEventListener(
+                    "click",
+                    function () {
+
+                        items.forEach(
+                            function (other) {
+
+                                other.classList.remove(
+                                    "selected"
+                                );
+
+                            }
+                        );
+
+
+                        item.classList.add(
+                            "selected"
+                        );
+
+
+                        const id =
+                            item.dataset.id;
+
+
+                        const selected =
+                            problems.find(
+                                function (problem) {
+
+                                    return (
+                                        String(
+                                            problem.id
+                                        )
+                                        ===
+                                        String(id)
+                                    );
+
+                                }
+                            );
+
+
+                        if (!selected) {
+                            return;
+                        }
+
+
+                        /*
+                        ========================================
+                        UPDATE TITLE
+                        ========================================
+                        */
+
+                        const title =
+                            document.getElementById(
+                                "detailTitle"
+                            );
+
+
+                        if (title) {
+
+                            title.textContent =
+                                selected.title;
+
+                        }
+
+
+                        /*
+                        ========================================
+                        UPDATE LOCATION
+                        ========================================
+                        */
+
+                        const location =
+                            document.getElementById(
+                                "detailLocation"
+                            );
+
+
+                        if (location) {
+
+                            location.textContent =
+                                selected.address
+                                + " • "
+                                + selected.category;
+
+                        }
+
+
+                        /*
+                        ========================================
+                        UPDATE SCORE
+                        ========================================
+                        */
+
+                        const score =
+                            document.getElementById(
+                                "detailScore"
+                            );
+
+
+                        if (score) {
+
+                            score.textContent =
+                                selected.priority_score;
+
+                        }
+
+
+                        /*
+                        ========================================
+                        UPDATE PRIORITY
+                        ========================================
+                        */
+
+                        const priority =
+                            document.getElementById(
+                                "detailPriority"
+                            );
+
+
+                        if (priority) {
+
+                            priority.textContent =
+                                selected.priority
+                                + " Priority";
+
+                        }
+
+
+                        /*
+                        ========================================
+                        UPDATE REASON
+                        ========================================
+                        */
+
+                        const reason =
+                            document.getElementById(
+                                "detailReason"
+                            );
+
+
+                        if (reason) {
+
+                            reason.textContent =
+                                selected.reason;
+
+                        }
+
+
+                        /*
+                        ========================================
+                        UPDATE ACTION
+                        ========================================
+                        */
+
+                        const action =
+                            document.getElementById(
+                                "detailAction"
+                            );
+
+
+                        if (action) {
+
+                            action.textContent =
+                                selected.recommended_action;
+
+                        }
+
+
+                        /*
+                        ========================================
+                        UPDATE SCORE BARS
+                        ========================================
+                        */
+
+                        const scores = [
+
+                            selected.impact_score,
+
+                            selected.severity_score,
+
+                            selected.connectivity_score,
+
+                            selected.area_score,
+
+                            selected.urgency_score
+
+                        ];
+
+
+                        document
+                            .querySelectorAll(
+                                ".score-fill"
+                            )
+                            .forEach(
+                                function (
+                                    bar,
+                                    index
+                                ) {
+
+                                    const value =
+                                        Number(
+                                            scores[index]
+                                        );
+
+
+                                    bar.dataset.score =
+                                        value;
+
+
+                                    bar.style.width =
+                                        value
+                                        + "%";
+
+                                }
+                            );
+
+                    }
+                );
+
+            }
+        );
+
+
+    }
+);
+
+</script>
+
+{% endblock %}

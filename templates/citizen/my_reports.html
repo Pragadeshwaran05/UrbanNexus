@@ -1,0 +1,1203 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+My Reports | UrbanNexus
+{% endblock %}
+
+
+{% block extra_css %}
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/citizen-dashboard.css') }}">
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/my-reports.css') }}">
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="reports-page">
+
+
+    <!-- =====================================================
+         BACK LINK
+    ====================================================== -->
+
+  
+
+    <!-- =====================================================
+         TOP USER
+    ====================================================== -->
+
+    <div class="top-user">
+
+        <div class="top-user-info">
+
+            <strong>Citizen</strong>
+
+            <span>Resident</span>
+
+        </div>
+
+
+        <div class="top-user-avatar">
+            P
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <div class="reports-header">
+
+        <span class="eyebrow">
+            CITIZEN PORTAL
+        </span>
+
+
+        <h1>
+            My Reports
+        </h1>
+
+
+        <p>
+            Track the problems you reported and follow their progress.
+        </p>
+
+    </div>
+
+
+    <!-- =====================================================
+         SUMMARY VALUES
+    ====================================================== -->
+
+    {% set total_reports = reports|length %}
+
+
+    {% set active_reports = reports
+        |selectattr("status", "equalto", "In Progress")
+        |list
+        |length
+    %}
+
+
+    {% set analysis_reports = namespace(count=0) %}
+
+
+    {% set resolved_reports = reports
+        |selectattr("status", "equalto", "Resolved")
+        |list
+        |length
+    %}
+
+
+    <!-- Count reports that have actually been AI analyzed -->
+
+    {% for r in reports %}
+
+        {% if r.get("ai_analyzed", false)
+              and r.get("status", "Submitted") not in ["Resolved", "In Progress"] %}
+
+            {% set analysis_reports.count =
+                analysis_reports.count + 1
+            %}
+
+        {% endif %}
+
+    {% endfor %}
+
+
+
+    <!-- =====================================================
+         SUMMARY CARDS
+    ====================================================== -->
+
+    <div class="report-summary-grid">
+
+
+        <!-- TOTAL -->
+
+        <div class="summary-card">
+
+            <div class="summary-icon total">
+                ▤
+            </div>
+
+            <div>
+
+                <span>
+                    Total Reports
+                </span>
+
+                <strong>
+                    {{ total_reports }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- ACTIVE -->
+
+        <div class="summary-card">
+
+            <div class="summary-icon active">
+                ◔
+            </div>
+
+            <div>
+
+                <span>
+                    Active Reports
+                </span>
+
+                <strong>
+                    {{ active_reports }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- UNDER ANALYSIS -->
+
+        <div class="summary-card">
+
+            <div class="summary-icon analysis">
+                ✦
+            </div>
+
+            <div>
+
+                <span>
+                    Under Analysis
+                </span>
+
+                <strong>
+                    {{ analysis_reports.count }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- RESOLVED -->
+
+        <div class="summary-card">
+
+            <div class="summary-icon resolved">
+                ✓
+            </div>
+
+            <div>
+
+                <span>
+                    Resolved
+                </span>
+
+                <strong>
+                    {{ resolved_reports }}
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         SEARCH / FILTER
+    ====================================================== -->
+
+    <div class="reports-toolbar">
+
+
+        <div class="search-box">
+
+            <span class="search-icon">
+                ⌕
+            </span>
+
+
+            <input
+                type="text"
+                placeholder="Search your reports..."
+                id="reportSearch">
+
+        </div>
+
+
+        <div class="filter-box">
+
+            <select id="statusFilter">
+
+                <option value="all">
+                    All Status
+                </option>
+
+                <option value="submitted">
+                    Submitted
+                </option>
+
+                <option value="analysis">
+                    AI Analyzed
+                </option>
+
+                <option value="verified">
+                    Verified
+                </option>
+
+                <option value="assigned">
+                    Assigned
+                </option>
+
+                <option value="progress">
+                    In Progress
+                </option>
+
+                <option value="resolved">
+                    Resolved
+                </option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         SECTION HEADER
+    ====================================================== -->
+
+    <div class="section-title-row">
+
+        <div>
+
+            <h2>
+                Your Reports
+            </h2>
+
+            <p>
+                Recent problems submitted by you
+            </p>
+
+        </div>
+
+
+        <a href="{{ url_for('report_problem') }}"
+           class="new-report-button">
+
+            + Report a Problem
+
+        </a>
+
+    </div>
+
+
+    <!-- =====================================================
+         REPORT LIST
+    ====================================================== -->
+
+    <div class="reports-list"
+         id="reportsList">
+
+
+        {% if reports %}
+
+
+            {% for report in reports %}
+
+
+                <!-- =================================================
+                     BASIC VALUES
+                ================================================== -->
+
+                {% set category =
+                    report.get("category", "General")
+                %}
+
+
+                {% set category_lower =
+                    category|lower
+                %}
+
+
+                {% set actual_status =
+                    report.get("status", "Submitted")
+                %}
+
+
+                {% set ai_analyzed =
+                    report.get("ai_analyzed", false)
+                %}
+
+
+                <!-- =================================================
+                     DISPLAY STATUS
+
+                     AI analysis is separate from workflow status.
+                ================================================== -->
+
+                {% if actual_status == "Resolved" %}
+
+                    {% set display_status = "Resolved" %}
+
+                {% elif actual_status == "In Progress" %}
+
+                    {% set display_status = "In Progress" %}
+
+                {% elif actual_status == "Assigned" %}
+
+                    {% set display_status = "Assigned" %}
+
+                {% elif actual_status == "Verified" %}
+
+                    {% set display_status = "Verified" %}
+
+                {% elif ai_analyzed %}
+
+                    {% set display_status = "AI Analyzed" %}
+
+                {% else %}
+
+                    {% set display_status = "Submitted" %}
+
+                {% endif %}
+
+
+
+                <!-- =================================================
+                     IMPACT
+                ================================================== -->
+
+                {% set impact =
+                    report.get("impact_level", "MEDIUM")
+                    |upper
+                %}
+
+
+                {% set priority =
+                    report.get("priority", impact)
+                    |upper
+                %}
+
+
+
+                <!-- =================================================
+                     DEPARTMENT
+
+                     Use real database value.
+                ================================================== -->
+
+                {% set department =
+                    report.get(
+                        "department",
+                        "Awaiting Assignment"
+                    )
+                %}
+
+
+
+                <!-- =================================================
+                     CATEGORY MAPPING
+                ================================================== -->
+
+                {% if category_lower == "water & drainage" %}
+
+                    {% set category_name = "Water & Drainage" %}
+                    {% set category_icon = "≋" %}
+                    {% set category_class = "water" %}
+
+
+                {% elif category_lower == "roads & infrastructure" %}
+
+                    {% set category_name = "Roads & Infrastructure" %}
+                    {% set category_icon = "▰" %}
+                    {% set category_class = "roads" %}
+
+
+                {% elif category_lower == "traffic" %}
+
+                    {% set category_name = "Traffic" %}
+                    {% set category_icon = "◉" %}
+                    {% set category_class = "traffic" %}
+
+
+                {% elif category_lower == "waste management" %}
+
+                    {% set category_name = "Waste Management" %}
+                    {% set category_icon = "▣" %}
+                    {% set category_class = "waste" %}
+
+
+                {% elif category_lower == "electricity & lighting" %}
+
+                    {% set category_name = "Electricity & Lighting" %}
+                    {% set category_icon = "☼" %}
+                    {% set category_class = "electricity" %}
+
+
+                {% elif category_lower == "parks & environment" %}
+
+                    {% set category_name = "Parks & Environment" %}
+                    {% set category_icon = "♧" %}
+                    {% set category_class = "environment" %}
+
+
+                {% else %}
+
+                    {% set category_name = category %}
+                    {% set category_icon = "!" %}
+                    {% set category_class = "environment" %}
+
+                {% endif %}
+
+
+
+                <!-- =================================================
+                     PROGRESS
+                ================================================== -->
+
+                {% if actual_status == "Resolved" %}
+
+                    {% set report_progress = 100 %}
+
+                {% elif actual_status == "In Progress" %}
+
+                    {% set report_progress = 75 %}
+
+                {% elif actual_status == "Assigned" %}
+
+                    {% set report_progress = 60 %}
+
+                {% elif actual_status == "Verified" %}
+
+                    {% set report_progress = 50 %}
+
+                {% elif ai_analyzed %}
+
+                    {% set report_progress = 40 %}
+
+                {% else %}
+
+                    {% set report_progress =
+                        report.get("progress", 20)
+                    %}
+
+                {% endif %}
+
+
+
+                <!-- =================================================
+                     REPORT CARD
+                ================================================== -->
+
+                <article
+                    class="report-card"
+
+                    data-status="{% if display_status == 'AI Analyzed' %}analysis{% elif display_status == 'In Progress' %}progress{% elif display_status == 'Resolved' %}resolved{% elif display_status == 'Verified' %}verified{% elif display_status == 'Assigned' %}assigned{% else %}submitted{% endif %}"
+
+                    data-search="{{ report.get('title', '')|lower }}
+                                {{ category_name|lower }}
+                                {{ report.get('address', '')|lower }}
+                                {{ report.get('description', '')|lower }}
+                                {{ department|lower }}">
+
+
+                    <!-- =================================================
+                         CARD TOP
+                    ================================================== -->
+
+                    <div class="report-card-top">
+
+
+                        <div class="report-main">
+
+
+                            <!-- ICON -->
+
+                            <div class="report-category-icon {{ category_class }}">
+
+                                {{ category_icon }}
+
+                            </div>
+
+
+                            <!-- TITLE -->
+
+                            <div>
+
+                                <div class="report-title-row">
+
+
+                                    <h3>
+
+                                        {{ report.get(
+                                            "title",
+                                            "Untitled Problem"
+                                        ) }}
+
+                                    </h3>
+
+
+                                    <!-- REAL AI IMPACT -->
+
+                                    <span
+                                        class="priority
+                                        {% if impact == 'HIGH' %}
+                                            high
+                                        {% elif impact == 'LOW' %}
+                                            low
+                                        {% else %}
+                                            medium
+                                        {% endif %}">
+
+                                        {{ impact }}
+
+                                    </span>
+
+                                </div>
+
+
+                                <span class="report-category">
+
+                                    {{ category_name }}
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- =================================================
+                             STATUS BADGE
+                        ================================================== -->
+
+                        {% if display_status == "In Progress" %}
+
+                            <span class="status-badge in-progress">
+                                In Progress
+                            </span>
+
+
+                        {% elif display_status == "AI Analyzed" %}
+
+                            <span class="status-badge analysis">
+                                AI Analyzed
+                            </span>
+
+
+                        {% elif display_status == "Resolved" %}
+
+                            <span class="status-badge resolved">
+                                Resolved
+                            </span>
+
+
+                        {% elif display_status == "Verified" %}
+
+                            <span class="status-badge analysis">
+                                Verified
+                            </span>
+
+
+                        {% elif display_status == "Assigned" %}
+
+                            <span class="status-badge analysis">
+                                Assigned
+                            </span>
+
+
+                        {% else %}
+
+                            <span class="status-badge submitted">
+                                Submitted
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         REPORT DETAILS
+                    ================================================== -->
+
+                    <div class="report-details">
+
+
+                        <!-- LOCATION -->
+
+                        <div class="detail-item">
+
+                            <span class="detail-icon">
+                                ⌖
+                            </span>
+
+                            <span>
+
+                                {{ report.get(
+                                    "address",
+                                    "Location not provided"
+                                ) }}
+
+                            </span>
+
+                        </div>
+
+
+
+                        <!-- DATE -->
+
+                        <div class="detail-item">
+
+                            <span class="detail-icon">
+                                ◷
+                            </span>
+
+                            <span>
+
+                                {% if report.get("created_at") %}
+
+                                    {{ report.get("created_at").strftime("%d %b %Y") }}
+
+                                {% else %}
+
+                                    Just submitted
+
+                                {% endif %}
+
+                            </span>
+
+                        </div>
+
+
+
+                        <!-- DEPARTMENT -->
+
+                        <div class="detail-item">
+
+                            <span class="detail-icon">
+                                ◉
+                            </span>
+
+                            <span>
+
+                                {{ department }}
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         AI INSIGHT ROW
+                    ================================================== -->
+
+                    {% if ai_analyzed %}
+
+                        <div class="report-ai-summary">
+
+                            <span class="ai-summary-icon">
+                                ✦
+                            </span>
+
+
+                            <span>
+
+                                AI identified
+
+                                <strong>
+                                    {{ impact }}
+                                </strong>
+
+                                impact
+
+                                {% if report.get("connected_problems", 0) > 0 %}
+
+                                    with
+
+                                    <strong>
+                                        {{ report.get("connected_problems") }}
+                                    </strong>
+
+                                    connected urban problems.
+
+                                {% else %}
+
+                                    with no connected problems identified yet.
+
+                                {% endif %}
+
+                            </span>
+
+                        </div>
+
+                    {% endif %}
+
+
+
+                    <!-- =================================================
+                         PROGRESS
+                    ================================================== -->
+
+                    <div class="report-progress">
+
+
+                        <div class="progress-track">
+
+                            <div
+                                class="progress-fill"
+                                data-progress="{{ report_progress }}">
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="progress-labels">
+
+
+                            <span class="completed">
+                                Submitted
+                            </span>
+
+
+                            {% if ai_analyzed %}
+
+                                <span class="completed">
+                                    AI Analyzed
+                                </span>
+
+                            {% else %}
+
+                                <span>
+                                    AI Analyzed
+                                </span>
+
+                            {% endif %}
+
+
+
+                            {% if actual_status in [
+                                "Verified",
+                                "Assigned",
+                                "In Progress",
+                                "Resolved"
+                            ] %}
+
+                                <span class="completed">
+                                    Verified
+                                </span>
+
+                            {% else %}
+
+                                <span>
+                                    Verified
+                                </span>
+
+                            {% endif %}
+
+
+
+                            {% if actual_status in [
+                                "Assigned",
+                                "In Progress",
+                                "Resolved"
+                            ] %}
+
+                                <span class="completed">
+                                    Assigned
+                                </span>
+
+                            {% else %}
+
+                                <span>
+                                    Assigned
+                                </span>
+
+                            {% endif %}
+
+
+
+                            {% if actual_status == "Resolved" %}
+
+                                <span class="completed">
+                                    Resolved
+                                </span>
+
+                            {% else %}
+
+                                <span>
+                                    Resolved
+                                </span>
+
+                            {% endif %}
+
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         FOOTER
+                    ================================================== -->
+
+                    <div class="report-card-footer">
+
+
+                        {% if actual_status == "Resolved" %}
+
+                            <span class="resolved-note">
+
+                                ✓ Issue resolved
+
+                            </span>
+
+
+                        {% elif actual_status == "In Progress" %}
+
+                            <span class="ai-note">
+
+                                ✦ Department is working on this issue
+
+                            </span>
+
+
+                        {% elif ai_analyzed %}
+
+                            <span class="ai-note">
+
+                                ✦ AI analysis completed
+
+                            </span>
+
+
+                        {% elif actual_status == "Assigned" %}
+
+                            <span class="ai-note">
+
+                                ✦ Department assigned
+
+                            </span>
+
+
+                        {% elif actual_status == "Verified" %}
+
+                            <span class="ai-note">
+
+                                ✦ Report verified
+
+                            </span>
+
+
+                        {% else %}
+
+                            <span class="ai-note">
+
+                                ✦ Waiting for AI analysis
+
+                            </span>
+
+                        {% endif %}
+
+
+
+                        <!-- VIEW REPORT -->
+
+                        <a
+                            href="{{ url_for(
+                                'report_details',
+                                report_id=report._id
+                            ) }}"
+                            class="view-report-button">
+
+                            View Report →
+
+                        </a>
+
+                    </div>
+
+
+                </article>
+
+
+            {% endfor %}
+
+
+        {% else %}
+
+
+            <!-- =================================================
+                 NO REPORTS
+            ================================================== -->
+
+            <div class="no-reports"
+                 id="noReports">
+
+
+                <div class="no-reports-icon">
+                    ▤
+                </div>
+
+
+                <h3>
+                    No reports yet
+                </h3>
+
+
+                <p>
+                    You haven't submitted any problems yet.
+                </p>
+
+
+                <a
+                    href="{{ url_for('report_problem') }}"
+                    class="new-report-button">
+
+                    + Report a Problem
+
+                </a>
+
+            </div>
+
+
+        {% endif %}
+
+
+    </div>
+
+
+
+    <!-- =====================================================
+         SEARCH EMPTY STATE
+    ====================================================== -->
+
+    <div
+        class="no-reports"
+        id="searchNoReports"
+        style="display:none;">
+
+
+        <div class="no-reports-icon">
+            ▤
+        </div>
+
+
+        <h3>
+            No reports found
+        </h3>
+
+
+        <p>
+            Try changing your search or status filter.
+        </p>
+
+
+    </div>
+
+
+</div>
+
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+
+    /* =====================================================
+       PROGRESS BARS
+    ===================================================== */
+
+    const progressBars =
+        document.querySelectorAll(
+            ".progress-fill"
+        );
+
+
+    progressBars.forEach(function (bar) {
+
+        const progress =
+            parseInt(
+                bar.dataset.progress || "0",
+                10
+            );
+
+
+        bar.style.width =
+            progress + "%";
+
+    });
+
+
+
+    /* =====================================================
+       SEARCH
+    ===================================================== */
+
+    const searchInput =
+        document.getElementById(
+            "reportSearch"
+        );
+
+
+    const statusFilter =
+        document.getElementById(
+            "statusFilter"
+        );
+
+
+    const reportCards =
+        document.querySelectorAll(
+            ".report-card"
+        );
+
+
+    const searchNoReports =
+        document.getElementById(
+            "searchNoReports"
+        );
+
+
+
+    function filterReports() {
+
+
+        const searchValue =
+            searchInput
+                ? searchInput.value
+                    .toLowerCase()
+                    .trim()
+                : "";
+
+
+        const statusValue =
+            statusFilter
+                ? statusFilter.value
+                : "all";
+
+
+        let visibleCount = 0;
+
+
+
+        reportCards.forEach(function (card) {
+
+
+            const cardText =
+                (
+                    card.dataset.search || ""
+                ).toLowerCase();
+
+
+            const cardStatus =
+                card.dataset.status;
+
+
+            const matchesSearch =
+                cardText.includes(
+                    searchValue
+                );
+
+
+            const matchesStatus =
+                statusValue === "all" ||
+                cardStatus === statusValue;
+
+
+
+            if (
+                matchesSearch &&
+                matchesStatus
+            ) {
+
+                card.style.display = "";
+
+                visibleCount++;
+
+            }
+
+            else {
+
+                card.style.display =
+                    "none";
+
+            }
+
+        });
+
+
+
+        if (
+            reportCards.length > 0 &&
+            visibleCount === 0
+        ) {
+
+            searchNoReports.style.display =
+                "block";
+
+        }
+
+        else {
+
+            searchNoReports.style.display =
+                "none";
+
+        }
+
+    }
+
+
+
+    if (searchInput) {
+
+        searchInput.addEventListener(
+            "input",
+            filterReports
+        );
+
+    }
+
+
+
+    if (statusFilter) {
+
+        statusFilter.addEventListener(
+            "change",
+            filterReports
+        );
+
+    }
+
+
+});
+
+</script>
+
+
+{% endblock %}
