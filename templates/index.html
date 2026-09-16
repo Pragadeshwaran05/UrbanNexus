@@ -1,0 +1,2711 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>UrbanNexus | Build a Smarter City</title>
+
+    <style>
+
+        /* =========================================================
+           RESET
+        ========================================================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            color: #171717;
+            background: #ffffff;
+            line-height: 1.5;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button {
+            font-family: inherit;
+        }
+
+
+        /* =========================================================
+           COLORS
+        ========================================================= */
+
+        :root {
+            --purple: #38245F;
+            --purple-dark: #2D1B50;
+            --purple-light: #5A4380;
+            --purple-soft: #F3EFF8;
+            --purple-border: #DDD5E8;
+
+            /* ICE BLUE */
+            --ice-blue: #E6F4FF;
+            --ice-blue-dark: #075985;
+            --ice-blue-border: #C7E7FA;
+            --ice-blue-soft: #F3FAFF;
+
+            --black: #171717;
+            --dark: #242424;
+
+            --gray: #66616D;
+            --gray-light: #E8E6EA;
+
+            --white: #FFFFFF;
+        }
+
+
+        /* =========================================================
+           NAVBAR
+        ========================================================= */
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 9999;
+
+            width: 100%;
+
+            background: rgba(255, 255, 255, 0.97);
+
+            border-bottom: 1px solid #EEEEEE;
+
+            backdrop-filter: blur(12px);
+        }
+
+        .nav-container {
+            width: min(1200px, 92%);
+
+            height: 76px;
+
+            margin: 0 auto;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            color: var(--purple);
+
+            font-size: 27px;
+            font-weight: 900;
+
+            letter-spacing: -0.8px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+
+            gap: 34px;
+        }
+
+        .nav-links a {
+            color: #44404A;
+
+            font-size: 15px;
+            font-weight: 700;
+
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--purple);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+
+            gap: 11px;
+        }
+
+        .login-btn,
+        .report-btn {
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            min-height: 43px;
+
+            padding: 0 18px;
+
+            border-radius: 8px;
+
+            font-size: 14px;
+            font-weight: 800;
+
+            transition: 0.2s ease;
+        }
+
+        .login-btn {
+            color: var(--purple);
+
+            border: 2px solid var(--purple);
+
+            background: #FFFFFF;
+        }
+
+        .login-btn:hover {
+            background: var(--purple);
+
+            color: #FFFFFF;
+        }
+
+        .report-btn {
+            background: var(--purple);
+
+            color: #FFFFFF;
+
+            border: 2px solid var(--purple);
+        }
+
+        .report-btn:hover {
+            background: var(--purple-dark);
+
+            border-color: var(--purple-dark);
+
+            transform: translateY(-1px);
+        }
+
+
+        /* =========================================================
+           MOBILE MENU BUTTON
+        ========================================================= */
+
+        .menu-btn {
+            display: none;
+
+            width: 43px;
+            height: 43px;
+
+            border: 1px solid #DDDDDD;
+
+            border-radius: 8px;
+
+            background: #FFFFFF;
+
+            color: var(--purple);
+
+            font-size: 22px;
+
+            cursor: pointer;
+        }
+
+
+        /* =========================================================
+           HERO
+        ========================================================= */
+
+        .hero {
+            position: relative;
+
+            overflow: hidden;
+
+            background: var(--purple);
+
+            color: #FFFFFF;
+
+            padding: 105px 0 80px;
+        }
+
+        .hero::before {
+            content: "";
+
+            position: absolute;
+
+            width: 500px;
+            height: 500px;
+
+            top: -250px;
+            right: -170px;
+
+            border: 1px solid rgba(255,255,255,0.09);
+
+            border-radius: 50%;
+        }
+
+        .hero::after {
+            content: "";
+
+            position: absolute;
+
+            width: 380px;
+            height: 380px;
+
+            bottom: -240px;
+            left: -150px;
+
+            border: 1px solid rgba(255,255,255,0.08);
+
+            border-radius: 50%;
+        }
+
+        .hero-container {
+            position: relative;
+
+            z-index: 2;
+
+            width: min(1200px, 92%);
+
+            margin: 0 auto;
+
+            display: grid;
+
+            grid-template-columns: 1fr 0.92fr;
+
+            gap: 65px;
+
+            align-items: center;
+        }
+
+        .hero-content {
+            max-width: 650px;
+        }
+
+        .hero-label {
+            display: inline-flex;
+
+            padding: 8px 13px;
+
+            margin-bottom: 22px;
+
+            background: rgba(255,255,255,0.10);
+
+            border: 1px solid rgba(255,255,255,0.18);
+
+            border-radius: 30px;
+
+            color: #EEE8F7;
+
+            font-size: 13px;
+            font-weight: 800;
+
+            letter-spacing: 0.8px;
+        }
+
+        .hero h1 {
+            margin-bottom: 25px;
+
+            color: #FFFFFF;
+
+            font-size: clamp(44px, 5vw, 68px);
+
+            font-weight: 900;
+
+            line-height: 1.03;
+
+            letter-spacing: -2px;
+        }
+
+        .hero h1 span {
+            display: inline-block;
+
+            padding: 2px 12px;
+
+            background: #FFFFFF;
+
+            color: var(--purple);
+
+            border-radius: 5px;
+        }
+
+        .hero-description {
+            max-width: 610px;
+
+            margin-bottom: 32px;
+
+            color: #E5DEED;
+
+            font-size: 17px;
+
+            line-height: 1.75;
+        }
+
+        .hero-actions {
+            display: flex;
+
+            align-items: center;
+
+            gap: 13px;
+
+            flex-wrap: wrap;
+        }
+
+        .hero-primary {
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            min-height: 50px;
+
+            padding: 0 23px;
+
+            background: #FFFFFF;
+
+            color: var(--purple);
+
+            border-radius: 8px;
+
+            font-size: 15px;
+            font-weight: 800;
+
+            transition: 0.2s ease;
+        }
+
+        .hero-primary:hover {
+            background: #F1ECF7;
+
+            transform: translateY(-2px);
+        }
+
+        .hero-secondary {
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            min-height: 50px;
+
+            padding: 0 23px;
+
+            background: transparent;
+
+            color: #FFFFFF;
+
+            border: 1.5px solid rgba(255,255,255,0.45);
+
+            border-radius: 8px;
+
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .hero-secondary:hover {
+            background: rgba(255,255,255,0.08);
+        }
+
+
+        /* =========================================================
+           DASHBOARD PREVIEW
+        ========================================================= */
+
+        .dashboard-preview {
+            width: 100%;
+
+            background: #FFFFFF;
+
+            border-radius: 14px;
+
+            padding: 13px;
+
+            box-shadow: 0 25px 70px rgba(0,0,0,0.25);
+        }
+
+        .preview-top {
+            height: 35px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            padding: 0 8px;
+
+            border-bottom: 1px solid #EEEEEE;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+
+            border-radius: 50%;
+
+            background: #D8D8D8;
+        }
+
+        .preview-body {
+            padding: 18px;
+        }
+
+        .preview-title {
+            color: var(--black);
+
+            font-size: 18px;
+            font-weight: 900;
+
+            margin-bottom: 16px;
+        }
+
+        .preview-cards {
+            display: grid;
+
+            grid-template-columns: repeat(3, 1fr);
+
+            gap: 10px;
+
+            margin-bottom: 16px;
+        }
+
+        .preview-card {
+            padding: 13px;
+
+            background: #F5F7FA;
+
+            border-radius: 8px;
+        }
+
+        .preview-card strong {
+            display: block;
+
+            margin-bottom: 4px;
+
+            color: var(--purple);
+
+            font-size: 21px;
+            font-weight: 900;
+        }
+
+        .preview-card span {
+            color: #777777;
+
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .preview-table {
+            border: 1px solid #EEEEEE;
+
+            border-radius: 8px;
+
+            overflow: hidden;
+        }
+
+        .preview-row {
+            display: grid;
+
+            grid-template-columns: 1.6fr 0.8fr 0.7fr;
+
+            padding: 11px 13px;
+
+            border-bottom: 1px solid #EEEEEE;
+
+            color: #555555;
+
+            font-size: 11px;
+        }
+
+        .preview-row:last-child {
+            border-bottom: none;
+        }
+
+        .preview-row.header {
+            background: #F6F6F8;
+
+            color: #222222;
+
+            font-weight: 800;
+        }
+
+        .status {
+            display: inline-block;
+
+            padding: 3px 7px;
+
+            border-radius: 10px;
+
+            background: #EAF8EE;
+
+            color: #258243;
+
+            font-size: 9px;
+
+            font-weight: 800;
+        }
+
+
+        /* =========================================================
+           STATS
+        ========================================================= */
+
+        .stats {
+            background: #FFFFFF;
+
+            padding: 40px 0;
+
+            border-bottom: 1px solid #EEEEEE;
+        }
+
+        .stats-container {
+            width: min(1050px, 90%);
+
+            margin: 0 auto;
+
+            display: grid;
+
+            grid-template-columns: repeat(4, 1fr);
+
+            gap: 20px;
+        }
+
+        .stat {
+            text-align: center;
+
+            padding: 10px;
+        }
+
+        .stat-number {
+            display: block;
+
+            margin-bottom: 5px;
+
+            color: var(--purple);
+
+            font-size: 34px;
+
+            font-weight: 900;
+        }
+
+        .stat-label {
+            color: var(--gray);
+
+            font-size: 14px;
+
+            font-weight: 700;
+        }
+
+
+        /* =========================================================
+           COMMON SECTION
+        ========================================================= */
+
+        .section {
+            padding: 95px 0;
+        }
+
+        .section-container {
+            width: min(1200px, 92%);
+
+            margin: 0 auto;
+        }
+
+        .section-heading {
+            max-width: 750px;
+
+            margin: 0 auto 55px;
+
+            text-align: center;
+        }
+
+        .section-label {
+            display: block;
+
+            margin-bottom: 10px;
+
+            color: var(--purple);
+
+            font-size: 13px;
+
+            font-weight: 900;
+
+            letter-spacing: 1.4px;
+
+            text-transform: uppercase;
+        }
+
+        .section-heading h2 {
+            margin-bottom: 14px;
+
+            color: var(--black);
+
+            font-size: 42px;
+
+            font-weight: 900;
+
+            line-height: 1.15;
+
+            letter-spacing: -1px;
+        }
+
+        .section-heading p {
+            color: var(--gray);
+
+            font-size: 16px;
+
+            line-height: 1.7;
+        }
+
+
+        /* =========================================================
+           FEATURES SECTION
+           ICE BLUE BOXES
+        ========================================================= */
+
+        .features-section {
+            background: #FFFFFF;
+        }
+
+        .feature-grid {
+            display: grid;
+
+            grid-template-columns: repeat(3, 1fr);
+
+            gap: 24px;
+        }
+
+        .feature-card {
+            position: relative;
+
+            min-height: 305px;
+
+            padding: 34px 30px;
+
+            background: var(--ice-blue);
+
+            color: var(--ice-blue-dark);
+
+            border: 1px solid var(--ice-blue-border);
+
+            border-radius: 15px;
+
+            overflow: hidden;
+
+            box-shadow: 0 12px 30px rgba(7,89,133,0.08);
+
+            transition:
+                transform 0.25s ease,
+                box-shadow 0.25s ease;
+        }
+
+        .feature-card::after {
+            content: "";
+
+            position: absolute;
+
+            width: 180px;
+            height: 180px;
+
+            right: -90px;
+            bottom: -90px;
+
+            border: 1px solid rgba(7,89,133,0.10);
+
+            border-radius: 50%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-7px);
+
+            box-shadow: 0 20px 40px rgba(7,89,133,0.13);
+        }
+
+        .feature-icon {
+            width: 58px;
+            height: 58px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            margin-bottom: 25px;
+
+            background: #D3EDFF;
+
+            color: var(--ice-blue-dark);
+
+            border-radius: 12px;
+
+            font-size: 27px;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 14px;
+
+            color: var(--ice-blue-dark);
+
+            font-size: 22px;
+
+            font-weight: 900;
+        }
+
+        .feature-card p {
+            color: #075985;
+
+            font-size: 15px;
+
+            line-height: 1.75;
+        }
+
+
+        /* =========================================================
+           HOW IT WORKS
+           ICE BLUE BOXES
+        ========================================================= */
+
+        .how-section {
+            background: #F7F9FC;
+        }
+
+        .steps-grid {
+            display: grid;
+
+            grid-template-columns: repeat(3, 1fr);
+
+            gap: 24px;
+        }
+
+        .step-card {
+            min-height: 305px;
+
+            padding: 34px 30px;
+
+            background: var(--ice-blue);
+
+            color: var(--ice-blue-dark);
+
+            border: 1px solid var(--ice-blue-border);
+
+            border-radius: 15px;
+
+            box-shadow: 0 12px 30px rgba(7,89,133,0.08);
+
+            transition:
+                transform 0.25s ease,
+                box-shadow 0.25s ease;
+        }
+
+        .step-card:hover {
+            transform: translateY(-7px);
+
+            box-shadow: 0 20px 40px rgba(7,89,133,0.13);
+        }
+
+        .step-number {
+            width: 52px;
+            height: 52px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            margin-bottom: 25px;
+
+            background: #FFFFFF;
+
+            color: var(--ice-blue-dark);
+
+            border: 1px solid var(--ice-blue-border);
+
+            border-radius: 50%;
+
+            font-size: 14px;
+
+            font-weight: 900;
+        }
+
+        .step-card h3 {
+            margin-bottom: 14px;
+
+            color: var(--ice-blue-dark);
+
+            font-size: 23px;
+
+            font-weight: 900;
+        }
+
+        .step-card p {
+            color: #075985;
+
+            font-size: 15px;
+
+            line-height: 1.75;
+        }
+
+
+        /* =========================================================
+           AI INTELLIGENCE
+        ========================================================= */
+
+        .ai-section {
+            background: var(--purple);
+
+            color: #FFFFFF;
+
+            padding: 100px 0;
+        }
+
+        .ai-container {
+            width: min(1150px, 92%);
+
+            margin: 0 auto;
+
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 70px;
+
+            align-items: center;
+        }
+
+        .ai-content .section-label {
+            color: #CDB9ED;
+        }
+
+        .ai-content h2 {
+            margin-bottom: 20px;
+
+            color: #FFFFFF;
+
+            font-size: 43px;
+
+            font-weight: 900;
+
+            line-height: 1.15;
+        }
+
+        .ai-content > p {
+            margin-bottom: 28px;
+
+            color: #E5DEED;
+
+            font-size: 16px;
+
+            line-height: 1.75;
+        }
+
+        .ai-list {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 15px;
+        }
+
+        .ai-list-item {
+            display: flex;
+
+            align-items: flex-start;
+
+            gap: 12px;
+
+            color: #FFFFFF;
+
+            font-size: 15px;
+
+            line-height: 1.6;
+        }
+
+        .ai-check {
+            width: 25px;
+            height: 25px;
+
+            min-width: 25px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            background: #FFFFFF;
+
+            color: var(--purple);
+
+            border-radius: 50%;
+
+            font-size: 12px;
+
+            font-weight: 900;
+        }
+
+        .ai-panel {
+            padding: 28px;
+
+            background: #FFFFFF;
+
+            border-radius: 15px;
+
+            box-shadow: 0 20px 50px rgba(0,0,0,0.18);
+        }
+
+        .ai-panel-title {
+            margin-bottom: 20px;
+
+            color: var(--black);
+
+            font-size: 19px;
+
+            font-weight: 900;
+        }
+
+        .ai-analysis-card {
+            padding: 16px;
+
+            margin-bottom: 12px;
+
+            background: #F6F7FA;
+
+            border: 1px solid #EEEEEE;
+
+            border-radius: 10px;
+        }
+
+        .ai-analysis-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .analysis-top {
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 10px;
+
+            margin-bottom: 9px;
+        }
+
+        .analysis-top strong {
+            color: #252525;
+
+            font-size: 14px;
+
+            font-weight: 800;
+        }
+
+        .priority-high {
+            padding: 4px 8px;
+
+            background: #FFECEC;
+
+            color: #C53030;
+
+            border-radius: 10px;
+
+            font-size: 9px;
+
+            font-weight: 900;
+        }
+
+        .analysis-line {
+            color: #777777;
+
+            font-size: 11px;
+        }
+
+
+        /* =========================================================
+           ABOUT
+        ========================================================= */
+
+        .about-section {
+            background: #FFFFFF;
+        }
+
+        .about-grid {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 70px;
+
+            align-items: center;
+        }
+
+        .about-content h2 {
+            margin-bottom: 20px;
+
+            color: var(--black);
+
+            font-size: 42px;
+
+            font-weight: 900;
+
+            line-height: 1.15;
+        }
+
+        .about-content > p {
+            margin-bottom: 25px;
+
+            color: var(--gray);
+
+            font-size: 16px;
+
+            line-height: 1.75;
+        }
+
+        .about-points {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 14px;
+        }
+
+        .about-point {
+            display: flex;
+
+            align-items: flex-start;
+
+            gap: 12px;
+
+            color: #39353F;
+
+            font-size: 15px;
+
+            line-height: 1.6;
+        }
+
+        .about-icon {
+            width: 27px;
+            height: 27px;
+
+            min-width: 27px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            background: #EAF4FF;
+
+            color: var(--ice-blue-dark);
+
+            border-radius: 50%;
+
+            font-size: 12px;
+
+            font-weight: 900;
+        }
+
+        .about-visual {
+            padding: 35px;
+
+            background: var(--purple-soft);
+
+            border: 1px solid var(--purple-border);
+
+            border-radius: 18px;
+        }
+
+        .city-box {
+            padding: 25px;
+
+            background: #FFFFFF;
+
+            border-radius: 13px;
+
+            box-shadow: 0 12px 30px rgba(56,36,95,0.08);
+        }
+
+        .city-box-title {
+            margin-bottom: 20px;
+
+            color: var(--purple);
+
+            font-size: 19px;
+
+            font-weight: 900;
+        }
+
+        .city-bar {
+            height: 11px;
+
+            margin-bottom: 17px;
+
+            background: #EEEEEE;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+        }
+
+        .city-bar span {
+            display: block;
+
+            height: 100%;
+
+            background: var(--ice-blue-dark);
+
+            border-radius: 20px;
+        }
+
+        .city-bar:nth-child(2) span {
+            width: 82%;
+        }
+
+        .city-bar:nth-child(3) span {
+            width: 68%;
+        }
+
+        .city-bar:nth-child(4) span {
+            width: 54%;
+        }
+
+
+        /* =========================================================
+           CTA
+        ========================================================= */
+
+        .cta-section {
+            padding: 80px 0;
+
+            background: #FFFFFF;
+        }
+
+        .cta-box {
+            width: min(1150px, 92%);
+
+            margin: 0 auto;
+
+            padding: 55px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 35px;
+
+            background: var(--purple);
+
+            border-radius: 18px;
+
+            color: #FFFFFF;
+
+            box-shadow: 0 20px 45px rgba(56,36,95,0.18);
+        }
+
+        .cta-content {
+            max-width: 700px;
+        }
+
+        .cta-content h2 {
+            margin-bottom: 12px;
+
+            color: #FFFFFF;
+
+            font-size: 34px;
+
+            font-weight: 900;
+
+            line-height: 1.2;
+        }
+
+        .cta-content p {
+            color: #E5DEED;
+
+            font-size: 15px;
+
+            line-height: 1.7;
+        }
+
+        .cta-button {
+            flex-shrink: 0;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            min-height: 50px;
+
+            padding: 0 23px;
+
+            background: #FFFFFF;
+
+            color: var(--purple);
+
+            border-radius: 8px;
+
+            font-size: 15px;
+
+            font-weight: 900;
+
+            transition: 0.2s ease;
+        }
+
+        .cta-button:hover {
+            background: #F1ECF7;
+
+            transform: translateY(-2px);
+        }
+
+
+        /* =========================================================
+           FOOTER
+        ========================================================= */
+
+        .footer {
+            padding: 55px 0 25px;
+
+            background: #111111;
+
+            color: #FFFFFF;
+        }
+
+        .footer-container {
+            width: min(1200px, 92%);
+
+            margin: 0 auto;
+        }
+
+        .footer-top {
+            display: grid;
+
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+
+            gap: 50px;
+
+            padding-bottom: 40px;
+
+            border-bottom: 1px solid #2D2D2D;
+        }
+
+        .footer-brand h3 {
+            margin-bottom: 12px;
+
+            color: #FFFFFF;
+
+            font-size: 24px;
+
+            font-weight: 900;
+        }
+
+        .footer-brand p {
+            max-width: 350px;
+
+            color: #AAAAAA;
+
+            font-size: 14px;
+
+            line-height: 1.7;
+        }
+
+        .footer-column h4 {
+            margin-bottom: 16px;
+
+            color: #FFFFFF;
+
+            font-size: 14px;
+
+            font-weight: 800;
+        }
+
+        .footer-column a {
+            display: block;
+
+            margin-bottom: 10px;
+
+            color: #AAAAAA;
+
+            font-size: 13px;
+
+            transition: color 0.2s ease;
+        }
+
+        .footer-column a:hover {
+            color: #FFFFFF;
+        }
+
+        .footer-bottom {
+            padding-top: 22px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 20px;
+
+            color: #888888;
+
+            font-size: 12px;
+        }
+
+
+        /* =========================================================
+           MOBILE MENU
+        ========================================================= */
+
+        .mobile-menu {
+            display: none;
+
+            padding: 0 4% 18px;
+
+            background: #FFFFFF;
+
+            border-top: 1px solid #EEEEEE;
+        }
+
+        .mobile-menu a {
+            display: block;
+
+            padding: 13px 0;
+
+            color: #44404A;
+
+            font-size: 15px;
+
+            font-weight: 700;
+
+            border-bottom: 1px solid #EEEEEE;
+        }
+
+        .mobile-menu .mobile-login {
+            margin-top: 12px;
+
+            padding: 12px;
+
+            text-align: center;
+
+            color: var(--purple);
+
+            border: 2px solid var(--purple);
+
+            border-radius: 8px;
+        }
+
+        .mobile-menu .mobile-report {
+            margin-top: 8px;
+
+            padding: 12px;
+
+            text-align: center;
+
+            background: var(--purple);
+
+            color: #FFFFFF;
+
+            border-radius: 8px;
+        }
+
+
+        /* =========================================================
+           TABLET
+        ========================================================= */
+
+        @media (max-width: 950px) {
+
+            .nav-links,
+            .nav-actions {
+                display: none;
+            }
+
+            .menu-btn {
+                display: block;
+            }
+
+            .hero-container {
+                grid-template-columns: 1fr;
+
+                gap: 50px;
+            }
+
+            .hero-content {
+                max-width: 750px;
+
+                text-align: center;
+
+                margin: 0 auto;
+            }
+
+            .hero-description {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .hero-actions {
+                justify-content: center;
+            }
+
+            .dashboard-preview {
+                max-width: 700px;
+
+                margin: 0 auto;
+            }
+
+            .feature-grid,
+            .steps-grid {
+                grid-template-columns: 1fr;
+
+                max-width: 650px;
+
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .ai-container,
+            .about-grid {
+                grid-template-columns: 1fr;
+
+                gap: 45px;
+            }
+
+            .ai-content,
+            .about-content {
+                max-width: 700px;
+
+                margin: 0 auto;
+            }
+
+            .footer-top {
+                grid-template-columns: 1fr 1fr;
+            }
+
+        }
+
+
+        /* =========================================================
+           MOBILE
+        ========================================================= */
+
+        @media (max-width: 650px) {
+
+            .nav-container {
+                height: 68px;
+            }
+
+            .logo {
+                font-size: 23px;
+            }
+
+            .hero {
+                padding: 75px 0 60px;
+            }
+
+            .hero h1 {
+                font-size: 43px;
+
+                letter-spacing: -1.4px;
+            }
+
+            .hero-description {
+                font-size: 15px;
+            }
+
+            .hero-primary,
+            .hero-secondary {
+                width: 100%;
+            }
+
+            .preview-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .preview-row {
+                grid-template-columns: 1.5fr 0.8fr 0.8fr;
+
+                font-size: 9px;
+            }
+
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .section {
+                padding: 70px 0;
+            }
+
+            .section-heading {
+                margin-bottom: 40px;
+            }
+
+            .section-heading h2 {
+                font-size: 32px;
+            }
+
+            .feature-card,
+            .step-card {
+                min-height: auto;
+            }
+
+            .ai-content h2,
+            .about-content h2 {
+                font-size: 33px;
+            }
+
+            .cta-box {
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                padding: 35px 25px;
+            }
+
+            .cta-button {
+                width: 100%;
+            }
+
+            .footer-top {
+                grid-template-columns: 1fr;
+
+                gap: 30px;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+
+                align-items: flex-start;
+            }
+
+        }
+
+
+        /* =========================================================
+           SMALL MOBILE
+        ========================================================= */
+
+        @media (max-width: 400px) {
+
+            .hero h1 {
+                font-size: 37px;
+            }
+
+            .hero h1 span {
+                padding-left: 8px;
+                padding-right: 8px;
+            }
+
+            .stats-container {
+                gap: 8px;
+            }
+
+            .stat-number {
+                font-size: 29px;
+            }
+
+            .feature-card,
+            .step-card {
+                padding: 27px 23px;
+            }
+
+            .about-visual {
+                padding: 20px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================================
+         NAVBAR
+    ========================================================== -->
+
+    <header class="navbar">
+
+        <div class="nav-container">
+
+            <a href="home.html" class="logo">
+                UrbanNexus
+            </a>
+
+
+            <nav class="nav-links">
+
+                <a href="#features">
+                    Features
+                </a>
+
+                <a href="#how-it-works">
+                    How It Works
+                </a>
+
+                <a href="#ai-intelligence">
+                    AI Intelligence
+                </a>
+
+                <a href="#about">
+                    About
+                </a>
+
+            </nav>
+
+
+            <div class="nav-actions">
+
+             <a href="{{ url_for('login') }}" class="login-btn">
+    Login
+</a>
+
+                <a href="login.html" class="report-btn">
+                    Report a Problem
+                </a>
+
+            </div>
+
+
+            <button
+                class="menu-btn"
+                id="menuButton"
+                type="button"
+                aria-label="Open menu"
+            >
+                ☰
+            </button>
+
+        </div>
+
+
+        <!-- MOBILE MENU -->
+
+        <div class="mobile-menu" id="mobileMenu">
+
+            <a href="#features">
+                Features
+            </a>
+
+            <a href="#how-it-works">
+                How It Works
+            </a>
+
+            <a href="#ai-intelligence">
+                AI Intelligence
+            </a>
+
+            <a href="#about">
+                About
+            </a>
+
+            <a href="login.html" class="mobile-login">
+                Login
+            </a>
+
+            <a href="login.html" class="mobile-report">
+                Report a Problem
+            </a>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =========================================================
+         HERO
+    ========================================================== -->
+
+    <section class="hero">
+
+        <div class="hero-container">
+
+
+            <div class="hero-content">
+
+                <div class="hero-label">
+                    SMART URBAN INTELLIGENCE PLATFORM
+                </div>
+
+
+                <h1>
+                    Build a
+                    <span>Smarter</span>
+                    City
+                </h1>
+
+
+                <p class="hero-description">
+                    UrbanNexus connects citizens and municipal
+                    authorities through intelligent problem
+                    reporting, AI-powered analysis and structured
+                    urban intelligence.
+                </p>
+
+
+                <div class="hero-actions">
+
+                    <a
+                        href="login.html"
+                        class="hero-primary"
+                    >
+                        Report a Problem
+                    </a>
+
+                    <a
+                        href="#how-it-works"
+                        class="hero-secondary"
+                    >
+                        See How It Works
+                    </a>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- DASHBOARD PREVIEW -->
+
+            <div class="dashboard-preview">
+
+                <div class="preview-top">
+
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+
+                </div>
+
+
+                <div class="preview-body">
+
+                    <div class="preview-title">
+                        Municipal Intelligence
+                    </div>
+
+
+                    <div class="preview-cards">
+
+                        <div class="preview-card">
+
+                            <strong>
+                                128
+                            </strong>
+
+                            <span>
+                                Total Problems
+                            </span>
+
+                        </div>
+
+
+                        <div class="preview-card">
+
+                            <strong>
+                                42
+                            </strong>
+
+                            <span>
+                                High Impact
+                            </span>
+
+                        </div>
+
+
+                        <div class="preview-card">
+
+                            <strong>
+                                87%
+                            </strong>
+
+                            <span>
+                                Analysed
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="preview-table">
+
+                        <div class="preview-row header">
+
+                            <span>
+                                Problem
+                            </span>
+
+                            <span>
+                                Priority
+                            </span>
+
+                            <span>
+                                Status
+                            </span>
+
+                        </div>
+
+
+                        <div class="preview-row">
+
+                            <span>
+                                Drainage Blockage
+                            </span>
+
+                            <span>
+                                High
+                            </span>
+
+                            <span>
+                                <small class="status">
+                                    Active
+                                </small>
+                            </span>
+
+                        </div>
+
+
+                        <div class="preview-row">
+
+                            <span>
+                                Road Damage
+                            </span>
+
+                            <span>
+                                Medium
+                            </span>
+
+                            <span>
+                                <small class="status">
+                                    Active
+                                </small>
+                            </span>
+
+                        </div>
+
+
+                        <div class="preview-row">
+
+                            <span>
+                                Street Lighting
+                            </span>
+
+                            <span>
+                                Low
+                            </span>
+
+                            <span>
+                                <small class="status">
+                                    Active
+                                </small>
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================================
+         STATS
+    ========================================================== -->
+
+    <section class="stats">
+
+        <div class="stats-container">
+
+
+            <div class="stat">
+
+                <span class="stat-number">
+                    6+
+                </span>
+
+                <span class="stat-label">
+                    Problem Categories
+                </span>
+
+            </div>
+
+
+            <div class="stat">
+
+                <span class="stat-number">
+                    AI
+                </span>
+
+                <span class="stat-label">
+                    Powered Analysis
+                </span>
+
+            </div>
+
+
+            <div class="stat">
+
+                <span class="stat-number">
+                    3
+                </span>
+
+                <span class="stat-label">
+                    Intelligence Stages
+                </span>
+
+            </div>
+
+
+            <div class="stat">
+
+                <span class="stat-number">
+                    24/7
+                </span>
+
+                <span class="stat-label">
+                    Citizen Reporting
+                </span>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================================
+         FEATURES
+    ========================================================== -->
+
+    <section
+        class="section features-section"
+        id="features"
+    >
+
+        <div class="section-container">
+
+
+            <div class="section-heading">
+
+                <span class="section-label">
+                    UrbanNexus Platform
+                </span>
+
+                <h2>
+                    Smarter Urban Problem Solving
+                </h2>
+
+                <p>
+                    From citizen reports to municipal action,
+                    UrbanNexus transforms urban problems into
+                    structured intelligence.
+                </p>
+
+            </div>
+
+
+
+            <div class="feature-grid">
+
+
+                <!-- PROBLEM REPORTING -->
+
+                <article class="feature-card">
+
+                    <div class="feature-icon">
+                        📍
+                    </div>
+
+                    <h3>
+                        Problem Reporting
+                    </h3>
+
+                    <p>
+                        Citizens can report infrastructure,
+                        traffic, waste, drainage, electricity
+                        and environmental problems.
+                    </p>
+
+                </article>
+
+
+
+                <!-- AI ANALYSIS -->
+
+                <article class="feature-card">
+
+                    <div class="feature-icon">
+                        🤖
+                    </div>
+
+                    <h3>
+                        AI Analysis
+                    </h3>
+
+                    <p>
+                        Urban problems are analysed to identify
+                        impact, priority, root causes and
+                        connected issues.
+                    </p>
+
+                </article>
+
+
+
+                <!-- MUNICIPAL INTELLIGENCE -->
+
+                <article class="feature-card">
+
+                    <div class="feature-icon">
+                        📊
+                    </div>
+
+                    <h3>
+                        Municipal Intelligence
+                    </h3>
+
+                    <p>
+                        Municipal teams receive structured
+                        intelligence that helps them understand
+                        and prioritize city problems.
+                    </p>
+
+                </article>
+
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================================
+         HOW IT WORKS
+    ========================================================== -->
+
+    <section
+        class="section how-section"
+        id="how-it-works"
+    >
+
+        <div class="section-container">
+
+
+            <div class="section-heading">
+
+                <span class="section-label">
+                    How It Works
+                </span>
+
+                <h2>
+                    From Report to Action
+                </h2>
+
+                <p>
+                    A simple three-step process transforms
+                    citizen reports into actionable municipal
+                    intelligence.
+                </p>
+
+            </div>
+
+
+
+            <div class="steps-grid">
+
+
+                <!-- STEP 01 -->
+
+                <article class="step-card">
+
+                    <div class="step-number">
+                        01
+                    </div>
+
+                    <h3>
+                        Report
+                    </h3>
+
+                    <p>
+                        Citizens submit an urban problem with
+                        its location, category and description.
+                    </p>
+
+                </article>
+
+
+
+                <!-- STEP 02 -->
+
+                <article class="step-card">
+
+                    <div class="step-number">
+                        02
+                    </div>
+
+                    <h3>
+                        Analyse
+                    </h3>
+
+                    <p>
+                        AI analyses the problem and determines
+                        its impact, priority and possible
+                        dependencies.
+                    </p>
+
+                </article>
+
+
+
+                <!-- STEP 03 -->
+
+                <article class="step-card">
+
+                    <div class="step-number">
+                        03
+                    </div>
+
+                    <h3>
+                        Act
+                    </h3>
+
+                    <p>
+                        Municipal authorities use the
+                        intelligence to prioritize interventions
+                        and resolve issues.
+                    </p>
+
+                </article>
+
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================================
+         AI INTELLIGENCE
+    ========================================================== -->
+
+    <section
+        class="ai-section"
+        id="ai-intelligence"
+    >
+
+        <div class="ai-container">
+
+
+            <div class="ai-content">
+
+                <span class="section-label">
+                    AI Intelligence
+                </span>
+
+                <h2>
+                    Understand Problems
+                    Beyond the Report
+                </h2>
+
+                <p>
+                    UrbanNexus analyses reported problems to
+                    help identify what matters most, why the
+                    problem may be occurring and what other
+                    urban issues may be connected to it.
+                </p>
+
+
+                <div class="ai-list">
+
+
+                    <div class="ai-list-item">
+
+                        <div class="ai-check">
+                            ✓
+                        </div>
+
+                        <span>
+                            Determine the potential impact of
+                            an urban problem.
+                        </span>
+
+                    </div>
+
+
+                    <div class="ai-list-item">
+
+                        <div class="ai-check">
+                            ✓
+                        </div>
+
+                        <span>
+                            Assign priority based on the
+                            problem characteristics.
+                        </span>
+
+                    </div>
+
+
+                    <div class="ai-list-item">
+
+                        <div class="ai-check">
+                            ✓
+                        </div>
+
+                        <span>
+                            Identify possible root causes.
+                        </span>
+
+                    </div>
+
+
+                    <div class="ai-list-item">
+
+                        <div class="ai-check">
+                            ✓
+                        </div>
+
+                        <span>
+                            Highlight connected issues and
+                            possible dependencies.
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- AI ANALYSIS PANEL -->
+
+            <div class="ai-panel">
+
+                <div class="ai-panel-title">
+                    AI Problem Analysis
+                </div>
+
+
+                <div class="ai-analysis-card">
+
+                    <div class="analysis-top">
+
+                        <strong>
+                            Drainage Blockage
+                        </strong>
+
+                        <span class="priority-high">
+                            HIGH PRIORITY
+                        </span>
+
+                    </div>
+
+                    <div class="analysis-line">
+                        Impact: High · Root Cause: Poor drainage
+                    </div>
+
+                </div>
+
+
+                <div class="ai-analysis-card">
+
+                    <div class="analysis-top">
+
+                        <strong>
+                            Road Waterlogging
+                        </strong>
+
+                        <span class="priority-high">
+                            HIGH PRIORITY
+                        </span>
+
+                    </div>
+
+                    <div class="analysis-line">
+                        Connected issue: Traffic congestion
+                    </div>
+
+                </div>
+
+
+                <div class="ai-analysis-card">
+
+                    <div class="analysis-top">
+
+                        <strong>
+                            Traffic Disruption
+                        </strong>
+
+                        <span class="priority-high">
+                            HIGH PRIORITY
+                        </span>
+
+                    </div>
+
+                    <div class="analysis-line">
+                        Dependency: Travel delay
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================================
+         ABOUT
+    ========================================================== -->
+
+    <section
+        class="section about-section"
+        id="about"
+    >
+
+        <div class="section-container">
+
+            <div class="about-grid">
+
+
+                <div class="about-content">
+
+                    <span class="section-label">
+                        About UrbanNexus
+                    </span>
+
+                    <h2>
+                        One Platform.
+                        Smarter Decisions.
+                    </h2>
+
+                    <p>
+                        UrbanNexus creates a connection between
+                        citizens who experience urban problems
+                        and municipal teams responsible for
+                        solving them.
+                    </p>
+
+                    <p>
+                        By combining structured reporting,
+                        AI analysis and municipal intelligence,
+                        the platform helps cities move from
+                        scattered complaints to informed action.
+                    </p>
+
+
+                    <div class="about-points">
+
+
+                        <div class="about-point">
+
+                            <div class="about-icon">
+                                ✓
+                            </div>
+
+                            <span>
+                                Citizen-focused problem reporting
+                            </span>
+
+                        </div>
+
+
+                        <div class="about-point">
+
+                            <div class="about-icon">
+                                ✓
+                            </div>
+
+                            <span>
+                                Structured AI-powered analysis
+                            </span>
+
+                        </div>
+
+
+                        <div class="about-point">
+
+                            <div class="about-icon">
+                                ✓
+                            </div>
+
+                            <span>
+                                Better municipal prioritization
+                            </span>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ABOUT VISUAL -->
+
+                <div class="about-visual">
+
+                    <div class="city-box">
+
+                        <div class="city-box-title">
+                            City Intelligence
+                        </div>
+
+                        <div class="city-bar">
+                            <span></span>
+                        </div>
+
+                        <div class="city-bar">
+                            <span></span>
+                        </div>
+
+                        <div class="city-bar">
+                            <span></span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================================
+         CTA
+    ========================================================== -->
+
+    <section class="cta-section">
+
+        <div class="cta-box">
+
+
+            <div class="cta-content">
+
+                <h2>
+                    Help Build a Smarter City
+                </h2>
+
+                <p>
+                    Report an urban problem and help municipal
+                    teams understand the issues that matter
+                    most to your city.
+                </p>
+
+            </div>
+
+
+            <a
+                href="login.html"
+                class="cta-button"
+            >
+                Report a Problem
+            </a>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================================
+         FOOTER
+    ========================================================== -->
+
+    <footer class="footer">
+
+        <div class="footer-container">
+
+
+            <div class="footer-top">
+
+
+                <div class="footer-brand">
+
+                    <h3>
+                        UrbanNexus
+                    </h3>
+
+                    <p>
+                        Intelligent urban problem reporting
+                        and municipal intelligence for smarter
+                        cities.
+                    </p>
+
+                </div>
+
+
+
+                <div class="footer-column">
+
+                    <h4>
+                        Platform
+                    </h4>
+
+                    <a href="#features">
+                        Features
+                    </a>
+
+                    <a href="#how-it-works">
+                        How It Works
+                    </a>
+
+                    <a href="#ai-intelligence">
+                        AI Intelligence
+                    </a>
+
+                </div>
+
+
+
+                <div class="footer-column">
+
+                    <h4>
+                        Access
+                    </h4>
+
+                    <a href="login.html">
+                        Citizen Login
+                    </a>
+
+                    <a href="login.html">
+                        Municipality Login
+                    </a>
+
+                    <a href="login.html">
+                        Report a Problem
+                    </a>
+
+                </div>
+
+
+
+                <div class="footer-column">
+
+                    <h4>
+                        UrbanNexus
+                    </h4>
+
+                    <a href="#about">
+                        About
+                    </a>
+
+                    <a href="#features">
+                        Problem Reporting
+                    </a>
+
+                    <a href="#ai-intelligence">
+                        Municipal Intelligence
+                    </a>
+
+                </div>
+
+
+            </div>
+
+
+
+            <div class="footer-bottom">
+
+                <span>
+                    © 2026 UrbanNexus. All rights reserved.
+                </span>
+
+                <span>
+                    Building smarter cities through intelligence.
+                </span>
+
+            </div>
+
+
+        </div>
+
+    </footer>
+
+
+
+    <!-- =========================================================
+         JAVASCRIPT
+    ========================================================== -->
+
+    <script>
+
+        const menuButton =
+            document.getElementById("menuButton");
+
+        const mobileMenu =
+            document.getElementById("mobileMenu");
+
+
+        menuButton.addEventListener(
+            "click",
+            function () {
+
+                if (
+                    mobileMenu.style.display === "block"
+                ) {
+
+                    mobileMenu.style.display = "none";
+
+                    menuButton.textContent = "☰";
+
+                } else {
+
+                    mobileMenu.style.display = "block";
+
+                    menuButton.textContent = "✕";
+
+                }
+
+            }
+        );
+
+
+        const mobileLinks =
+            mobileMenu.querySelectorAll("a");
+
+
+        mobileLinks.forEach(
+            function (link) {
+
+                link.addEventListener(
+                    "click",
+                    function () {
+
+                        mobileMenu.style.display = "none";
+
+                        menuButton.textContent = "☰";
+
+                    }
+                );
+
+            }
+        );
+
+    </script>
+
+</body>
+
+</html>

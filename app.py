@@ -2,6 +2,8 @@ from flask import Flask, render_template
 from dependency_engine import analyze_dependencies
 from flask import Flask, render_template, request, redirect, url_for
 from database import db
+import math
+from ml_engine import predict_dependency
 from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, session
 app = Flask(__name__)
@@ -10,7 +12,9 @@ from database import db
 from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 import requests
-
+from ml_engine import predict_dependency
+import math
+from ml_engine import predict_dependency
 app.secret_key = "urbannexus-secret-key-2026"
 
 # ============================================================
@@ -383,11 +387,10 @@ def analyze_old_reports():
 # =========================
 # CITIZEN DASHBOARD
 # =========================
-
 @app.route("/")
 def home():
-    return redirect(
-        url_for("citizen_dashboard")
+    return render_template(
+        "index.html"
     )
 
 
@@ -593,6 +596,63 @@ def citizen_dashboard():
         # Sidebar active item
         active_page="dashboard"
     )
+
+def calculate_distance(lat1, lon1, lat2, lon2):
+    """
+    Calculate distance between two coordinates in kilometers.
+    """
+
+    try:
+        lat1 = float(lat1)
+        lon1 = float(lon1)
+        lat2 = float(lat2)
+        lon2 = float(lon2)
+    except (TypeError, ValueError):
+        return None
+
+    R = 6371.0
+
+    lat1_rad = math.radians(lat1)
+    lat2_rad = math.radians(lat2)
+
+    dlat = math.radians(lat2 - lat1)
+    dlon = math.radians(lon2 - lon1)
+
+    a = (
+        math.sin(dlat / 2) ** 2
+        + math.cos(lat1_rad)
+        * math.cos(lat2_rad)
+        * math.sin(dlon / 2) ** 2
+    )
+
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+
+    return R * c
+
+def normalize_ml_category(category):
+
+    category = str(category).lower().strip()
+
+    if "water" in category or "drain" in category:
+        return "Water"
+
+    if "road" in category:
+        return "Road"
+
+    if "traffic" in category:
+        return "Traffic"
+
+    if "waste" in category or "garbage" in category:
+        return "Waste"
+
+    if "lighting" in category or "street light" in category:
+        return "Lighting"
+
+    if "environment" in category or "park" in category:
+        return "Environment"
+
+    return "General"
+
 @app.route("/citizen/report", methods=["GET", "POST"])
 def report_problem():
 
@@ -600,9 +660,6 @@ def report_problem():
 
         # ====================================================
         # CITIZEN ID
-        # ====================================================
-        # Temporary citizen ID until login/authentication
-        # is implemented.
         # ====================================================
 
         citizen_id = session.get(
@@ -621,33 +678,63 @@ def report_problem():
 
         category = ", ".join(categories)
 
-        print(
-            "CATEGORIES RECEIVED:",
-            categories
-        )
+        print("CATEGORIES RECEIVED:", categories)
 
 
         title = request.form.get(
             "title",
             "Untitled Problem"
-        )
+        ).strip()
+
 
         description = request.form.get(
             "description",
             ""
-        )
+        ).strip()
+
 
         address = request.form.get(
             "address",
             "Location not provided"
-        )
-        latitude = request.form.get(
-    "latitude"
-)
+        ).strip()
 
-        longitude = request.form.get(
-    "longitude"
-)
+
+        # ====================================================
+        # GET LOCATION
+        # ====================================================
+
+        latitude = request.form.get("latitude")
+
+        longitude = request.form.get("longitude")
+
+
+        # Convert latitude safely
+        try:
+
+            latitude_value = (
+                float(latitude)
+                if latitude
+                else None
+            )
+
+        except (TypeError, ValueError):
+
+            latitude_value = None
+
+
+        # Convert longitude safely
+        try:
+
+            longitude_value = (
+                float(longitude)
+                if longitude
+                else None
+            )
+
+        except (TypeError, ValueError):
+
+            longitude_value = None
+
 
         # ====================================================
         # BASIC REPORT DATA
@@ -655,10 +742,8 @@ def report_problem():
 
         report = {
 
-            # Citizen who submitted the report
             "citizen_id": citizen_id,
 
-            # Problem information
             "category": category,
 
             "title": title,
@@ -667,78 +752,560 @@ def report_problem():
 
             "address": address,
 
-            # Keep location for Report Details
             "location": address,
-            "latitude": (
-        float(latitude)
-        if latitude
-        else None
-    ),
 
-    "longitude": (
-        float(longitude)
-        if longitude
-        else None
-    ),
-            # Initial status
+            "latitude": latitude_value,
+
+            "longitude": longitude_value,
+
             "status": "Submitted",
 
-            # Initial values
             "impact_level": "MEDIUM",
 
             "priority": "MEDIUM",
 
             "department": "Awaiting Assignment",
 
-            # Initial progress
             "progress": 25,
 
-            # Creation time
             "created_at": datetime.utcnow()
         }
 
 
         # ====================================================
-        # URBANNEXUS AI ANALYSIS
+        # BASIC URBANNEXUS AI ANALYSIS
         # ====================================================
 
-        ai_result = analyze_urban_problem(
-            title,
-            description,
-            category
-        )
+        try:
+
+            ai_result = analyze_urban_problem(
+                title,
+                description,
+                category
+            )
+
+        except Exception as e:
+
+            print(
+                "Basic AI analysis error:",
+                e
+            )
+
+            ai_result = {}
 
 
         # ====================================================
-        # ADD AI RESULTS
+        # ADD BASIC AI RESULTS
         # ====================================================
 
         if ai_result:
 
             report.update(ai_result)
+
             report["status"] = "AI Analyzed"
 
 
         # ====================================================
-        # PRINT WHAT IS BEING SAVED
+        # ML DEPENDENCY ANALYSIS
         # ====================================================
 
         print("==========================================")
-        print("SAVING REPORT:")
-        print("CITIZEN ID:", report.get("citizen_id"))
-        print("TITLE:", report.get("title"))
-        print("CATEGORY:", report.get("category"))
-        print("IMPACT:", report.get("impact_level"))
-        print("PRIORITY:", report.get("priority"))
-        print("ROOT CAUSE:", report.get("root_cause"))
+        print("STARTING ML DEPENDENCY ANALYSIS")
+        print("==========================================")
+
+
+        # Get existing reports
+        existing_reports = list(
+            db.problems.find({})
+        )
+
+
+        ml_dependencies = []
+
+
+        # ====================================================
+        # COMPARE NEW REPORT WITH EXISTING REPORTS
+        # ====================================================
+
+        for existing in existing_reports:
+
+            try:
+
+                # --------------------------------------------
+                # Existing problem information
+                # --------------------------------------------
+
+                existing_title = existing.get(
+                    "title",
+                    "Urban Problem"
+                )
+
+
+                existing_description = existing.get(
+                    "description",
+                    ""
+                )
+
+
+                existing_category = existing.get(
+                    "category",
+                    "General"
+                )
+
+
+                existing_latitude = existing.get(
+                    "latitude"
+                )
+
+
+                existing_longitude = existing.get(
+                    "longitude"
+                )
+
+
+                # --------------------------------------------
+                # DISTANCE
+                # --------------------------------------------
+
+                distance_km = 5.0
+
+
+                if (
+                    latitude_value is not None
+                    and longitude_value is not None
+                    and existing_latitude is not None
+                    and existing_longitude is not None
+                ):
+
+                    calculated_distance = calculate_distance(
+                        latitude_value,
+                        longitude_value,
+                        existing_latitude,
+                        existing_longitude
+                    )
+
+
+                    if calculated_distance is not None:
+
+                        distance_km = calculated_distance
+
+                    # Ignore problems that are too far away
+                    if distance_km > 5:
+                         continue 
+
+                # --------------------------------------------
+                # TEXT SIMILARITY
+                # --------------------------------------------
+
+                new_text = (
+                    f"{title} {description}"
+                ).lower().split()
+
+
+                existing_text = (
+                    f"{existing_title} "
+                    f"{existing_description}"
+                ).lower().split()
+
+
+                new_words = set(new_text)
+
+                existing_words = set(existing_text)
+
+
+                if new_words and existing_words:
+
+                    intersection = len(
+                        new_words.intersection(
+                            existing_words
+                        )
+                    )
+
+
+                    union = len(
+                        new_words.union(
+                            existing_words
+                        )
+                    )
+
+
+                    if union > 0:
+
+                        text_similarity = (
+                            intersection / union
+                        )
+
+                    else:
+
+                        text_similarity = 0.0
+
+                else:
+
+                    text_similarity = 0.0
+
+
+                # --------------------------------------------
+                # TIME DIFFERENCE
+                # --------------------------------------------
+
+                time_difference_hours = 0.0
+
+
+                existing_created = existing.get(
+                    "created_at"
+                )
+
+
+                if existing_created:
+
+                    try:
+
+                        time_difference_hours = abs(
+                            (
+                                datetime.utcnow()
+                                - existing_created
+                            ).total_seconds()
+                            / 3600
+                        )
+
+                    except Exception:
+
+                        time_difference_hours = 0.0
+
+
+                # --------------------------------------------
+                # SEVERITY
+                # --------------------------------------------
+
+                severity_a = str(
+                    report.get(
+                        "impact_level",
+                        "MEDIUM"
+                    )
+                ).upper()
+
+
+                severity_b = str(
+                    existing.get(
+                        "impact_level",
+                        "MEDIUM"
+                    )
+                ).upper()
+
+
+                # --------------------------------------------
+                # NEARBY FREQUENCY
+                # --------------------------------------------
+
+                nearby_frequency = 1
+
+
+                if (
+                    latitude_value is not None
+                    and longitude_value is not None
+                ):
+
+                    nearby_count = 0
+
+
+                    for r in existing_reports:
+
+                        r_lat = r.get("latitude")
+
+                        r_lon = r.get("longitude")
+
+
+                        if (
+                            r_lat is None
+                            or r_lon is None
+                        ):
+
+                            continue
+
+
+                        r_distance = calculate_distance(
+                            latitude_value,
+                            longitude_value,
+                            r_lat,
+                            r_lon
+                        )
+
+
+                        if (
+                            r_distance is not None
+                            and r_distance <= 5
+                        ):
+
+                            nearby_count += 1
+
+
+                    nearby_frequency = max(
+                        nearby_count,
+                        1
+                    )
+                print("------------------------------------------------")
+                print("ML INPUT")
+                print("Problem A:", title)
+                print("Problem B:", existing_title)
+                print("Category A:", category)
+                print("Category B:", existing_category)
+                print("Distance:", distance_km)
+                print("Time Difference:", time_difference_hours)
+                print("Severity A:", severity_a)
+                print("Severity B:", severity_b)
+                print("Nearby Frequency:", nearby_frequency)
+                print("Text Similarity:", text_similarity)
+                print("------------------------------------------------")  
+
+                # --------------------------------------------
+                # ML MODEL PREDICTION
+                # --------------------------------------------
+
+                ml_result = predict_dependency(
+
+                    problem_a=title,
+
+                    problem_b=existing_title,
+
+                    category_a=category,
+
+                    category_b=existing_category,
+
+                    description_a=description,
+
+                    description_b=existing_description,
+
+                    location=address,
+
+                    distance_km=distance_km,
+
+                    time_difference_hours=time_difference_hours,
+
+                    severity_a=severity_a,
+
+                    severity_b=severity_b,
+
+                    nearby_frequency=nearby_frequency,
+
+                    text_similarity=text_similarity
+                )
+
+
+                # --------------------------------------------
+                # PRINT ML RESULT
+                # --------------------------------------------
+
+                print(
+                    "Compared with:",
+                    existing_title
+                )
+
+
+                print(
+                    "Dependency detected:",
+                    ml_result[
+                        "dependency_detected"
+                    ]
+                )
+
+
+                print(
+                    "Probability:",
+                    ml_result[
+                        "probability"
+                    ],
+                    "%"
+                )
+
+
+                # --------------------------------------------
+                # SAVE DETECTED DEPENDENCY
+                # --------------------------------------------
+
+                if ml_result[
+                    "dependency_detected"
+                ]:
+
+                    ml_dependencies.append({
+
+                        "problem_id": str(
+                            existing["_id"]
+                        ),
+
+                        "title": existing_title,
+
+                        "category": existing_category,
+
+                        "relationship":
+                            "ML detected dependency",
+
+                        "direction":
+                            "NEW_PROBLEM → EXISTING_PROBLEM",
+
+                        "probability":
+                            ml_result[
+                                "probability"
+                            ],
+
+                        "distance_km":
+                            round(
+                                distance_km,
+                                2
+                            ),
+
+                        "text_similarity":
+                            round(
+                                text_similarity,
+                                3
+                            )
+                    })
+
+
+            except Exception as e:
+
+                print(
+                    "ML dependency analysis error:",
+                    e
+                )
+
+
+        # ====================================================
+        # SORT DEPENDENCIES
+        # ====================================================
+
+        ml_dependencies.sort(
+            key=lambda x: x["probability"],
+            reverse=True
+        )
+
+
+        # Keep strongest 5
+        ml_dependencies = ml_dependencies[:5]
+
+
+        # ====================================================
+        # SAVE ML RESULTS
+        # ====================================================
+
+        report[
+            "ml_dependency_analyzed"
+        ] = True
+
+
+        report[
+            "ml_dependency_count"
+        ] = len(
+            ml_dependencies
+        )
+
+
+        report[
+            "ml_dependencies"
+        ] = ml_dependencies
+
+
+        if ml_dependencies:
+
+            report[
+                "dependency_score"
+            ] = round(
+                ml_dependencies[0][
+                    "probability"
+                ],
+                2
+            )
+
+        else:
+
+            report[
+                "dependency_score"
+            ] = 0
+
+
+        # ====================================================
+        # FINAL DEBUG OUTPUT
+        # ====================================================
+
+        print("==========================================")
+        print("FINAL URBANNEXUS ANALYSIS")
+        print("==========================================")
+
+
+        print(
+            "CITIZEN ID:",
+            report.get("citizen_id")
+        )
+
+
+        print(
+            "TITLE:",
+            report.get("title")
+        )
+
+
+        print(
+            "CATEGORY:",
+            report.get("category")
+        )
+
+
+        print(
+            "IMPACT:",
+            report.get("impact_level")
+        )
+
+
+        print(
+            "PRIORITY:",
+            report.get("priority")
+        )
+
+
+        print(
+            "ROOT CAUSE:",
+            report.get("root_cause")
+        )
+
+
         print(
             "CONNECTED PROBLEMS:",
-            report.get("connected_problems")
+            report.get(
+                "connected_problems"
+            )
         )
+
+
         print(
             "CASCADING EFFECTS:",
-            report.get("cascading_effects")
+            report.get(
+                "cascading_effects"
+            )
         )
+
+
+        print(
+            "ML DEPENDENCIES:",
+            report.get(
+                "ml_dependency_count"
+            )
+        )
+
+
+        print(
+            "DEPENDENCY SCORE:",
+            report.get(
+                "dependency_score"
+            )
+        )
+
+
+        print(
+            "LOCATION:",
+            report.get("latitude"),
+            report.get("longitude")
+        )
+
+
         print("==========================================")
 
 
@@ -746,13 +1313,18 @@ def report_problem():
         # SAVE TO MONGODB
         # ====================================================
 
-        result = db.problems.insert_one(report)
+        result = db.problems.insert_one(
+            report
+        )
+
 
         print(
-    "LOCATION SAVED:",
-    report.get("latitude"),
-    report.get("longitude")
-)
+            "LOCATION SAVED:",
+            report.get("latitude"),
+            report.get("longitude")
+        )
+
+
         print(
             "REPORT SAVED WITH ID:",
             result.inserted_id
@@ -776,7 +1348,6 @@ def report_problem():
         "citizen/report_problem.html",
         active_page="report"
     )
-
 
 @app.route("/citizen/reports")
 def my_reports():
@@ -1957,7 +2528,6 @@ def municipality_intelligence():
         portal="municipality"
 
     )
-
 @app.route("/municipality/dependencies")
 def municipality_dependencies():
 
@@ -1995,10 +2565,8 @@ def municipality_dependencies():
             sin(d_lat / 2) ** 2
             +
             cos(radians(lat1))
-            *
-            cos(radians(lat2))
-            *
-            sin(d_lon / 2) ** 2
+            * cos(radians(lat2))
+            * sin(d_lon / 2) ** 2
         )
 
         c = 2 * atan2(
@@ -2017,6 +2585,7 @@ def municipality_dependencies():
     for report in reports:
 
         try:
+
             latitude = float(
                 report.get("latitude")
             )
@@ -2029,19 +2598,25 @@ def municipality_dependencies():
 
             continue
 
-        title = report.get(
-            "title",
-            "Urban Problem"
+        title = str(
+            report.get(
+                "title",
+                "Urban Problem"
+            )
         )
 
-        description = report.get(
-            "description",
-            ""
+        description = str(
+            report.get(
+                "description",
+                ""
+            )
         )
 
-        category = report.get(
-            "category",
-            "General"
+        category = str(
+            report.get(
+                "category",
+                "General"
+            )
         )
 
         impact = str(
@@ -2066,6 +2641,34 @@ def municipality_dependencies():
             []
         )
 
+        if not isinstance(
+            cascading_effects,
+            list
+        ):
+            cascading_effects = []
+
+        # =================================================
+        # REAL ML DEPENDENCIES STORED IN MONGODB
+        # =================================================
+
+        ml_dependencies = report.get(
+            "ml_dependencies",
+            []
+        )
+
+        if not isinstance(
+            ml_dependencies,
+            list
+        ):
+            ml_dependencies = []
+
+        ml_dependency_score = float(
+            report.get(
+                "dependency_score",
+                0
+            ) or 0
+        )
+
         problems.append({
 
             "id": str(
@@ -2088,7 +2691,14 @@ def municipality_dependencies():
 
             "root_cause": root_cause,
 
-            "cascading_effects": cascading_effects
+            "cascading_effects":
+                cascading_effects,
+
+            "ml_dependencies":
+                ml_dependencies,
+
+            "ml_dependency_score":
+                ml_dependency_score
 
         })
 
@@ -2107,12 +2717,16 @@ def municipality_dependencies():
         ).lower()
 
         if any(word in text for word in [
-            "drain",
+            "blocked drain",
+            "drain blockage",
             "drainage",
+            "stormwater",
             "waterlogging",
             "flood",
             "flooding",
-            "stormwater"
+            "stagnant water",
+            "water leakage",
+            "sewer overflow"
         ]):
 
             return "Water & Drainage"
@@ -2122,7 +2736,9 @@ def municipality_dependencies():
             "congestion",
             "traffic jam",
             "junction",
-            "signal"
+            "signal",
+            "vehicle delay",
+            "emergency response"
         ]):
 
             return "Traffic"
@@ -2131,8 +2747,9 @@ def municipality_dependencies():
             "road",
             "pothole",
             "potholes",
-            "damaged road",
-            "road damage"
+            "road damage",
+            "road blockage",
+            "damaged road"
         ]):
 
             return "Roads & Infrastructure"
@@ -2141,7 +2758,8 @@ def municipality_dependencies():
             "garbage",
             "waste",
             "dumping",
-            "trash"
+            "trash",
+            "public health"
         ]):
 
             return "Waste Management"
@@ -2150,7 +2768,8 @@ def municipality_dependencies():
             "streetlight",
             "street light",
             "lighting",
-            "electricity"
+            "electricity",
+            "visibility"
         ]):
 
             return "Electricity & Lighting"
@@ -2167,7 +2786,7 @@ def municipality_dependencies():
         return "General"
 
     # =====================================================
-    # ASSIGN PROBLEM GROUP
+    # ASSIGN GROUP
     # =====================================================
 
     for problem in problems:
@@ -2177,131 +2796,56 @@ def municipality_dependencies():
         )
 
     # =====================================================
-    # CHECK WHETHER TWO PROBLEMS CAN BE CONNECTED
+    # KNOWN URBAN DEPENDENCY PATTERNS
     # =====================================================
 
-    def calculate_dependency(problem_a, problem_b):
+    def known_dependency(
+        group_a,
+        group_b
+    ):
 
-        score = 0
+        patterns = {
 
-        # ---------------------------------------------
-        # LOCATION SCORE
-        # ---------------------------------------------
+            (
+                "Water & Drainage",
+                "Roads & Infrastructure"
+            ),
 
-        distance = calculate_distance(
+            (
+                "Water & Drainage",
+                "Traffic"
+            ),
 
-            problem_a["latitude"],
-            problem_a["longitude"],
-
-            problem_b["latitude"],
-            problem_b["longitude"]
-
-        )
-
-        if distance <= 0.5:
-
-            location_score = 30
-
-        elif distance <= 1:
-
-            location_score = 25
-
-        elif distance <= 2:
-
-            location_score = 15
-
-        elif distance <= 5:
-
-            location_score = 5
-
-        else:
-
-            location_score = 0
-
-        score += location_score
-
-        # ---------------------------------------------
-        # CATEGORY SCORE
-        # ---------------------------------------------
-
-        group_a = problem_a["group"]
-        group_b = problem_b["group"]
-
-        category_score = 0
-
-        # Same category
-        if group_a == group_b:
-
-            category_score = 30
-
-        # Known urban dependency relationships
-        elif (
-            group_a == "Water & Drainage"
-            and group_b in [
+            (
                 "Roads & Infrastructure",
                 "Traffic"
-            ]
-        ):
+            ),
 
-            category_score = 30
+            (
+                "Waste Management",
+                "Water & Drainage"
+            ),
 
-        elif (
-            group_b == "Water & Drainage"
-            and group_a in [
-                "Roads & Infrastructure",
-                "Traffic"
-            ]
-        ):
+            (
+                "Electricity & Lighting",
+                "Roads & Infrastructure"
+            )
 
-            category_score = 30
+        }
 
-        elif (
-            group_a == "Waste Management"
-            and group_b == "Water & Drainage"
-        ):
+        return (
+            group_a,
+            group_b
+        ) in patterns
 
-            category_score = 30
+    # =====================================================
+    # TEXT SIMILARITY
+    # =====================================================
 
-        elif (
-            group_b == "Waste Management"
-            and group_a == "Water & Drainage"
-        ):
-
-            category_score = 30
-
-        elif (
-            group_a == "Roads & Infrastructure"
-            and group_b == "Traffic"
-        ):
-
-            category_score = 25
-
-        elif (
-            group_b == "Roads & Infrastructure"
-            and group_a == "Traffic"
-        ):
-
-            category_score = 25
-
-        elif (
-            group_a == "Electricity & Lighting"
-            and group_b == "Roads & Infrastructure"
-        ):
-
-            category_score = 15
-
-        elif (
-            group_b == "Electricity & Lighting"
-            and group_a == "Roads & Infrastructure"
-        ):
-
-            category_score = 15
-
-        score += category_score
-
-        # ---------------------------------------------
-        # TEXT / SEMANTIC SIMILARITY
-        # ---------------------------------------------
+    def text_similarity(
+        problem_a,
+        problem_b
+    ):
 
         text_a = (
             problem_a["title"]
@@ -2316,44 +2860,35 @@ def municipality_dependencies():
         ).lower()
 
         words_a = set(
-            text_a.split()
+            word
+            for word in text_a.split()
+            if len(word) > 3
         )
 
         words_b = set(
-            text_b.split()
+            word
+            for word in text_b.split()
+            if len(word) > 3
         )
 
-        common_words = (
+        if not words_a or not words_b:
+            return 0.0
+
+        intersection = len(
             words_a.intersection(words_b)
         )
 
-        # Ignore very small common words
-        useful_words = [
-            word
-            for word in common_words
-            if len(word) > 3
-        ]
-
-        semantic_score = min(
-            len(useful_words) * 5,
-            20
+        union = len(
+            words_a.union(words_b)
         )
 
-        score += semantic_score
+        if union == 0:
+            return 0.0
 
-        # ---------------------------------------------
-        # FINAL SCORE
-        # ---------------------------------------------
-
-        score = min(
-            score,
-            100
-        )
-
-        return score, distance
+        return intersection / union
 
     # =====================================================
-    # CREATE DEPENDENCY CONNECTIONS
+    # CREATE MEANINGFUL DEPENDENCY CONNECTIONS
     # =====================================================
 
     dependencies = []
@@ -2368,32 +2903,308 @@ def municipality_dependencies():
         ):
 
             problem_a = problems[i]
+
             problem_b = problems[j]
 
-            dependency_score, distance = (
-                calculate_dependency(
-                    problem_a,
-                    problem_b
-                )
+            # =================================================
+            # DISTANCE
+            # =================================================
+
+            distance = calculate_distance(
+
+                problem_a["latitude"],
+                problem_a["longitude"],
+
+                problem_b["latitude"],
+                problem_b["longitude"]
+
             )
 
-            # Only meaningful relationships
-            if dependency_score >= 50:
+            # Ignore problems farther than 5 km
+            if distance > 5:
+                continue
 
-                dependencies.append({
+            # =================================================
+            # ML DETECTION
+            # =================================================
 
-                    "source": problem_a,
+            ml_detected = False
+            ml_score = 0.0
+            ml_direction = None
 
-                    "target": problem_b,
+            # Check A -> B
+            for ml_dependency in problem_a.get(
+                "ml_dependencies",
+                []
+            ):
 
-                    "score": dependency_score,
+                if str(
+                    ml_dependency.get(
+                        "problem_id"
+                    )
+                ) == problem_b["id"]:
 
-                    "distance": round(
-                        distance,
-                        2
+                    ml_detected = True
+
+                    ml_score = max(
+                        ml_score,
+                        float(
+                            ml_dependency.get(
+                                "probability",
+                                0
+                            )
+                        )
                     )
 
-                })
+                    ml_direction = (
+                        "A_TO_B"
+                    )
+
+            # Check B -> A
+            for ml_dependency in problem_b.get(
+                "ml_dependencies",
+                []
+            ):
+
+                if str(
+                    ml_dependency.get(
+                        "problem_id"
+                    )
+                ) == problem_a["id"]:
+
+                    ml_detected = True
+
+                    ml_score = max(
+                        ml_score,
+                        float(
+                            ml_dependency.get(
+                                "probability",
+                                0
+                            )
+                        )
+                    )
+
+                    ml_direction = (
+                        "B_TO_A"
+                    )
+
+            # =================================================
+            # RULE-BASED SUPPORT
+            # =================================================
+
+            category_a = problem_a["group"]
+
+            category_b = problem_b["group"]
+
+            rule_supported = False
+
+            if known_dependency(
+                category_a,
+                category_b
+            ):
+
+                rule_supported = True
+
+            elif known_dependency(
+                category_b,
+                category_a
+            ):
+
+                rule_supported = True
+
+            # =================================================
+            # TEXT SIMILARITY
+            # =================================================
+
+            similarity = text_similarity(
+                problem_a,
+                problem_b
+            )
+
+            # =================================================
+            # RULE SCORE
+            # =================================================
+
+            rule_score = 0
+
+            # Close location
+            if distance <= 0.5:
+
+                rule_score += 30
+
+            elif distance <= 1:
+
+                rule_score += 25
+
+            elif distance <= 2:
+
+                rule_score += 15
+
+            elif distance <= 5:
+
+                rule_score += 5
+
+            # Known causal category relationship
+            if rule_supported:
+
+                rule_score += 40
+
+            # Text similarity
+            if similarity >= 0.50:
+
+                rule_score += 20
+
+            elif similarity >= 0.25:
+
+                rule_score += 10
+
+            rule_score = min(
+                rule_score,
+                100
+            )
+
+            # =================================================
+            # FINAL DECISION
+            # =================================================
+
+            # ML relationship is accepted when detected.
+            #
+            # Rule relationship requires stronger evidence.
+
+            if ml_detected:
+
+                final_score = ml_score
+
+                relationship_type = (
+                    "ML detected dependency"
+                )
+
+            elif (
+                rule_supported
+                and rule_score >= 70
+            ):
+
+                final_score = rule_score
+
+                relationship_type = (
+                    "Causal pattern detected"
+                )
+
+            else:
+
+                continue
+
+            # =================================================
+            # DETERMINE DIRECTION
+            # =================================================
+
+            if ml_direction == "A_TO_B":
+
+                source = problem_a
+
+                target = problem_b
+
+            elif ml_direction == "B_TO_A":
+
+                source = problem_b
+
+                target = problem_a
+
+            else:
+
+                # For rule-based relationship,
+                # use known causal category direction.
+
+                if known_dependency(
+                    category_a,
+                    category_b
+                ):
+
+                    source = problem_a
+
+                    target = problem_b
+
+                else:
+
+                    source = problem_b
+
+                    target = problem_a
+
+            # =================================================
+            # SAVE CONNECTION
+            # =================================================
+
+            dependencies.append({
+
+                "source": source,
+
+                "target": target,
+
+                "score": round(
+                    final_score,
+                    2
+                ),
+
+                "rule_score": round(
+                    rule_score,
+                    2
+                ),
+
+                "ml_score": round(
+                    ml_score,
+                    2
+                ),
+
+                "ml_detected":
+                    ml_detected,
+
+                "relationship":
+                    relationship_type,
+
+                "distance":
+                    round(
+                        distance,
+                        2
+                    ),
+
+                "text_similarity":
+                    round(
+                        similarity,
+                        3
+                    )
+
+            })
+
+    # =====================================================
+    # REMOVE DUPLICATE CONNECTIONS
+    # =====================================================
+
+    unique_dependencies = {}
+
+    for dependency in dependencies:
+
+        key = (
+            dependency["source"]["id"],
+            dependency["target"]["id"]
+        )
+
+        existing = unique_dependencies.get(
+            key
+        )
+
+        if (
+            existing is None
+            or dependency["score"]
+            > existing["score"]
+        ):
+
+            unique_dependencies[key] = (
+                dependency
+            )
+
+    dependencies = list(
+        unique_dependencies.values()
+    )
 
     # =====================================================
     # BUILD CONNECTED CLUSTERS
@@ -2409,7 +3220,10 @@ def municipality_dependencies():
 
     def find_parent(problem_id):
 
-        while parent[problem_id] != problem_id:
+        while (
+            parent[problem_id]
+            != problem_id
+        ):
 
             parent[problem_id] = parent[
                 parent[problem_id]
@@ -2424,6 +3238,7 @@ def municipality_dependencies():
     def union(a, b):
 
         root_a = find_parent(a)
+
         root_b = find_parent(b)
 
         if root_a != root_b:
@@ -2432,17 +3247,12 @@ def municipality_dependencies():
 
     for dependency in dependencies:
 
-        source_id = dependency[
-            "source"
-        ]["id"]
-
-        target_id = dependency[
-            "target"
-        ]["id"]
-
         union(
-            source_id,
-            target_id
+
+            dependency["source"]["id"],
+
+            dependency["target"]["id"]
+
         )
 
     # =====================================================
@@ -2473,14 +3283,12 @@ def municipality_dependencies():
 
     for cluster_items in cluster_groups.values():
 
-        # A cluster must contain at least 2 problems
         if len(cluster_items) < 2:
-
             continue
 
-        # ---------------------------------------------
+        # =================================================
         # CLUSTER IMPACT
-        # ---------------------------------------------
+        # =================================================
 
         impact_values = []
 
@@ -2516,9 +3324,9 @@ def municipality_dependencies():
 
             cluster_impact = "LOW"
 
-        # ---------------------------------------------
+        # =================================================
         # DEPARTMENTS
-        # ---------------------------------------------
+        # =================================================
 
         departments = set()
 
@@ -2562,58 +3370,16 @@ def municipality_dependencies():
                     "Environment"
                 )
 
-        # ---------------------------------------------
-        # FIND ROOT CAUSE
-        # ---------------------------------------------
-
-        root_cause_problem = cluster_items[0]
-
-        for problem in cluster_items:
-
-            text = (
-                problem["title"]
-                + " "
-                + problem["description"]
-            ).lower()
-
-            if any(word in text for word in [
-                "drain",
-                "drainage",
-                "blocked",
-                "garbage",
-                "waste",
-                "pothole"
-            ]):
-
-                root_cause_problem = problem
-
-                break
-
-        # ---------------------------------------------
-        # FIND DOWNSTREAM EFFECTS
-        # ---------------------------------------------
-
-        downstream_effects = []
-
-        for problem in cluster_items:
-
-            if (
-                problem["id"]
-                !=
-                root_cause_problem["id"]
-            ):
-
-                downstream_effects.append(
-                    problem
-                )
-
-        # ---------------------------------------------
-        # FIND CONNECTIONS INSIDE CLUSTER
-        # ---------------------------------------------
+        # =================================================
+        # CLUSTER CONNECTIONS
+        # =================================================
 
         cluster_ids = set(
+
             problem["id"]
+
             for problem in cluster_items
+
         )
 
         cluster_dependencies = [
@@ -2629,7 +3395,131 @@ def municipality_dependencies():
                 dependency["target"]["id"]
                 in cluster_ids
             )
+
         ]
+
+        # =================================================
+        # FIND ROOT CAUSE FROM INCOMING/OUTGOING EDGES
+        # =================================================
+
+        incoming_count = {
+            problem["id"]: 0
+            for problem in cluster_items
+        }
+
+        outgoing_count = {
+            problem["id"]: 0
+            for problem in cluster_items
+        }
+
+        for dependency in cluster_dependencies:
+
+            source_id = dependency[
+                "source"
+            ]["id"]
+
+            target_id = dependency[
+                "target"
+            ]["id"]
+
+            outgoing_count[
+                source_id
+            ] += 1
+
+            incoming_count[
+                target_id
+            ] += 1
+
+        # Prefer a problem with outgoing
+        # connections and fewer incoming connections.
+
+        root_cause_problem = max(
+
+            cluster_items,
+
+            key=lambda problem: (
+
+                outgoing_count[
+                    problem["id"]
+                ]
+                -
+                incoming_count[
+                    problem["id"]
+                ]
+
+            )
+
+        )
+
+        # =================================================
+        # DOWNSTREAM EFFECTS
+        # =================================================
+
+        downstream_effects = []
+
+        visited = set()
+
+        queue = [
+            root_cause_problem["id"]
+        ]
+
+        while queue:
+
+            current_id = queue.pop(0)
+
+            for dependency in cluster_dependencies:
+
+                if dependency[
+                    "source"
+                ]["id"] != current_id:
+
+                    continue
+
+                target = dependency[
+                    "target"
+                ]
+
+                target_id = target["id"]
+
+                if target_id in visited:
+
+                    continue
+
+                if target_id == root_cause_problem["id"]:
+
+                    continue
+
+                visited.add(
+                    target_id
+                )
+
+                downstream_effects.append(
+                    target
+                )
+
+                queue.append(
+                    target_id
+                )
+
+        # If no directed chain was found,
+        # show remaining cluster problems.
+
+        if not downstream_effects:
+
+            downstream_effects = [
+
+                problem
+
+                for problem in cluster_items
+
+                if problem["id"]
+                != root_cause_problem["id"]
+
+            ]
+
+        # =================================================
+        # DEPENDENCY SCORE
+        # =================================================
 
         if cluster_dependencies:
 
@@ -2646,9 +3536,27 @@ def municipality_dependencies():
 
             dependency_score = 0
 
-        # ---------------------------------------------
+        # =================================================
+        # ML CONNECTION COUNT
+        # =================================================
+
+        ml_connections = sum(
+
+            1
+
+            for dependency
+            in cluster_dependencies
+
+            if dependency.get(
+                "ml_detected",
+                False
+            )
+
+        )
+
+        # =================================================
         # CLUSTER NAME
-        # ---------------------------------------------
+        # =================================================
 
         groups = []
 
@@ -2672,22 +3580,23 @@ def municipality_dependencies():
 
             cluster_name = groups[0]
 
-        # ---------------------------------------------
-        # CLUSTER DESCRIPTION
-        # ---------------------------------------------
+        # =================================================
+        # DESCRIPTION
+        # =================================================
 
         cluster_description = (
 
             f"{len(cluster_items)} real "
             f"citizen-reported problems "
-            f"show a potential dependency "
-            f"relationship based on location, "
-            f"problem type and description."
+            f"show detected or potential "
+            f"dependency relationships using "
+            f"ML signals, location and known "
+            f"urban problem patterns."
         )
 
-        # ---------------------------------------------
+        # =================================================
         # SAVE CLUSTER
-        # ---------------------------------------------
+        # =================================================
 
         clusters.append({
 
@@ -2710,18 +3619,26 @@ def municipality_dependencies():
                 downstream_effects,
 
             "connections":
-                len(cluster_dependencies),
+                len(
+                    cluster_dependencies
+                ),
+
+            "ml_connections":
+                ml_connections,
 
             "departments":
                 list(departments),
 
             "dependency_score":
-                dependency_score
+                round(
+                    dependency_score,
+                    2
+                )
 
         })
 
     # =====================================================
-    # SORT CLUSTERS BY DEPENDENCY SCORE
+    # SORT CLUSTERS
     # =====================================================
 
     clusters.sort(
@@ -2730,6 +3647,7 @@ def municipality_dependencies():
             cluster["dependency_score"],
 
         reverse=True
+
     )
 
     # =====================================================
@@ -2744,6 +3662,20 @@ def municipality_dependencies():
         dependencies
     )
 
+    ml_connections_total = sum(
+
+        1
+
+        for dependency
+        in dependencies
+
+        if dependency.get(
+            "ml_detected",
+            False
+        )
+
+    )
+
     high_impact_clusters = len([
 
         cluster
@@ -2755,7 +3687,7 @@ def municipality_dependencies():
     ])
 
     # =====================================================
-    # SEND REAL DATA TO HTML
+    # SEND DATA TO HTML
     # =====================================================
 
     return render_template(
@@ -2764,11 +3696,18 @@ def municipality_dependencies():
 
         clusters=clusters,
 
+        dependencies=dependencies,
+
+        problems=problems,
+
         total_problems=
             total_problems,
 
         total_connections=
             total_connections,
+
+        ml_connections_total=
+            ml_connections_total,
 
         high_impact_clusters=
             high_impact_clusters,
@@ -2778,8 +3717,8 @@ def municipality_dependencies():
 
         portal=
             "municipality"
-    )
 
+    )
 @app.route("/municipality/priority")
 def municipality_priority():
 
@@ -2795,7 +3734,6 @@ def municipality_priority():
 
     # ==========================================================
     # DISTANCE FUNCTION
-    # Used to estimate how many nearby problems are connected
     # ==========================================================
 
     def calculate_distance(lat1, lon1, lat2, lon2):
@@ -2827,7 +3765,6 @@ def municipality_priority():
     department_map = {
 
         "water": "Water & Drainage Department",
-
         "drain": "Water & Drainage Department",
 
         "road": "Roads & Infrastructure Department",
@@ -2837,11 +3774,9 @@ def municipality_priority():
         "waste": "Waste Management Department",
 
         "electricity": "Electricity & Lighting Department",
-
         "lighting": "Electricity & Lighting Department",
 
         "environment": "Environment Department"
-
     }
 
     # ==========================================================
@@ -2857,13 +3792,13 @@ def municipality_priority():
         for keyword, department in department_map.items():
 
             if keyword in category_text:
+
                 return department
 
         return "Municipal Administration"
 
     # ==========================================================
     # IMPACT SCORE
-    # Based on the REAL AI impact level already stored
     # ==========================================================
 
     def get_impact_score(report):
@@ -2885,7 +3820,6 @@ def municipality_priority():
 
     # ==========================================================
     # SEVERITY SCORE
-    # Derived from real report title + description
     # ==========================================================
 
     def get_severity_score(report):
@@ -2897,6 +3831,7 @@ def municipality_priority():
         ).lower()
 
         severe_words = [
+
             "accident",
             "dangerous",
             "emergency",
@@ -2909,9 +3844,11 @@ def municipality_priority():
             "life threatening",
             "major blockage",
             "blocked completely"
+
         ]
 
         high_words = [
+
             "waterlogging",
             "blocked drain",
             "traffic congestion",
@@ -2920,57 +3857,126 @@ def municipality_priority():
             "garbage",
             "waste dumping",
             "streetlight not working"
+
         ]
 
         severe_matches = sum(
+
             1
+
             for word in severe_words
+
             if word in text
+
         )
 
         high_matches = sum(
+
             1
+
             for word in high_words
+
             if word in text
+
         )
 
         if severe_matches >= 2:
+
             return 100
 
         if severe_matches == 1:
+
             return 90
 
         if high_matches >= 2:
+
             return 80
 
         if high_matches == 1:
+
             return 70
 
         return 50
 
     # ==========================================================
-    # FIND REAL CONNECTED PROBLEMS
+    # REAL ML DEPENDENCY INFORMATION
+    # ==========================================================
+
+    def get_ml_dependencies(report):
+
+        dependencies = report.get(
+            "ml_dependencies",
+            []
+        )
+
+        if not isinstance(
+            dependencies,
+            list
+        ):
+
+            return []
+
+        return dependencies
+
+    # ==========================================================
+    # GET REAL ML CONNECTION COUNT
     # ==========================================================
 
     def get_connected_count(report):
 
-        stored_count = report.get(
-            "connected_problems"
+        ml_dependencies = get_ml_dependencies(
+            report
         )
 
-        try:
+        return len(
+            ml_dependencies
+        )
 
-            if stored_count is not None:
-                return int(stored_count)
+    # ==========================================================
+    # GET ML DEPENDENCY SCORE
+    # ==========================================================
 
-        except (
-            TypeError,
-            ValueError
-        ):
+    def get_ml_dependency_score(report):
 
-            pass
+        dependencies = get_ml_dependencies(
+            report
+        )
 
-        return 0
+        if not dependencies:
+
+            return 0
+
+        probabilities = []
+
+        for dependency in dependencies:
+
+            try:
+
+                probability = float(
+                    dependency.get(
+                        "probability",
+                        0
+                    )
+                )
+
+                probabilities.append(
+                    probability
+                )
+
+            except (
+                TypeError,
+                ValueError
+            ):
+
+                continue
+
+        if not probabilities:
+
+            return 0
+
+        return max(
+            probabilities
+        )
 
     # ==========================================================
     # FIND NEARBY REPORTS
@@ -3000,6 +4006,7 @@ def municipality_priority():
         for other in reports:
 
             if other.get("_id") == report.get("_id"):
+
                 continue
 
             try:
@@ -3020,13 +4027,17 @@ def municipality_priority():
                 continue
 
             distance = calculate_distance(
+
                 latitude,
                 longitude,
+
                 other_lat,
                 other_lon
+
             )
 
             if distance <= 1.0:
+
                 count += 1
 
         return count
@@ -3037,44 +4048,106 @@ def municipality_priority():
 
     def get_connectivity_score(
         connected_count,
-        nearby_count
+        nearby_count,
+        ml_dependency_score
     ):
 
-        total_connections = (
-            connected_count
-            + nearby_count
+        # ------------------------------------------------------
+        # ML DEPENDENCY
+        # ------------------------------------------------------
+
+        if ml_dependency_score > 0:
+
+            ml_score = (
+                ml_dependency_score
+            )
+
+        else:
+
+            ml_score = 0
+
+        # ------------------------------------------------------
+        # CONNECTION COUNT
+        # ------------------------------------------------------
+
+        connection_score = min(
+
+            100,
+
+            connected_count * 20
+
         )
 
-        return min(
+        # ------------------------------------------------------
+        # NEARBY PROBLEM SCORE
+        # ------------------------------------------------------
+
+        nearby_score = min(
+
             100,
-            40 + (
-                total_connections * 10
+
+            nearby_count * 10
+
+        )
+
+        # ------------------------------------------------------
+        # FINAL CONNECTIVITY
+        # ------------------------------------------------------
+
+        if ml_score > 0:
+
+            return round(
+
+                (
+                    ml_score * 0.60
+                )
+                +
+                (
+                    connection_score * 0.25
+                )
+                +
+                (
+                    nearby_score * 0.15
+                )
+
             )
+
+        return round(
+
+            (
+                connection_score * 0.60
+            )
+            +
+            (
+                nearby_score * 0.40
+            )
+
         )
 
     # ==========================================================
     # AFFECTED AREA SCORE
-    #
-    # We do not have actual GIS affected-area polygons yet.
-    # Therefore we use nearby citizen complaints as a
-    # real-world proxy.
     # ==========================================================
 
     def get_area_score(nearby_count):
 
         if nearby_count >= 8:
+
             return 100
 
         if nearby_count >= 6:
+
             return 90
 
         if nearby_count >= 4:
+
             return 80
 
         if nearby_count >= 2:
+
             return 70
 
         if nearby_count == 1:
+
             return 50
 
         return 30
@@ -3106,6 +4179,7 @@ def municipality_priority():
         ).lower()
 
         emergency_words = [
+
             "accident",
             "emergency",
             "ambulance",
@@ -3114,21 +4188,26 @@ def municipality_priority():
             "life threatening",
             "dangerous",
             "critical"
+
         ]
 
         if any(
             word in text
             for word in emergency_words
         ):
+
             return 100
 
         if priority == "HIGH":
+
             return 90
 
         if priority == "MEDIUM":
+
             return 65
 
         if "submitted" in status:
+
             return 55
 
         return 45
@@ -3171,13 +4250,31 @@ def municipality_priority():
             )
         ).upper()
 
+        # ======================================================
+        # REAL ML DATA
+        # ======================================================
+
+        ml_dependencies = get_ml_dependencies(
+            report
+        )
+
         connected_count = get_connected_count(
             report
+        )
+
+        ml_dependency_score = (
+            get_ml_dependency_score(
+                report
+            )
         )
 
         nearby_count = get_nearby_count(
             report
         )
+
+        # ======================================================
+        # SCORES
+        # ======================================================
 
         impact_score = get_impact_score(
             report
@@ -3187,9 +4284,12 @@ def municipality_priority():
             report
         )
 
-        connectivity_score = get_connectivity_score(
-            connected_count,
-            nearby_count
+        connectivity_score = (
+            get_connectivity_score(
+                connected_count,
+                nearby_count,
+                ml_dependency_score
+            )
         )
 
         area_score = get_area_score(
@@ -3201,19 +4301,48 @@ def municipality_priority():
         )
 
         # ======================================================
+        # CASCADING EFFECTS
+        # ======================================================
+
+        cascading_effects = report.get(
+            "cascading_effects",
+            []
+        )
+
+        if not isinstance(
+            cascading_effects,
+            list
+        ):
+
+            cascading_effects = []
+
+        # ======================================================
+        # CASCADING SCORE
+        # ======================================================
+
+        cascading_score = min(
+
+            100,
+
+            len(cascading_effects) * 20
+
+        )
+
+        # ======================================================
         # FINAL PRIORITY SCORE
         #
-        # Impact       = 30%
-        # Severity     = 20%
-        # Connectivity= 20%
-        # Area         = 15%
-        # Urgency      = 15%
+        # Impact          = 25%
+        # Severity        = 20%
+        # Connectivity    = 25%
+        # Affected Area   = 15%
+        # Urgency         = 10%
+        # Cascading       = additional influence
         # ======================================================
 
         priority_score = round(
 
             (
-                impact_score * 0.30
+                impact_score * 0.25
             )
             +
             (
@@ -3221,7 +4350,7 @@ def municipality_priority():
             )
             +
             (
-                connectivity_score * 0.20
+                connectivity_score * 0.25
             )
             +
             (
@@ -3229,9 +4358,18 @@ def municipality_priority():
             )
             +
             (
-                urgency_score * 0.15
+                urgency_score * 0.10
+            )
+            +
+            (
+                cascading_score * 0.05
             )
 
+        )
+
+        priority_score = min(
+            100,
+            priority_score
         )
 
         # ======================================================
@@ -3263,60 +4401,75 @@ def municipality_priority():
         )
 
         # ======================================================
-        # DOWNSTREAM EFFECTS
-        # Already generated by AI analysis
-        # ======================================================
-
-        cascading_effects = report.get(
-            "cascading_effects",
-            []
-        )
-
-        if not isinstance(
-            cascading_effects,
-            list
-        ):
-            cascading_effects = []
-
-        # ======================================================
         # AI REASON
         # ======================================================
 
-        if cascading_effects:
+        if ml_dependency_score >= 80:
 
             reason = (
-                "High impact with cascading effects. "
-                "The problem is connected to "
-                + ", ".join(
+
+                "The ML dependency engine detected "
+                f"a strong dependency relationship "
+                f"with {connected_count} connected "
+                "problem(s). "
+
+                f"ML dependency confidence is "
+                f"{ml_dependency_score:.2f}%."
+
+            )
+
+        elif cascading_effects:
+
+            reason = (
+
+                "The problem has identified "
+                "cascading effects involving "
+                +
+                ", ".join(
                     cascading_effects
                 )
-                + ". Addressing the upstream "
-                "problem may reduce downstream impacts."
+                +
+                ". Addressing the upstream "
+                "problem may reduce downstream "
+                "impacts."
+
             )
 
         elif connected_count > 0:
 
             reason = (
-                "The problem has "
-                + str(connected_count)
-                + " connected urban problems and "
-                "may affect multiple municipal services."
+
+                "The ML dependency analysis "
+                "identified "
+                +
+                str(
+                    connected_count
+                )
+                +
+                " connected urban problem(s)."
+
             )
 
         elif nearby_count > 0:
 
             reason = (
-                "Several citizen-reported problems "
-                "are located nearby, indicating a "
-                "potential local problem cluster."
+
+                "Several citizen-reported "
+                "problems are located nearby, "
+                "indicating a potential local "
+                "problem cluster."
+
             )
 
         else:
 
             reason = (
-                "The problem currently has limited "
-                "identified connections and should "
-                "be reviewed based on local conditions."
+
+                "The problem currently has "
+                "limited identified connections "
+                "and should be reviewed based "
+                "on local conditions."
+
             )
 
         # ======================================================
@@ -3326,30 +4479,42 @@ def municipality_priority():
         if priority_level == "CRITICAL":
 
             recommended_action = (
-                "Immediate field verification and "
-                "municipal intervention."
+
+                "Immediate field verification "
+                "and municipal intervention."
+
             )
 
         elif priority_level == "HIGH":
 
             recommended_action = (
+
                 "Inspect the location and assign "
                 "the responsible department."
+
             )
 
         elif priority_level == "MEDIUM":
 
             recommended_action = (
+
                 "Schedule inspection and monitor "
                 "the problem."
+
             )
 
         else:
 
             recommended_action = (
+
                 "Monitor the report and review "
                 "during routine maintenance."
+
             )
+
+        # ======================================================
+        # ADD PRIORITY RECORD
+        # ======================================================
 
         priority_problems.append({
 
@@ -3369,29 +4534,62 @@ def municipality_priority():
 
             "priority": priority_level,
 
-            "priority_score": priority_score,
+            "priority_score":
+                priority_score,
 
-            "impact_score": impact_score,
+            "impact_score":
+                impact_score,
 
-            "severity_score": severity_score,
+            "severity_score":
+                severity_score,
 
-            "connectivity_score": connectivity_score,
+            "connectivity_score":
+                connectivity_score,
 
-            "area_score": area_score,
+            "area_score":
+                area_score,
 
-            "urgency_score": urgency_score,
+            "urgency_score":
+                urgency_score,
 
-            "connected_problems": connected_count,
+            "cascading_score":
+                cascading_score,
 
-            "nearby_problems": nearby_count,
+            # ----------------------------------------------
+            # REAL ML INFORMATION
+            # ----------------------------------------------
 
-            "cascading_effects": cascading_effects,
+            "connected_problems":
+                connected_count,
 
-            "department": department,
+            "ml_dependency_count":
+                len(
+                    ml_dependencies
+                ),
 
-            "reason": reason,
+            "ml_dependency_score":
+                round(
+                    ml_dependency_score,
+                    2
+                ),
 
-            "recommended_action": recommended_action
+            "ml_dependencies":
+                ml_dependencies,
+
+            "nearby_problems":
+                nearby_count,
+
+            "cascading_effects":
+                cascading_effects,
+
+            "department":
+                department,
+
+            "reason":
+                reason,
+
+            "recommended_action":
+                recommended_action
 
         })
 
@@ -3400,9 +4598,12 @@ def municipality_priority():
     # ==========================================================
 
     priority_problems.sort(
+
         key=lambda item:
             item["priority_score"],
+
         reverse=True
+
     )
 
     # ==========================================================
@@ -3410,8 +4611,11 @@ def municipality_priority():
     # ==========================================================
 
     for index, problem in enumerate(
+
         priority_problems,
+
         start=1
+
     ):
 
         problem["rank"] = index
@@ -3421,31 +4625,55 @@ def municipality_priority():
     # ==========================================================
 
     critical_count = sum(
+
         1
+
         for problem in priority_problems
-        if problem["priority"] == "CRITICAL"
+
+        if problem["priority"]
+        == "CRITICAL"
+
     )
 
     high_count = sum(
+
         1
+
         for problem in priority_problems
-        if problem["priority"] == "HIGH"
+
+        if problem["priority"]
+        == "HIGH"
+
     )
 
     interconnected_count = sum(
+
         1
+
         for problem in priority_problems
+
         if (
             problem["connected_problems"] > 0
-            or problem["nearby_problems"] > 0
+            or
+            problem["ml_dependency_score"] > 0
         )
+
     )
 
     high_impact_count = sum(
+
         1
+
         for problem in priority_problems
-        if problem["impact"] == "HIGH"
+
+        if problem["impact"]
+        == "HIGH"
+
     )
+
+    # ==========================================================
+    # SEND DATA TO HTML
+    # ==========================================================
 
     return render_template(
 
@@ -3457,17 +4685,23 @@ def municipality_priority():
             priority_problems
         ),
 
-        critical_count=critical_count,
+        critical_count=
+            critical_count,
 
-        high_count=high_count,
+        high_count=
+            high_count,
 
-        interconnected_count=interconnected_count,
+        interconnected_count=
+            interconnected_count,
 
-        high_impact_count=high_impact_count,
+        high_impact_count=
+            high_impact_count,
 
-        active_page="priority",
+        active_page=
+            "priority",
 
-        portal="municipality"
+        portal=
+            "municipality"
 
     )
 
@@ -3481,7 +4715,6 @@ def municipality_interventions():
     reports = list(
         db.problems.find({}).sort("_id", -1)
     )
-
 
     # =====================================================
     # DEPARTMENT MAPPING
@@ -3506,9 +4739,7 @@ def municipality_interventions():
         ):
             return "Roads & Infrastructure"
 
-        elif (
-            "traffic" in category_text
-        ):
+        elif "traffic" in category_text:
             return "Traffic"
 
         elif (
@@ -3524,18 +4755,160 @@ def municipality_interventions():
         ):
             return "Electricity & Lighting"
 
+        elif (
+            "environment" in category_text
+            or "park" in category_text
+        ):
+            return "Environment"
+
         else:
             return "Municipal Services"
 
+    # =====================================================
+    # RECOMMENDED ACTION
+    # =====================================================
+
+    def get_intervention_action(
+        category,
+        title,
+        root_cause
+    ):
+
+        text = (
+            str(category or "")
+            + " "
+            + str(title or "")
+            + " "
+            + str(root_cause or "")
+        ).lower()
+
+        if (
+            "drain" in text
+            or "drainage" in text
+            or "waterlogging" in text
+        ):
+
+            return (
+                "Inspect the drainage location, "
+                "clear the blockage and restore "
+                "stormwater flow."
+            )
+
+        elif (
+            "road" in text
+            or "pothole" in text
+        ):
+
+            return (
+                "Conduct field inspection and "
+                "repair the damaged road section."
+            )
+
+        elif "traffic" in text:
+
+            return (
+                "Inspect the affected road corridor "
+                "and implement appropriate traffic "
+                "management measures."
+            )
+
+        elif (
+            "waste" in text
+            or "garbage" in text
+        ):
+
+            return (
+                "Arrange waste removal and inspect "
+                "the affected collection area."
+            )
+
+        elif (
+            "lighting" in text
+            or "streetlight" in text
+            or "electricity" in text
+        ):
+
+            return (
+                "Inspect the lighting infrastructure "
+                "and restore the faulty streetlight."
+            )
+
+        else:
+
+            return (
+                "Conduct field verification and "
+                "assign the responsible municipal "
+                "department."
+            )
 
     # =====================================================
-    # CREATE REAL INTERVENTION DATA
+    # INTERVENTION TITLE
+    # =====================================================
+
+    def get_intervention_title(category):
+
+        category_text = str(
+            category or ""
+        ).lower()
+
+        if (
+            "water" in category_text
+            or "drain" in category_text
+            or "drainage" in category_text
+        ):
+
+            return "Drainage Infrastructure Intervention"
+
+        elif (
+            "road" in category_text
+            or "infrastructure" in category_text
+        ):
+
+            return "Road Infrastructure Intervention"
+
+        elif "traffic" in category_text:
+
+            return "Traffic Management Intervention"
+
+        elif (
+            "waste" in category_text
+            or "garbage" in category_text
+        ):
+
+            return "Waste Management Intervention"
+
+        elif (
+            "electricity" in category_text
+            or "lighting" in category_text
+            or "streetlight" in category_text
+        ):
+
+            return "Lighting Infrastructure Intervention"
+
+        elif (
+            "environment" in category_text
+            or "park" in category_text
+        ):
+
+            return "Environmental Maintenance Intervention"
+
+        return "Municipal Infrastructure Intervention"
+
+    # =====================================================
+    # CREATE INTERVENTIONS
     # =====================================================
 
     interventions = []
 
-
     for report in reports:
+
+        # =================================================
+        # BASIC REPORT INFORMATION
+        # =================================================
+
+        report_id = str(
+            report.get("_id")
+        )
 
         title = report.get(
             "title",
@@ -3550,6 +4923,14 @@ def municipality_interventions():
         description = report.get(
             "description",
             ""
+        )
+
+        address = report.get(
+            "address",
+            report.get(
+                "location",
+                "Location not provided"
+            )
         )
 
         impact = str(
@@ -3571,28 +4952,25 @@ def municipality_interventions():
             "Submitted"
         )
 
+        # =================================================
+        # PROGRESS
+        # =================================================
+
         progress = report.get(
             "progress",
             25
         )
 
-        department = get_department(
-            category
-        )
-
-
-        # =================================================
-        # NORMALIZE PROGRESS
-        # =================================================
-
         try:
+
             progress = int(progress)
+
         except (
             TypeError,
             ValueError
         ):
-            progress = 25
 
+            progress = 25
 
         progress = max(
             0,
@@ -3602,24 +4980,222 @@ def municipality_interventions():
             )
         )
 
+        # =================================================
+        # DEPARTMENT
+        # =================================================
+
+        department = get_department(
+            category
+        )
 
         # =================================================
-        # DETERMINE INTERVENTION STATUS
+        # NEW ML DEPENDENCY DATA
+        # =================================================
+
+        dependencies = report.get(
+            "dependencies",
+            []
+        )
+
+        if not isinstance(
+            dependencies,
+            list
+        ):
+            dependencies = []
+
+        # =================================================
+        # DEPENDENCY SCORE
+        # =================================================
+
+        dependency_score = report.get(
+            "dependency_score",
+            0
+        )
+
+        try:
+
+            dependency_score = float(
+                dependency_score
+            )
+
+        except (
+            TypeError,
+            ValueError
+        ):
+
+            dependency_score = 0
+
+        # =================================================
+        # DEPENDENCY ANALYZED FLAG
+        # =================================================
+
+        dependency_analyzed = report.get(
+            "dependency_analyzed",
+            False
+        )
+
+        # =================================================
+        # CONNECTED PROBLEM COUNT
+        # =================================================
+
+        connected_problems = len(
+            dependencies
+        )
+
+        # =================================================
+        # ROOT CAUSE
+        # =================================================
+
+        root_cause = report.get(
+            "root_cause",
+            "Analysis pending"
+        )
+
+        root_cause_type = report.get(
+            "root_cause_type",
+            "UNDETERMINED"
+        )
+
+        # =================================================
+        # CASCADING EFFECTS
+        # =================================================
+
+        cascading_effects = report.get(
+            "cascading_effects",
+            []
+        )
+
+        if not isinstance(
+            cascading_effects,
+            list
+        ):
+            cascading_effects = []
+
+        cascading_count = len(
+            cascading_effects
+        )
+
+        # =================================================
+        # PRIORITY SCORE
+        # =================================================
+
+        priority_score = report.get(
+            "priority_score",
+            0
+        )
+
+        try:
+
+            priority_score = int(
+                float(priority_score)
+            )
+
+        except (
+            TypeError,
+            ValueError
+        ):
+
+            priority_score = 0
+
+        # =================================================
+        # CREATE FALLBACK PRIORITY SCORE
+        # =================================================
+
+        if priority_score <= 0:
+
+            impact_score = {
+
+                "CRITICAL": 100,
+                "HIGH": 90,
+                "MEDIUM": 60,
+                "LOW": 30
+
+            }.get(
+                impact,
+                50
+            )
+
+            dependency_component = min(
+                dependency_score,
+                100
+            )
+
+            connection_component = min(
+                connected_problems * 20,
+                100
+            )
+
+            cascading_component = min(
+                cascading_count * 20,
+                100
+            )
+
+            priority_score = round(
+
+                (
+                    impact_score * 0.50
+                )
+                +
+                (
+                    dependency_component * 0.30
+                )
+                +
+                (
+                    connection_component * 0.10
+                )
+                +
+                (
+                    cascading_component * 0.10
+                )
+
+            )
+
+        priority_score = max(
+            0,
+            min(
+                priority_score,
+                100
+            )
+        )
+
+        # =================================================
+        # INTERVENTION PRIORITY
+        # =================================================
+
+        if priority_score >= 85:
+
+            intervention_priority = "CRITICAL"
+
+        elif priority_score >= 70:
+
+            intervention_priority = "HIGH"
+
+        elif priority_score >= 50:
+
+            intervention_priority = "MEDIUM"
+
+        else:
+
+            intervention_priority = "LOW"
+
+        # =================================================
+        # INTERVENTION STATUS
         # =================================================
 
         status_lower = str(
             status
         ).lower()
 
-
         if status_lower == "resolved":
 
             intervention_status = "completed"
+
             progress = 100
 
         elif status_lower in [
             "assigned",
-            "in progress"
+            "in progress",
+            "ai analyzed"
         ]:
 
             intervention_status = "active"
@@ -3628,63 +5204,76 @@ def municipality_interventions():
 
             intervention_status = "pending"
 
-
         # =================================================
         # INTERVENTION TITLE
         # =================================================
 
-        if (
-            "water" in str(category).lower()
-            or "drain" in str(category).lower()
-            or "drainage" in str(category).lower()
-        ):
-
-            intervention_title = (
-                "Drainage Infrastructure Intervention"
+        intervention_title = (
+            get_intervention_title(
+                category
             )
+        )
 
-        elif (
-            "road" in str(category).lower()
-            or "infrastructure" in str(category).lower()
-        ):
+        # =================================================
+        # RECOMMENDED ACTION
+        # =================================================
 
-            intervention_title = (
-                "Road Infrastructure Intervention"
+        recommended_action = (
+            get_intervention_action(
+                category,
+                title,
+                root_cause
             )
+        )
 
-        elif (
-            "traffic" in str(category).lower()
-        ):
+        # =================================================
+        # AI REASON
+        # =================================================
 
-            intervention_title = (
-                "Traffic Management Intervention"
-            )
+        if dependency_analyzed:
 
-        elif (
-            "waste" in str(category).lower()
-            or "garbage" in str(category).lower()
-        ):
+            if dependency_score >= 80:
 
-            intervention_title = (
-                "Waste Management Intervention"
-            )
+                ai_reason = (
+                    "The ML dependency analysis detected "
+                    "a strong relationship with "
+                    f"{connected_problems} connected "
+                    "problem(s). Addressing this problem "
+                    "may help reduce downstream effects."
+                )
 
-        elif (
-            "electricity" in str(category).lower()
-            or "lighting" in str(category).lower()
-            or "streetlight" in str(category).lower()
-        ):
+            elif dependency_score >= 60:
 
-            intervention_title = (
-                "Lighting Infrastructure Intervention"
-            )
+                ai_reason = (
+                    "The ML dependency analysis detected "
+                    "a moderate relationship with "
+                    f"{connected_problems} connected "
+                    "problem(s). Municipal verification "
+                    "is recommended."
+                )
+
+            elif connected_problems > 0:
+
+                ai_reason = (
+                    "The ML dependency analysis identified "
+                    f"{connected_problems} connected "
+                    "problem(s)."
+                )
+
+            else:
+
+                ai_reason = (
+                    "The ML dependency analysis did not "
+                    "identify a strong dependency "
+                    "relationship for this report."
+                )
 
         else:
 
-            intervention_title = (
-                "Municipal Infrastructure Intervention"
+            ai_reason = (
+                "ML dependency analysis is pending "
+                "for this report."
             )
-
 
         # =================================================
         # CREATE INTERVENTION OBJECT
@@ -3693,11 +5282,7 @@ def municipality_interventions():
         interventions.append({
 
             "id":
-                str(
-                    report.get(
-                        "_id"
-                    )
-                ),
+                report_id,
 
             "title":
                 intervention_title,
@@ -3718,7 +5303,10 @@ def municipality_interventions():
                 impact,
 
             "priority":
-                priority,
+                intervention_priority,
+
+            "priority_score":
+                priority_score,
 
             "status":
                 intervention_status,
@@ -3730,25 +5318,53 @@ def municipality_interventions():
                 progress,
 
             "address":
-                report.get(
-                    "address",
-                    report.get(
-                        "location",
-                        "Location not provided"
-                    )
+                address,
+
+            # =============================================
+            # ML DEPENDENCY DATA
+            # =============================================
+
+            "dependency_score":
+                round(
+                    dependency_score,
+                    2
                 ),
+
+            "dependency_analyzed":
+                dependency_analyzed,
+
+            "connected_problems":
+                connected_problems,
+
+            "dependencies":
+                dependencies,
+
+            # =============================================
+            # ROOT CAUSE
+            # =============================================
 
             "root_cause":
-                report.get(
-                    "root_cause",
-                    "Analysis pending"
-                ),
+                root_cause,
+
+            "root_cause_type":
+                root_cause_type,
+
+            # =============================================
+            # CASCADING EFFECTS
+            # =============================================
 
             "cascading_effects":
-                report.get(
-                    "cascading_effects",
-                    []
-                ),
+                cascading_effects,
+
+            "cascading_count":
+                cascading_count,
+
+            # =============================================
+            # AI INFORMATION
+            # =============================================
+
+            "ai_reason":
+                ai_reason,
 
             "ai_explanation":
                 report.get(
@@ -3756,88 +5372,172 @@ def municipality_interventions():
                     "AI analysis not available."
                 ),
 
+            # =============================================
+            # MUNICIPAL ACTION
+            # =============================================
+
+            "recommended_action":
+                recommended_action,
+
             "created_at":
                 report.get(
                     "created_at"
                 )
         })
 
+    # =====================================================
+    # SORT BY PRIORITY
+    # =====================================================
+
+    interventions.sort(
+
+        key=lambda item:
+            item["priority_score"],
+
+        reverse=True
+
+    )
+
+    # =====================================================
+    # ADD RANK
+    # =====================================================
+
+    for index, item in enumerate(
+        interventions,
+        start=1
+    ):
+
+        item["rank"] = index
 
     # =====================================================
     # SUMMARY COUNTS
     # =====================================================
 
     active_count = sum(
+
         1
         for item in interventions
         if item["status"] == "active"
+
     )
 
-
     pending_count = sum(
+
         1
         for item in interventions
         if item["status"] == "pending"
+
     )
 
-
     completed_count = sum(
+
         1
         for item in interventions
         if item["status"] == "completed"
-    )
 
+    )
 
     urgent_count = sum(
+
         1
         for item in interventions
-        if item["priority"] in [
-            "HIGH",
-            "CRITICAL"
-        ]
-        and item["status"] != "completed"
+
+        if (
+            item["priority"]
+            in [
+                "HIGH",
+                "CRITICAL"
+            ]
+        )
+        and
+        item["status"] != "completed"
+
     )
 
+    # =====================================================
+    # DEPARTMENTS
+    # =====================================================
 
     departments = sorted(
+
         set(
             item["department"]
             for item in interventions
         )
+
     )
 
+    # =====================================================
+    # TOTAL ML CONNECTIONS
+    # =====================================================
+
+    total_connections = sum(
+
+        item["connected_problems"]
+
+        for item in interventions
+
+    )
 
     # =====================================================
-    # RENDER PAGE
+    # TOTAL CASCADING EFFECTS
+    # =====================================================
+
+    total_cascading_effects = sum(
+
+        item["cascading_count"]
+
+        for item in interventions
+
+    )
+
+    # =====================================================
+    # RENDER
     # =====================================================
 
     return render_template(
 
         "municipality/interventions.html",
 
-        interventions=interventions,
+        interventions=
+            interventions,
 
-        active_count=active_count,
+        active_count=
+            active_count,
 
-        pending_count=pending_count,
+        pending_count=
+            pending_count,
 
-        completed_count=completed_count,
+        completed_count=
+            completed_count,
 
-        urgent_count=urgent_count,
+        urgent_count=
+            urgent_count,
 
-        department_list=departments,
+        department_list=
+            departments,
 
-        department_count=len(
-            departments
-        ),
+        department_count=
+            len(
+                departments
+            ),
 
-        total_count=len(
-            interventions
-        ),
+        total_count=
+            len(
+                interventions
+            ),
 
-        active_page="interventions",
+        total_connections=
+            total_connections,
 
-        portal="municipality"
+        total_cascading_effects=
+            total_cascading_effects,
+
+        active_page=
+            "interventions",
+
+        portal=
+            "municipality"
     )
 @app.route("/municipality/map")
 def municipality_map():
@@ -5155,6 +6855,63 @@ def municipality_analyze_dependencies():
         Dependency Analysis dashboard.
     </p>
     """
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+
+    if request.method == "POST":
+
+        email = request.form.get("email", "").strip().lower()
+        password = request.form.get("password", "").strip()
+        role = request.form.get("role", "citizen")
+
+        # ============================================
+        # CITIZEN LOGIN
+        # ============================================
+
+        if (
+            role == "citizen"
+            and email == "citizen@gmail.com"
+            and password == "citizen123"
+        ):
+
+            session["logged_in"] = True
+            session["role"] = "citizen"
+            session["citizen_id"] = "demo_citizen"
+            session["email"] = email
+
+            return redirect(
+                url_for("citizen_dashboard.html")
+            )
+
+        # ============================================
+        # MUNICIPALITY LOGIN
+        # ============================================
+
+        if (
+            role == "municipality"
+            and email == "municipality@urbannexus.com"
+            and password == "municipality123"
+        ):
+
+            session["logged_in"] = True
+            session["role"] = "municipality"
+            session["email"] = email
+
+            return redirect(
+                url_for("municipality_dashboard")
+            )
+
+        # ============================================
+        # INVALID LOGIN
+        # ============================================
+
+        return render_template(
+            "login.html",
+            error="Invalid email or password. Please check your portal and login details."
+        )
+
+    return render_template("login.html")
 # =========================
 # RUN APPLICATION
 # =========================

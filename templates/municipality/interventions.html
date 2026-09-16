@@ -1498,10 +1498,112 @@ document.addEventListener(
 
             /* ROOT CAUSE */
 
-            rootCause.textContent =
-                intervention.root_cause
-                || "Analysis pending";
+          /* =================================================
+   ML ROOT CAUSE
+================================================= */
 
+let detectedRootCause =
+    intervention.root_cause ||
+    "Analysis pending";
+
+
+const dependencies =
+    Array.isArray(
+        intervention.dependencies
+    )
+        ? intervention.dependencies
+        : [];
+
+
+/*
+ * Find upstream dependency.
+ */
+
+const upstreamDependencies =
+    dependencies.filter(
+        function (dependency) {
+
+            const direction =
+                String(
+                    dependency.direction ||
+                    ""
+                ).toLowerCase();
+
+            return (
+                direction.includes("upstream") ||
+                direction.includes("cause")
+            );
+        }
+    );
+
+
+if (
+    upstreamDependencies.length > 0
+) {
+
+    upstreamDependencies.sort(
+        function (a, b) {
+
+            return (
+                Number(
+                    b.score || 0
+                )
+                -
+                Number(
+                    a.score || 0
+                )
+            );
+
+        }
+    );
+
+
+    const strongest =
+        upstreamDependencies[0];
+
+
+    detectedRootCause =
+        strongest.title ||
+        strongest.problem_title ||
+        strongest.problem_a ||
+        detectedRootCause;
+
+}
+
+
+/*
+ * Do not allow the current report title
+ * to be displayed as the root cause.
+ */
+
+if (
+    detectedRootCause ===
+    intervention.problem_title
+) {
+
+    if (
+        intervention.root_cause &&
+        intervention.root_cause !==
+        intervention.problem_title
+    ) {
+
+        detectedRootCause =
+            intervention.root_cause;
+
+    }
+
+    else {
+
+        detectedRootCause =
+            "Upstream cause identified by ML analysis";
+
+    }
+
+}
+
+
+rootCause.textContent =
+    detectedRootCause;
 
 
             /* CASCADING EFFECTS */

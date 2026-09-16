@@ -620,7 +620,6 @@ def get_cascading_effects(report):
 # ============================================================
 # 13. DEPENDENCY ANALYSIS
 # ============================================================
-
 def analyze_dependencies(
     report,
     all_reports,
@@ -636,6 +635,7 @@ def analyze_dependencies(
         dependency_score,
         dependencies,
         root_cause,
+        root_cause_type,
         cascading_effects,
         dependency_analyzed
     }
@@ -653,13 +653,17 @@ def analyze_dependencies(
 
     best_upstream = None
 
+    # ========================================================
+    # COMPARE CURRENT REPORT WITH ALL OTHER REPORTS
+    # ========================================================
+
     for other_report in all_reports:
 
         other_id = str(
             other_report.get("_id", "")
         )
 
-        # Do not compare the report with itself.
+        # Do not compare the report with itself
         if other_id == report_id:
             continue
 
@@ -667,18 +671,18 @@ def analyze_dependencies(
             other_report
         )
 
-        # ----------------------------------------
+        # ====================================================
         # TEXT RELATIONSHIP
-        # ----------------------------------------
+        # ====================================================
 
         text_score = calculate_text_similarity(
             current_text,
             other_text
         )
 
-        # ----------------------------------------
+        # ====================================================
         # CAUSAL RELATIONSHIP
-        # ----------------------------------------
+        # ====================================================
 
         forward_causal = detect_causal_relationship(
             other_report,
@@ -690,7 +694,10 @@ def analyze_dependencies(
             other_report
         )
 
-        # We need to know which direction is stronger.
+        # ====================================================
+        # DETERMINE DIRECTION
+        # ====================================================
+
         if (
             forward_causal["strength"]
             >=
@@ -713,9 +720,9 @@ def analyze_dependencies(
 
             direction = "DOWNSTREAM"
 
-        # ----------------------------------------
-        # LOCATION
-        # ----------------------------------------
+        # ====================================================
+        # LOCATION RELATIONSHIP
+        # ====================================================
 
         location = calculate_location_score(
             report,
@@ -724,18 +731,18 @@ def analyze_dependencies(
 
         location_score = location["score"]
 
-        # ----------------------------------------
-        # CATEGORY
-        # ----------------------------------------
+        # ====================================================
+        # CATEGORY RELATIONSHIP
+        # ====================================================
 
         category_score = calculate_category_relationship(
             source_report,
             target_report
         )
 
-        # ----------------------------------------
+        # ====================================================
         # FINAL DEPENDENCY SCORE
-        # ----------------------------------------
+        # ====================================================
 
         dependency_score = calculate_dependency_strength(
             causal["strength"],
@@ -744,9 +751,9 @@ def analyze_dependencies(
             category_score
         )
 
-        # ----------------------------------------
-        # FILTER LOW RELATIONSHIPS
-        # ----------------------------------------
+        # ====================================================
+        # IGNORE LOW CONFIDENCE RELATIONSHIPS
+        # ====================================================
 
         if dependency_score < minimum_score:
             continue
@@ -755,73 +762,96 @@ def analyze_dependencies(
             dependency_score
         )
 
+        # ====================================================
+        # CREATE DEPENDENCY OBJECT
+        # ====================================================
+
         dependency = {
-            "problem_id": other_id,
 
-            "title": other_report.get(
-                "title",
-                "Urban Problem"
-            ),
+            "problem_id":
+                other_id,
 
-            "category": other_report.get(
-                "category",
-                "General"
-            ),
+            "title":
+                other_report.get(
+                    "title",
+                    "Urban Problem"
+                ),
 
-            "relationship": (
-                causal["relationship"]
-                or
-                "Potential related urban problem"
-            ),
+            "category":
+                other_report.get(
+                    "category",
+                    "General"
+                ),
 
-            "direction": direction,
+            "relationship":
+                (
+                    causal["relationship"]
+                    or
+                    "Potential related urban problem"
+                ),
 
-            "strength": round(
-                dependency_score / 100,
-                3
-            ),
+            "direction":
+                direction,
 
-            "score": dependency_score,
+            "strength":
+                round(
+                    dependency_score / 100,
+                    3
+                ),
 
-            "level": dependency_level,
+            "score":
+                dependency_score,
+
+            "level":
+                dependency_level,
 
             "distance_km":
                 location["distance_km"],
 
             "signals": {
-                "causal": round(
-                    causal["strength"] * 100,
-                    1
-                ),
 
-                "text_similarity": round(
-                    text_score * 100,
-                    1
-                ),
+                "causal":
+                    round(
+                        causal["strength"] * 100,
+                        1
+                    ),
 
-                "location_proximity": round(
-                    location_score * 100,
-                    1
-                ),
+                "text_similarity":
+                    round(
+                        text_score * 100,
+                        1
+                    ),
 
-                "category_relationship": round(
-                    category_score * 100,
-                    1
-                )
+                "location_proximity":
+                    round(
+                        location_score * 100,
+                        1
+                    ),
+
+                "category_relationship":
+                    round(
+                        category_score * 100,
+                        1
+                    )
             }
         }
+
+        # ====================================================
+        # SAVE DETECTED DEPENDENCY
+        # ====================================================
 
         dependencies.append(
             dependency
         )
 
-        # ----------------------------------------
-        # ROOT CAUSE CANDIDATE
-        # ----------------------------------------
+        # ====================================================
+        # FIND STRONGEST UPSTREAM PROBLEM
+        # ====================================================
 
         if (
             direction == "UPSTREAM"
-            and causal["strength"] > 0
+            and
+            causal["strength"] > 0
         ):
 
             if (
@@ -835,7 +865,7 @@ def analyze_dependencies(
                 best_upstream = dependency
 
     # ========================================================
-    # SORT DEPENDENCIES
+    # SORT DEPENDENCIES BY SCORE
     # ========================================================
 
     dependencies.sort(
@@ -843,10 +873,11 @@ def analyze_dependencies(
         reverse=True
     )
 
+    # Keep maximum 10 connected reports
     dependencies = dependencies[:10]
 
     # ========================================================
-    # ROOT CAUSE
+    # ROOT CAUSE IDENTIFICATION
     # ========================================================
 
     existing_root_cause = report.get(
@@ -855,11 +886,14 @@ def analyze_dependencies(
 
     if best_upstream:
 
+        # Actual citizen-reported upstream problem
         root_cause = (
             best_upstream["title"]
         )
 
-        root_cause_type = "RELATED_UPSTREAM_PROBLEM"
+        root_cause_type = (
+            "RELATED_UPSTREAM_PROBLEM"
+        )
 
     elif (
         existing_root_cause
@@ -868,9 +902,14 @@ def analyze_dependencies(
         "Local infrastructure issue"
     ):
 
-        root_cause = existing_root_cause
+        # Fallback to original AI report analysis
+        root_cause = (
+            existing_root_cause
+        )
 
-        root_cause_type = "REPORT_ANALYSIS"
+        root_cause_type = (
+            "REPORT_ANALYSIS"
+        )
 
     else:
 
@@ -878,25 +917,37 @@ def analyze_dependencies(
             "No strong upstream cause identified"
         )
 
-        root_cause_type = "UNDETERMINED"
+        root_cause_type = (
+            "UNDETERMINED"
+        )
 
     # ========================================================
     # CASCADING EFFECTS
     # ========================================================
+    #
+    # IMPORTANT:
+    # Only actual DOWNSTREAM citizen reports
+    # detected by the dependency engine are used.
+    #
+    # We DO NOT call get_cascading_effects(report)
+    # here because that can create theoretical effects
+    # that are not actual reports.
+    # ========================================================
 
-    cascading_effects = get_cascading_effects(
-        report
-    )
+    cascading_effects = []
 
-    # Add downstream dependency titles.
     for dependency in dependencies:
 
         if (
-            dependency["direction"]
-            == "DOWNSTREAM"
+            dependency.get("direction")
+            ==
+            "DOWNSTREAM"
         ):
 
-            title = dependency["title"]
+            title = dependency.get(
+                "title",
+                "Connected urban problem"
+            )
 
             if title not in cascading_effects:
 
@@ -904,7 +955,10 @@ def analyze_dependencies(
                     title
                 )
 
-    cascading_effects = cascading_effects[:6]
+    # Maximum 6 downstream effects
+    cascading_effects = (
+        cascading_effects[:6]
+    )
 
     # ========================================================
     # OVERALL DEPENDENCY SCORE
@@ -920,6 +974,10 @@ def analyze_dependencies(
     else:
 
         overall_score = 0
+
+    # ========================================================
+    # RETURN FINAL AI ANALYSIS
+    # ========================================================
 
     return {
 

@@ -468,21 +468,21 @@ Dependency Analysis - UrbanNexus
 
                         <strong id="currentProblem">
 
-                            {% if clusters[0].problems|length > 1 %}
-                                {{ clusters[0].problems[1].title }}
-                            {% else %}
-                                Current Problem
-                            {% endif %}
+                          {% if clusters[0].downstream|length > 0 %}
+    {{ clusters[0].downstream[0].title }}
+{% else %}
+    Current Problem
+{% endif %}
 
                         </strong>
 
                         <small id="currentCategory">
 
-                            {% if clusters[0].problems|length > 1 %}
-                                {{ clusters[0].problems[1].group }}
-                            {% else %}
-                                Reported Issue
-                            {% endif %}
+                         {% if clusters[0].downstream|length > 0 %}
+    {{ clusters[0].downstream[0].group }}
+{% else %}
+    Reported Issue
+{% endif %}
 
                         </small>
 
@@ -504,22 +504,21 @@ Dependency Analysis - UrbanNexus
 
                         <strong id="downstreamProblem">
 
-                            {% if clusters[0].downstream|length > 0 %}
-                                {{ clusters[0].downstream[0].title }}
-                            {% else %}
-                                No downstream effect
-                            {% endif %}
+                           {% if clusters[0].downstream|length > 0 %}
+    {{ clusters[0].downstream[0].title }}
+{% else %}
+    Current Problem
+{% endif %}
 
                         </strong>
 
                         <small id="downstreamCategory">
 
-                            {% if clusters[0].downstream|length > 0 %}
-                                {{ clusters[0].downstream[0].group }}
-                            {% else %}
-                                —
-                            {% endif %}
-
+                          {% if clusters[0].downstream|length > 0 %}
+    {{ clusters[0].downstream[0].group }}
+{% else %}
+    Reported Issue
+{% endif %}
                         </small>
 
                     </div>
@@ -540,25 +539,28 @@ Dependency Analysis - UrbanNexus
 
                         <strong id="impactProblem">
 
-                            {% if clusters[0].downstream|length > 1 %}
-                                {{ clusters[0].downstream[1].title }}
-                            {% elif clusters[0].downstream|length > 0 %}
-                                {{ clusters[0].downstream[0].title }}
-                            {% else %}
-                                No cascading effect
-                            {% endif %}
+                         <strong id="impactProblem">
+
+    {% if clusters[0].downstream|length > 2 %}
+        {{ clusters[0].downstream[2].title }}
+    {% else %}
+        No cascading effect
+    {% endif %}
+
+</strong>
 
                         </strong>
 
                         <small id="impactCategory">
+<small id="impactCategory">
 
-                            {% if clusters[0].downstream|length > 1 %}
-                                {{ clusters[0].downstream[1].group }}
-                            {% elif clusters[0].downstream|length > 0 %}
-                                {{ clusters[0].downstream[0].group }}
-                            {% else %}
-                                —
-                            {% endif %}
+    {% if clusters[0].downstream|length > 2 %}
+        {{ clusters[0].downstream[2].group }}
+    {% else %}
+        —
+    {% endif %}
+
+</small>
 
                         </small>
 
@@ -868,419 +870,459 @@ document.addEventListener(
            UPDATE SELECTED NETWORK
         ===================================================== */
 
-        function updateNetwork(index) {
+    function updateNetwork(index) {
 
-            const cluster =
-                clusters[index];
+    const cluster =
+        clusters[index];
 
+    if (!cluster) {
+        return;
+    }
 
-            if (!cluster) {
-                return;
-            }
 
+    /* =====================================================
+       BASIC INFORMATION
+    ===================================================== */
 
-            /* -----------------------------------------------
-               BASIC INFORMATION
-            ------------------------------------------------ */
+    const name =
+        document.getElementById(
+            "selectedClusterName"
+        );
 
-            const name =
-                document.getElementById(
-                    "selectedClusterName"
-                );
+    const description =
+        document.getElementById(
+            "selectedClusterDescription"
+        );
 
+    const impact =
+        document.getElementById(
+            "selectedClusterImpact"
+        );
 
-            const description =
-                document.getElementById(
-                    "selectedClusterDescription"
-                );
 
+    if (name) {
 
-            const impact =
-                document.getElementById(
-                    "selectedClusterImpact"
-                );
+        name.textContent =
+            cluster.name;
 
+    }
 
-            if (name) {
 
-                name.textContent =
-                    cluster.name;
+    if (description) {
 
-            }
+        description.textContent =
+            cluster.description;
 
+    }
 
-            if (description) {
 
-                description.textContent =
-                    cluster.description;
+    if (impact) {
 
-            }
+        impact.textContent =
+            cluster.impact +
+            " IMPACT";
 
+    }
 
-            if (impact) {
 
-                impact.textContent =
-                    cluster.impact +
-                    " IMPACT";
+    /* =====================================================
+       CONNECTIONS
+    ===================================================== */
 
-            }
+    const networkConnections =
+        document.getElementById(
+            "networkConnections"
+        );
 
 
-            /* -----------------------------------------------
-               CONNECTIONS
-            ------------------------------------------------ */
+    if (networkConnections) {
 
-            const networkConnections =
-                document.getElementById(
-                    "networkConnections"
-                );
+        networkConnections.textContent =
+            cluster.connections +
+            " CONNECTION" +
+            (
+                cluster.connections === 1
+                    ? ""
+                    : "S"
+            );
 
+    }
 
-            if (networkConnections) {
 
-                networkConnections.textContent =
-                    cluster.connections +
-                    " CONNECTION" +
-                    (
-                        cluster.connections === 1
-                            ? ""
-                            : "S"
-                    );
+    /* =====================================================
+       ROOT CAUSE
+    ===================================================== */
 
-            }
+    const root =
+        cluster.root_cause;
 
 
-            /* -----------------------------------------------
-               ROOT CAUSE
-            ------------------------------------------------ */
+    const rootProblem =
+        document.getElementById(
+            "rootProblem"
+        );
 
-            const root =
-                cluster.root_cause;
+    const rootCategory =
+        document.getElementById(
+            "rootCategory"
+        );
 
 
-            const rootProblem =
-                document.getElementById(
-                    "rootProblem"
-                );
+    if (rootProblem) {
 
+        rootProblem.textContent =
+            root
+                ? root.title
+                : "Root Cause";
 
-            const rootCategory =
-                document.getElementById(
-                    "rootCategory"
-                );
+    }
 
 
-            if (rootProblem) {
+    if (rootCategory) {
 
-                rootProblem.textContent =
-                    root
-                        ? root.title
-                        : "Root Cause";
+        rootCategory.textContent =
+            root
+                ? root.group
+                : "Infrastructure";
 
-            }
+    }
 
 
-            if (rootCategory) {
+    /* =====================================================
+       DEPENDENCY CHAIN
+    ===================================================== */
 
-                rootCategory.textContent =
-                    root
-                        ? root.group
-                        : "Infrastructure";
+    /*
+       downstream[0]
+       = first detected problem connected
+         to the root cause
 
-            }
+       downstream[1]
+       = next downstream effect
 
+       downstream[2]
+       = next cascading effect
+    */
 
-            /* -----------------------------------------------
-               CURRENT PROBLEM
-            ------------------------------------------------ */
+    const downstream =
+        Array.isArray(cluster.downstream)
+            ? cluster.downstream
+            : [];
 
-            let currentProblem = null;
 
+    /* =====================================================
+       CURRENT PROBLEM
+    ===================================================== */
 
-            if (
-                cluster.problems &&
-                cluster.problems.length > 1
-            ) {
+    const currentProblem =
+        downstream.length > 0
+            ? downstream[0]
+            : null;
 
-                currentProblem =
-                    cluster.problems[1];
 
-            }
+    const currentTitle =
+        document.getElementById(
+            "currentProblem"
+        );
 
+    const currentCategory =
+        document.getElementById(
+            "currentCategory"
+        );
 
-            const currentTitle =
-                document.getElementById(
-                    "currentProblem"
-                );
 
+    if (currentTitle) {
 
-            const currentCategory =
-                document.getElementById(
-                    "currentCategory"
-                );
+        currentTitle.textContent =
+            currentProblem
+                ? currentProblem.title
+                : "Current Problem";
 
+    }
 
-            if (currentTitle) {
 
-                currentTitle.textContent =
-                    currentProblem
-                        ? currentProblem.title
-                        : "Current Problem";
+    if (currentCategory) {
 
-            }
+        currentCategory.textContent =
+            currentProblem
+                ? currentProblem.group
+                : "Reported Issue";
 
+    }
 
-            if (currentCategory) {
 
-                currentCategory.textContent =
-                    currentProblem
-                        ? currentProblem.group
-                        : "Reported Issue";
+    /* =====================================================
+       DOWNSTREAM EFFECT
+    ===================================================== */
 
-            }
+    const downstreamProblem =
+        document.getElementById(
+            "downstreamProblem"
+        );
 
+    const downstreamCategory =
+        document.getElementById(
+            "downstreamCategory"
+        );
 
-            /* -----------------------------------------------
-               DOWNSTREAM EFFECT
-            ------------------------------------------------ */
 
-            const downstream =
-                cluster.downstream || [];
+    /*
+       Only show a downstream problem when
+       there is MORE THAN ONE dependency.
 
+       Example:
 
-            const downstreamProblem =
-                document.getElementById(
-                    "downstreamProblem"
-                );
+       downstream[0] = Waterlogging
+       downstream[1] = Road Blockage
 
+       Current Problem = Waterlogging
+       Downstream = Road Blockage
+    */
 
-            const downstreamCategory =
-                document.getElementById(
-                    "downstreamCategory"
-                );
 
+    if (downstreamProblem) {
 
-            if (downstreamProblem) {
+        if (downstream.length > 1) {
 
-                if (downstream.length > 0) {
+            downstreamProblem.textContent =
+                downstream[1].title;
 
-                    downstreamProblem.textContent =
-                        downstream[0].title;
+        } else {
 
-                } else {
-
-                    downstreamProblem.textContent =
-                        "No downstream effect";
-
-                }
-
-            }
-
-
-            if (downstreamCategory) {
-
-                if (downstream.length > 0) {
-
-                    downstreamCategory.textContent =
-                        downstream[0].group;
-
-                } else {
-
-                    downstreamCategory.textContent =
-                        "—";
-
-                }
-
-            }
-
-
-            /* -----------------------------------------------
-               CASCADING EFFECT
-            ------------------------------------------------ */
-
-            const impactProblem =
-                document.getElementById(
-                    "impactProblem"
-                );
-
-
-            const impactCategory =
-                document.getElementById(
-                    "impactCategory"
-                );
-
-
-            if (impactProblem) {
-
-                if (downstream.length > 1) {
-
-                    impactProblem.textContent =
-                        downstream[1].title;
-
-                } else if (
-                    downstream.length === 1
-                ) {
-
-                    impactProblem.textContent =
-                        downstream[0].title;
-
-                } else {
-
-                    impactProblem.textContent =
-                        "No cascading effect";
-
-                }
-
-            }
-
-
-            if (impactCategory) {
-
-                if (downstream.length > 1) {
-
-                    impactCategory.textContent =
-                        downstream[1].group;
-
-                } else if (
-                    downstream.length === 1
-                ) {
-
-                    impactCategory.textContent =
-                        downstream[0].group;
-
-                } else {
-
-                    impactCategory.textContent =
-                        "—";
-
-                }
-
-            }
-
-
-            /* -----------------------------------------------
-               SUMMARY
-            ------------------------------------------------ */
-
-            const directConnections =
-                document.getElementById(
-                    "directConnections"
-                );
-
-
-            const cascadingCount =
-                document.getElementById(
-                    "cascadingCount"
-                );
-
-
-            const departmentCount =
-                document.getElementById(
-                    "departmentCount"
-                );
-
-
-            if (directConnections) {
-
-                directConnections.textContent =
-                    cluster.connections;
-
-            }
-
-
-            if (cascadingCount) {
-
-                cascadingCount.textContent =
-                    downstream.length;
-
-            }
-
-
-            if (departmentCount) {
-
-                departmentCount.textContent =
-                    cluster.departments.length;
-
-            }
-
-
-            /* -----------------------------------------------
-               AI INSIGHT
-            ------------------------------------------------ */
-
-            const aiTitle =
-                document.getElementById(
-                    "aiInsightTitle"
-                );
-
-
-            const aiText =
-                document.getElementById(
-                    "aiInsightText"
-                );
-
-
-            if (aiTitle) {
-
-                if (
-                    root &&
-                    root.title
-                ) {
-
-                    aiTitle.textContent =
-                        "Address the upstream problem first";
-
-                } else {
-
-                    aiTitle.textContent =
-                        "Review connected urban problems";
-
-                }
-
-            }
-
-
-            if (aiText) {
-
-                const rootName =
-                    root
-                        ? root.title
-                        : "the upstream problem";
-
-
-                const downstreamCount =
-                    downstream.length;
-
-
-                if (downstreamCount > 0) {
-
-                    aiText.textContent =
-                        rootName +
-                        " appears to be an upstream problem " +
-                        "within this real complaint cluster. " +
-                        "Addressing it may help reduce " +
-                        downstreamCount +
-                        " downstream effect" +
-                        (
-                            downstreamCount === 1
-                                ? ""
-                                : "s"
-                        ) +
-                        ".";
-
-                } else {
-
-                    aiText.textContent =
-                        "UrbanNexus detected a potential " +
-                        "relationship between the real " +
-                        "citizen-reported problems in this cluster.";
-
-                }
-
-            }
+            downstreamProblem.textContent =
+                "No further dependency";
 
         }
 
+    }
+
+
+    if (downstreamCategory) {
+
+        if (downstream.length > 1) {
+
+            downstreamCategory.textContent =
+                downstream[1].group;
+
+        } else {
+
+            downstreamCategory.textContent =
+                "—";
+
+        }
+
+    }
+
+
+    /* =====================================================
+       CASCADING EFFECT
+    ===================================================== */
+
+    const impactProblem =
+        document.getElementById(
+            "impactProblem"
+        );
+
+    const impactCategory =
+        document.getElementById(
+            "impactCategory"
+        );
+
+
+    /*
+       Only show a cascading effect when
+       there are at least THREE dependency
+       nodes.
+
+       Example:
+
+       downstream[0] = Waterlogging
+       downstream[1] = Road Blockage
+       downstream[2] = Traffic Congestion
+
+       Current Problem  = Waterlogging
+       Downstream       = Road Blockage
+       Cascading Effect  = Traffic Congestion
+    */
+
+
+    if (impactProblem) {
+
+        if (downstream.length > 2) {
+
+            impactProblem.textContent =
+                downstream[2].title;
+
+        } else {
+
+            impactProblem.textContent =
+                "No cascading effect";
+
+        }
+
+    }
+
+
+    if (impactCategory) {
+
+        if (downstream.length > 2) {
+
+            impactCategory.textContent =
+                downstream[2].group;
+
+        } else {
+
+            impactCategory.textContent =
+                "—";
+
+        }
+
+    }
+
+
+    /* =====================================================
+       SUMMARY
+    ===================================================== */
+
+    const directConnections =
+        document.getElementById(
+            "directConnections"
+        );
+
+    const cascadingCount =
+        document.getElementById(
+            "cascadingCount"
+        );
+
+    const departmentCount =
+        document.getElementById(
+            "departmentCount"
+        );
+
+
+    if (directConnections) {
+
+        directConnections.textContent =
+            cluster.connections;
+
+    }
+
+
+    /*
+       The first downstream item represents
+       the current problem.
+
+       Therefore only the remaining items
+       count as cascading effects.
+    */
+
+    const cascadingEffects =
+        Math.max(
+            downstream.length - 1,
+            0
+        );
+
+
+    if (cascadingCount) {
+
+        cascadingCount.textContent =
+            cascadingEffects;
+
+    }
+
+
+    if (departmentCount) {
+
+        departmentCount.textContent =
+            Array.isArray(cluster.departments)
+                ? cluster.departments.length
+                : 0;
+
+    }
+
+
+    /* =====================================================
+       AI NETWORK INSIGHT
+    ===================================================== */
+
+    const aiTitle =
+        document.getElementById(
+            "aiInsightTitle"
+        );
+
+    const aiText =
+        document.getElementById(
+            "aiInsightText"
+        );
+
+
+    if (aiTitle) {
+
+        if (
+            root &&
+            root.title
+        ) {
+
+            aiTitle.textContent =
+                "Address the upstream problem first";
+
+        } else {
+
+            aiTitle.textContent =
+                "Review connected urban problems";
+
+        }
+
+    }
+
+
+    if (aiText) {
+
+        const rootName =
+            root
+                ? root.title
+                : "the upstream problem";
+
+
+        if (cascadingEffects > 0) {
+
+            aiText.textContent =
+                rootName +
+                " appears to be an upstream problem " +
+                "within this real complaint cluster. " +
+                "Addressing it may help reduce " +
+                cascadingEffects +
+                " cascading effect" +
+                (
+                    cascadingEffects === 1
+                        ? ""
+                        : "s"
+                ) +
+                ".";
+
+        } else if (
+            downstream.length > 0
+        ) {
+
+            aiText.textContent =
+                rootName +
+                " is connected to a real citizen-reported " +
+                "problem. UrbanNexus detected a direct " +
+                "dependency relationship that can be reviewed " +
+                "by municipal officers.";
+
+        } else {
+
+            aiText.textContent =
+                "UrbanNexus detected a potential " +
+                "relationship between the real " +
+                "citizen-reported problems in this cluster.";
+
+        }
+
+    }
+
+}
 
         /* =====================================================
            SELECT CLUSTER

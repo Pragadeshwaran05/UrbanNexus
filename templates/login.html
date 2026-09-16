@@ -1,0 +1,1707 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>UrbanNexus | Login</title>
+
+    <style>
+
+        /* =====================================================
+           RESET
+        ===================================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #F6F4F9;
+            color: #171717;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        button,
+        input {
+            font-family: inherit;
+        }
+
+
+        /* =====================================================
+           FIXED BACK BUTTON
+        ===================================================== */
+
+        .unx-fixed-back {
+
+            position: fixed;
+
+            top: 24px;
+            right: 24px;
+
+            z-index: 999999;
+
+            width: 112px;
+            height: 44px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            gap: 8px;
+
+            background: #FFFFFF;
+            color: #38245F;
+
+            border: 2px solid #38245F;
+            border-radius: 8px;
+
+            font-size: 14px;
+            font-weight: 800;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 5px 18px
+                rgba(0, 0, 0, 0.08);
+
+            transition: 0.2s ease;
+        }
+
+        .unx-fixed-back:hover {
+
+            background: #38245F;
+            color: #FFFFFF;
+
+            transform: translateY(-2px);
+        }
+
+        .unx-back-arrow {
+
+            font-size: 19px;
+            line-height: 1;
+        }
+
+
+        /* =====================================================
+           MAIN LOGIN AREA
+        ===================================================== */
+
+        .login-page {
+
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 45px 25px;
+        }
+
+
+        /* =====================================================
+           LOGIN CONTAINER
+        ===================================================== */
+
+        .login-container {
+
+            width: min(1050px, 100%);
+
+            min-height: 650px;
+
+            display: grid;
+
+            grid-template-columns:
+                0.95fr 1.05fr;
+
+            background: #FFFFFF;
+
+            border-radius: 18px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 25px 70px
+                rgba(56, 36, 95, 0.14);
+        }
+
+
+        /* =====================================================
+           LEFT PURPLE PANEL
+        ===================================================== */
+
+        .login-left {
+
+            position: relative;
+
+            overflow: hidden;
+
+            padding: 55px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            background: #38245F;
+
+            color: #FFFFFF;
+        }
+
+        .login-left::before {
+
+            content: "";
+
+            position: absolute;
+
+            width: 350px;
+            height: 350px;
+
+            top: -170px;
+            right: -150px;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.10);
+
+            border-radius: 50%;
+        }
+
+        .login-left::after {
+
+            content: "";
+
+            position: absolute;
+
+            width: 300px;
+            height: 300px;
+
+            bottom: -180px;
+            left: -150px;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.08);
+
+            border-radius: 50%;
+        }
+
+
+        /* =====================================================
+           BRAND
+        ===================================================== */
+
+        .brand {
+
+            position: relative;
+
+            z-index: 2;
+
+            margin-bottom: 50px;
+        }
+
+        .brand-name {
+
+            margin-bottom: 10px;
+
+            color: #FFFFFF;
+
+            font-size: 34px;
+            font-weight: 900;
+
+            letter-spacing: -1px;
+        }
+
+        .brand-tagline {
+
+            max-width: 340px;
+
+            color: #DCD3E8;
+
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+
+        /* =====================================================
+           LEFT CONTENT
+        ===================================================== */
+
+        .left-content {
+
+            position: relative;
+            z-index: 2;
+        }
+
+        .left-content h1 {
+
+            margin-bottom: 20px;
+
+            color: #FFFFFF;
+
+            font-size: 43px;
+            font-weight: 900;
+
+            line-height: 1.12;
+
+            letter-spacing: -1px;
+        }
+
+        .left-content p {
+
+            max-width: 390px;
+
+            color: #DED7E7;
+
+            font-size: 15px;
+
+            line-height: 1.75;
+        }
+
+
+        /* =====================================================
+           LEFT FEATURES
+        ===================================================== */
+
+        .left-features {
+
+            position: relative;
+
+            z-index: 2;
+
+            margin-top: 35px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 13px;
+        }
+
+        .left-feature {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            color: #FFFFFF;
+
+            font-size: 14px;
+
+            font-weight: 700;
+        }
+
+        .left-check {
+
+            width: 24px;
+            height: 24px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            background:
+                rgba(255, 255, 255, 0.13);
+
+            border-radius: 50%;
+
+            font-size: 11px;
+        }
+
+
+        /* =====================================================
+           RIGHT LOGIN PANEL
+        ===================================================== */
+
+        .login-right {
+
+            padding: 55px 65px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: center;
+
+            background: #FFFFFF;
+        }
+
+
+        /* =====================================================
+           LOGIN HEADING
+        ===================================================== */
+
+        .login-heading {
+
+            margin-bottom: 30px;
+        }
+
+        .login-heading h2 {
+
+            margin-bottom: 8px;
+
+            color: #171717;
+
+            font-size: 32px;
+
+            font-weight: 900;
+        }
+
+        .login-heading p {
+
+            color: #77727D;
+
+            font-size: 14px;
+        }
+
+
+        /* =====================================================
+           PORTAL SELECTOR
+        ===================================================== */
+
+        .portal-label {
+
+            display: block;
+
+            margin-bottom: 10px;
+
+            color: #333333;
+
+            font-size: 13px;
+
+            font-weight: 800;
+        }
+
+        .portal-options {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 10px;
+
+            margin-bottom: 22px;
+        }
+
+        .portal-option {
+
+            position: relative;
+        }
+
+        .portal-option input {
+
+            position: absolute;
+
+            opacity: 0;
+
+            pointer-events: none;
+        }
+
+        .portal-option label {
+
+            min-height: 48px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            background: #F7F5FA;
+
+            color: #55505D;
+
+            border:
+                1px solid #DDD8E4;
+
+            border-radius: 8px;
+
+            font-size: 13px;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+            transition: 0.2s ease;
+        }
+
+        .portal-option label:hover {
+
+            border-color: #38245F;
+        }
+
+        .portal-option input:checked + label {
+
+            background: #38245F;
+
+            color: #FFFFFF;
+
+            border-color: #38245F;
+        }
+
+
+        /* =====================================================
+           FORM
+        ===================================================== */
+
+        .form-group {
+
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+
+            display: block;
+
+            margin-bottom: 8px;
+
+            color: #333333;
+
+            font-size: 13px;
+
+            font-weight: 800;
+        }
+
+        .input-wrapper {
+
+            position: relative;
+        }
+
+        .form-input {
+
+            width: 100%;
+
+            height: 50px;
+
+            padding: 0 15px;
+
+            background: #FFFFFF;
+
+            color: #171717;
+
+            border:
+                1px solid #D8D5DC;
+
+            border-radius: 8px;
+
+            outline: none;
+
+            font-size: 14px;
+
+            transition: 0.2s ease;
+        }
+
+        .form-input:focus {
+
+            border-color: #38245F;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(56, 36, 95, 0.08);
+        }
+
+        .password-input {
+
+            padding-right: 65px;
+        }
+
+
+        /* =====================================================
+           SHOW PASSWORD
+        ===================================================== */
+
+        .show-password {
+
+            position: absolute;
+
+            top: 50%;
+            right: 13px;
+
+            transform:
+                translateY(-50%);
+
+            border: none;
+
+            background: transparent;
+
+            color: #38245F;
+
+            font-size: 12px;
+
+            font-weight: 800;
+
+            cursor: pointer;
+        }
+
+
+        /* =====================================================
+           REMEMBER / FORGOT
+        ===================================================== */
+
+        .form-options {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 15px;
+
+            margin-bottom: 23px;
+        }
+
+        .remember {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            color: #68636D;
+
+            font-size: 12px;
+        }
+
+        .remember input {
+
+            accent-color: #38245F;
+        }
+
+        .forgot {
+
+            color: #38245F;
+
+            font-size: 12px;
+
+            font-weight: 800;
+        }
+
+        .forgot:hover {
+
+            text-decoration: underline;
+        }
+
+
+        /* =====================================================
+           LOGIN BUTTON
+        ===================================================== */
+
+        .login-submit {
+
+            width: 100%;
+
+            height: 51px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #38245F;
+
+            color: #FFFFFF;
+
+            font-size: 15px;
+
+            font-weight: 900;
+
+            cursor: pointer;
+
+            transition: 0.2s ease;
+        }
+
+        .login-submit:hover {
+
+            background: #2D1B50;
+
+            transform:
+                translateY(-1px);
+        }
+
+
+        /* =====================================================
+           CITIZEN REGISTER SECTION
+        ===================================================== */
+
+        .register-section {
+
+            margin-top: 25px;
+
+            padding-top: 23px;
+
+            border-top:
+                1px solid #E8E5EB;
+
+            text-align: center;
+
+            display: block;
+
+            animation:
+                registerFadeIn 0.25s ease;
+        }
+
+        @keyframes registerFadeIn {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    translateY(5px);
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translateY(0);
+            }
+        }
+
+        .register-text {
+
+            margin-bottom: 11px;
+
+            color: #77727D;
+
+            font-size: 13px;
+        }
+
+        .register-btn {
+
+            width: 100%;
+
+            min-height: 46px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            background: #FFFFFF;
+
+            color: #38245F;
+
+            border:
+                2px solid #38245F;
+
+            border-radius: 8px;
+
+            font-size: 14px;
+
+            font-weight: 900;
+
+            transition: 0.2s ease;
+        }
+
+        .register-btn:hover {
+
+            background: #38245F;
+
+            color: #FFFFFF;
+
+            transform:
+                translateY(-1px);
+        }
+
+
+        /* =====================================================
+           FOOT NOTE
+        ===================================================== */
+
+        .login-footer {
+
+            margin-top: 25px;
+
+            text-align: center;
+
+            color: #99949F;
+
+            font-size: 11px;
+
+            line-height: 1.6;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE - TABLET
+        ===================================================== */
+
+        @media (max-width: 850px) {
+
+            .login-container {
+
+                grid-template-columns: 1fr;
+
+                max-width: 570px;
+            }
+
+            .login-left {
+
+                min-height: 300px;
+
+                padding: 40px;
+            }
+
+            .brand {
+
+                margin-bottom: 25px;
+            }
+
+            .left-content h1 {
+
+                font-size: 32px;
+            }
+
+            .left-features {
+
+                display: none;
+            }
+
+            .login-right {
+
+                padding: 45px;
+            }
+        }
+
+
+        /* =====================================================
+           RESPONSIVE - MOBILE
+        ===================================================== */
+
+        @media (max-width: 600px) {
+
+            .login-page {
+
+                padding:
+                    80px 15px 25px;
+            }
+
+            .unx-fixed-back {
+
+                top: 16px;
+
+                right: 16px;
+
+                width: 104px;
+
+                height: 40px;
+
+                font-size: 13px;
+            }
+
+            .login-left {
+
+                padding:
+                    35px 28px;
+            }
+
+            .brand-name {
+
+                font-size: 28px;
+            }
+
+            .left-content h1 {
+
+                font-size: 28px;
+            }
+
+            .login-right {
+
+                padding:
+                    35px 25px;
+            }
+
+            .login-heading h2 {
+
+                font-size: 27px;
+            }
+        }
+
+
+        /* =====================================================
+           RESPONSIVE - SMALL MOBILE
+        ===================================================== */
+
+        @media (max-width: 400px) {
+
+            .portal-options {
+
+                grid-template-columns: 1fr;
+            }
+
+            .form-options {
+
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         FIXED BACK BUTTON
+         Uses browser history.
+         This avoids Cannot GET /home.html
+    ====================================================== -->
+
+    <button
+        type="button"
+        class="unx-fixed-back"
+        id="backButton"
+    >
+
+        <span class="unx-back-arrow">
+            ←
+        </span>
+
+        <span>
+            Back
+        </span>
+
+    </button>
+
+
+
+    <!-- =====================================================
+         LOGIN PAGE
+    ====================================================== -->
+
+    <main class="login-page">
+
+
+        <div class="login-container">
+
+
+            <!-- =================================================
+                 LEFT SIDE
+            ================================================== -->
+
+            <section class="login-left">
+
+
+                <div class="brand">
+
+                    <div class="brand-name">
+                        UrbanNexus
+                    </div>
+
+                    <div class="brand-tagline">
+                        Intelligent urban problem reporting
+                        and municipal intelligence.
+                    </div>
+
+                </div>
+
+
+                <div class="left-content">
+
+                    <h1>
+                        Welcome Back
+                    </h1>
+
+                    <p>
+                        Login to continue using UrbanNexus
+                        and connect with smarter urban
+                        problem solving.
+                    </p>
+
+                </div>
+
+
+                <div class="left-features">
+
+
+                    <div class="left-feature">
+
+                        <span class="left-check">
+                            ✓
+                        </span>
+
+                        Citizen Problem Reporting
+
+                    </div>
+
+
+                    <div class="left-feature">
+
+                        <span class="left-check">
+                            ✓
+                        </span>
+
+                        AI Powered Analysis
+
+                    </div>
+
+
+                    <div class="left-feature">
+
+                        <span class="left-check">
+                            ✓
+                        </span>
+
+                        Municipal Intelligence
+
+                    </div>
+
+
+                </div>
+
+
+            </section>
+
+
+
+            <!-- =================================================
+                 RIGHT SIDE
+            ================================================== -->
+
+            <section class="login-right">
+
+
+                <div class="login-heading">
+
+                    <h2>
+                        Login
+                    </h2>
+
+                    <p>
+                        Access your UrbanNexus portal
+                    </p>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     PORTAL SELECTOR
+                ================================================== -->
+
+                <span class="portal-label">
+                    Select Portal
+                </span>
+
+
+                <div class="portal-options">
+
+
+                    <div class="portal-option">
+
+                        <input
+                            type="radio"
+                            name="role"
+                            id="citizen"
+                            value="citizen"
+                            checked
+                        >
+
+                        <label for="citizen">
+                            👤 Citizen
+                        </label>
+
+                    </div>
+
+
+                    <div class="portal-option">
+
+                        <input
+                            type="radio"
+                            name="role"
+                            id="municipality"
+                            value="municipality"
+                        >
+
+                        <label for="municipality">
+                            🏛 Municipality
+                        </label>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- =================================================
+                     LOGIN FORM
+                ================================================== -->
+
+               <form
+    id="loginForm"
+    method="POST"
+    action="{{ url_for('login') }}"
+>
+
+
+                    <!-- EMAIL -->
+
+                    <div class="form-group">
+
+                        <label for="email">
+                            Email Address
+                        </label>
+
+                      <input
+    type="email"
+    id="email"
+    name="email"
+    class="form-input"
+    placeholder="Enter your email"
+    autocomplete="email"
+    required
+>
+
+                    </div>
+
+
+
+                    <!-- PASSWORD -->
+
+                    <div class="form-group">
+
+                        <label for="password">
+                            Password
+                        </label>
+
+
+                        <div class="input-wrapper">
+
+                          <input
+    type="password"
+    id="password"
+    name="password"
+    class="form-input password-input"
+    placeholder="Enter your password"
+    autocomplete="current-password"
+    required
+>
+                            <button
+                                type="button"
+                                class="show-password"
+                                id="showPassword"
+                            >
+                                Show
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- OPTIONS -->
+
+                    <div class="form-options">
+
+
+                        <label class="remember">
+
+                            <input
+                                type="checkbox"
+                                id="remember"
+                            >
+
+                            Remember me
+
+                        </label>
+
+
+                        <a
+                            href="#"
+                            class="forgot"
+                            id="forgotPassword"
+                        >
+                            Forgot Password?
+                        </a>
+
+
+                    </div>
+
+
+
+                    <!-- LOGIN BUTTON -->
+
+                    <button
+                        type="submit"
+                        class="login-submit"
+                    >
+                        Login
+                    </button>
+
+
+                </form>
+
+
+
+                <!-- =================================================
+                     CITIZEN ONLY REGISTER BOX
+                     
+                     CITIZEN     -> SHOW
+                     MUNICIPALITY -> HIDE
+                ================================================== -->
+
+                <div
+                    class="register-section"
+                    id="citizenRegisterBox"
+                >
+
+                    <p class="register-text">
+                        New to UrbanNexus?
+                    </p>
+
+
+                    <a
+                        href="register.html"
+                        class="register-btn"
+                    >
+                        Create New Account
+                    </a>
+
+                </div>
+
+
+
+                <!-- FOOT NOTE -->
+
+                <div class="login-footer">
+
+                    By continuing, you agree to use
+                    UrbanNexus responsibly.
+
+                </div>
+
+
+            </section>
+
+
+        </div>
+
+    </main>
+
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script>
+
+
+        /* =====================================================
+           BACK BUTTON
+           
+           IMPORTANT:
+           Uses browser history instead of:
+           href="home.html"
+           
+           So:
+           home.html
+                ↓
+           login.html
+                ↓
+           Back
+                ↓
+           home.html
+        ===================================================== */
+
+        const backButton =
+            document.getElementById("backButton");
+
+        backButton.addEventListener(
+            "click",
+            function () {
+
+                /*
+                    If this page was opened from another page,
+                    go back to that page.
+                */
+
+                if (window.history.length > 1) {
+
+                    window.history.back();
+
+                }
+
+                else {
+
+                    /*
+                        Fallback only if there is no previous
+                        browser history.
+                    */
+
+                    window.location.href = "./home.html";
+
+                }
+
+            }
+        );
+
+
+
+        /* =====================================================
+           ELEMENTS
+        ===================================================== */
+
+        const citizenRadio =
+            document.getElementById("citizen");
+
+        const municipalityRadio =
+            document.getElementById("municipality");
+
+        const citizenRegisterBox =
+            document.getElementById(
+                "citizenRegisterBox"
+            );
+
+
+
+        /* =====================================================
+           CITIZEN / MUNICIPALITY REGISTER BOX
+           
+           Citizen      -> SHOW
+           Municipality -> HIDE
+        ===================================================== */
+
+        function updateRegisterBox() {
+
+            if (citizenRadio.checked) {
+
+                citizenRegisterBox.style.display =
+                    "block";
+
+            }
+
+            else {
+
+                citizenRegisterBox.style.display =
+                    "none";
+
+            }
+
+        }
+
+
+        /* Citizen selected */
+
+        citizenRadio.addEventListener(
+            "change",
+            updateRegisterBox
+        );
+
+
+        /* Municipality selected */
+
+        municipalityRadio.addEventListener(
+            "change",
+            updateRegisterBox
+        );
+
+
+        /* Run once when page loads */
+
+        updateRegisterBox();
+
+
+
+        /* =====================================================
+           SHOW / HIDE PASSWORD
+        ===================================================== */
+
+        const passwordInput =
+            document.getElementById("password");
+
+        const showPassword =
+            document.getElementById("showPassword");
+
+
+        showPassword.addEventListener(
+            "click",
+            function () {
+
+                if (
+                    passwordInput.type ===
+                    "password"
+                ) {
+
+                    passwordInput.type =
+                        "text";
+
+                    showPassword.textContent =
+                        "Hide";
+
+                }
+
+                else {
+
+                    passwordInput.type =
+                        "password";
+
+                    showPassword.textContent =
+                        "Show";
+
+                }
+
+            }
+        );
+
+
+
+        /* =====================================================
+           LOGIN FORM
+        ===================================================== */
+
+        const loginForm =
+            document.getElementById("loginForm");
+
+
+        loginForm.addEventListener(
+            "submit",
+            function (event) {
+
+                event.preventDefault();
+
+
+                /* =================================================
+                   GET VALUES
+                ================================================= */
+
+                const email =
+                    document
+                        .getElementById("email")
+                        .value
+                        .trim()
+                        .toLowerCase();
+
+
+                const password =
+                    document
+                        .getElementById("password")
+                        .value;
+
+
+                const selectedRole =
+                    document.querySelector(
+                        'input[name="role"]:checked'
+                    ).value;
+
+
+
+                /* =================================================
+                   VALIDATE
+                ================================================= */
+
+                if (
+                    !email ||
+                    !password
+                ) {
+
+                    alert(
+                        "Please enter your email and password."
+                    );
+
+                    return;
+
+                }
+
+
+
+                /* =================================================
+                   LOAD REGISTERED USERS
+                   
+                   These users are stored by register.html
+                   in localStorage.
+                ================================================= */
+
+                let users = [];
+
+
+                try {
+
+                    const storedUsers =
+                        localStorage.getItem(
+                            "urbannexus_users"
+                        );
+
+
+                    if (storedUsers) {
+
+                        users =
+                            JSON.parse(
+                                storedUsers
+                            );
+
+                    }
+
+                    if (!Array.isArray(users)) {
+
+                        users = [];
+
+                    }
+
+                }
+
+                catch (error) {
+
+                    console.error(
+                        "Unable to read registered users:",
+                        error
+                    );
+
+                    users = [];
+
+                }
+
+
+
+                /* =================================================
+                   FIND REGISTERED USER
+                ================================================= */
+
+                const registeredUser =
+                    users.find(
+                        function (user) {
+
+                            return (
+                                user &&
+                                user.email === email &&
+                                user.role === selectedRole &&
+                                user.password === password
+                            );
+
+                        }
+                    );
+
+
+
+                /* =================================================
+                   REGISTERED USER LOGIN
+                ================================================= */
+
+                if (registeredUser) {
+
+                    localStorage.setItem(
+                        "urbannexus_logged_in",
+                        "true"
+                    );
+
+
+                    localStorage.setItem(
+                        "urbannexus_role",
+                        registeredUser.role
+                    );
+
+
+                    localStorage.setItem(
+                        "urbannexus_email",
+                        registeredUser.email
+                    );
+
+
+                    localStorage.setItem(
+                        "urbannexus_user_name",
+                        registeredUser.name || ""
+                    );
+
+
+                    if (
+                        registeredUser.role ===
+                        "citizen"
+                    ) {
+
+                        window.location.href =
+                            "citizen-dashboard.html";
+
+                    }
+
+                    else {
+
+                        window.location.href =
+                            "municipality-dashboard.html";
+
+                    }
+
+                    return;
+
+                }
+
+
+
+                /* =================================================
+                   DEMO CITIZEN LOGIN
+                ================================================== */
+
+                if (
+
+                    selectedRole ===
+                        "citizen"
+
+                    &&
+
+                    email ===
+                        "citizen@gmail.com"
+
+                    &&
+
+                    password ===
+                        "citizen123"
+
+                ) {
+
+
+                    localStorage.setItem(
+                        "urbannexus_logged_in",
+                        "true"
+                    );
+
+
+                    localStorage.setItem(
+                        "urbannexus_role",
+                        "citizen"
+                    );
+
+
+                    localStorage.setItem(
+                        "urbannexus_email",
+                        email
+                    );
+
+
+                    localStorage.setItem(
+                        "urbannexus_user_name",
+                        "Citizen"
+                    );
+
+
+                    window.location.href =
+                        "citizen-dashboard.html";
+
+
+                    return;
+
+                }
+
+
+
+                /* =================================================
+                   DEMO MUNICIPALITY LOGIN
+                ================================================== */
+
+                if (
+
+                    selectedRole ===
+                        "municipality"
+
+                    &&
+
+                    email ===
+                        "municipality@urbannexus.com"
+
+                    &&
+
+                    password ===
+                        "municipality123"
+
+                ) {
+
+
+                    localStorage.setItem(
+                        "urbannexus_logged_in",
+                        "true"
+                    );
+
+
+                    localStorage.setItem(
+                        "urbannexus_role",
+                        "municipality"
+                    );
+
+
+                    localStorage.setItem(
+                        "urbannexus_email",
+                        email
+                    );
+
+
+                    localStorage.setItem(
+                        "urbannexus_user_name",
+                        "Municipality"
+                    );
+
+
+                    window.location.href =
+                        "municipality-dashboard.html";
+
+
+                    return;
+
+                }
+
+
+
+                /* =================================================
+                   INVALID LOGIN
+                ================================================== */
+
+                alert(
+                    "Invalid email or password. Please check your portal and login details."
+                );
+
+            }
+        );
+
+
+
+        /* =====================================================
+           FORGOT PASSWORD
+        ===================================================== */
+
+        const forgotPassword =
+            document.getElementById(
+                "forgotPassword"
+            );
+
+
+        forgotPassword.addEventListener(
+            "click",
+            function (event) {
+
+                event.preventDefault();
+
+                alert(
+                    "Password recovery will be available soon."
+                );
+
+            }
+        );
+
+
+    </script>
+
+
+</body>
+
+</html>
