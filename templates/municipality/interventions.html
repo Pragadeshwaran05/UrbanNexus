@@ -1101,16 +1101,14 @@ document.addEventListener(
     "DOMContentLoaded",
     function () {
 
-
         /* =====================================================
-           GET REAL DATA
+           GET REAL INTERVENTION DATA FROM FLASK
         ===================================================== */
 
         const dataElement =
             document.getElementById(
                 "urbannexus-intervention-data"
             );
-
 
         let interventions = [];
 
@@ -1134,7 +1132,6 @@ document.addEventListener(
             }
 
         }
-
 
 
         /* =====================================================
@@ -1171,14 +1168,11 @@ document.addEventListener(
             );
 
 
-
         /* =====================================================
            HELPER
         ===================================================== */
 
-        function normalizeDepartment(
-            value
-        ) {
+        function normalizeDepartment(value) {
 
             return String(
                 value || ""
@@ -1196,14 +1190,11 @@ document.addEventListener(
         }
 
 
-
         /* =====================================================
            FIND INTERVENTION
         ===================================================== */
 
-        function getIntervention(
-            id
-        ) {
+        function getIntervention(id) {
 
             return interventions.find(
                 function (item) {
@@ -1220,14 +1211,11 @@ document.addEventListener(
         }
 
 
-
         /* =====================================================
            FORMAT DATE
         ===================================================== */
 
-        function formatDate(
-            value
-        ) {
+        function formatDate(value) {
 
             if (!value) {
 
@@ -1275,14 +1263,11 @@ document.addEventListener(
         }
 
 
-
         /* =====================================================
            UPDATE DETAIL PANEL
         ===================================================== */
 
-        function showIntervention(
-            intervention
-        ) {
+        function showIntervention(intervention) {
 
             if (!intervention) {
 
@@ -1290,6 +1275,10 @@ document.addEventListener(
 
             }
 
+
+            /* =================================================
+               GET ELEMENTS
+            ================================================= */
 
             const title =
                 document.getElementById(
@@ -1369,31 +1358,29 @@ document.addEventListener(
                 );
 
 
-
-            /* TITLE */
+            /* =================================================
+               BASIC INTERVENTION INFORMATION
+            ================================================= */
 
             title.textContent =
-                intervention.title
-                || "Municipal Intervention";
+                intervention.title ||
+                "Municipal Intervention";
 
-
-
-            /* DESCRIPTION */
 
             description.textContent =
-                intervention.description
-                || (
-                    "Addressing the reported urban problem: "
-                    +
+                intervention.description ||
+                (
+                    "Addressing the reported urban problem: " +
                     (
-                        intervention.problem_title
-                        || "Urban Problem"
+                        intervention.problem_title ||
+                        "Urban Problem"
                     )
                 );
 
 
-
-            /* PROGRESS */
+            /* =================================================
+               PROGRESS
+            ================================================= */
 
             const interventionProgress =
                 Number(
@@ -1402,19 +1389,27 @@ document.addEventListener(
 
 
             progress.textContent =
-                interventionProgress
-                + "%";
+                interventionProgress +
+                "%";
 
 
+            /* =================================================
+               STATUS
+            ================================================= */
 
-            /* STATUS */
+            const currentStatus =
+                String(
+                    intervention.status ||
+                    "pending"
+                ).toLowerCase();
+
 
             let statusText =
                 "PENDING";
 
 
             if (
-                intervention.status ===
+                currentStatus ===
                 "active"
             ) {
 
@@ -1424,7 +1419,7 @@ document.addEventListener(
             }
 
             else if (
-                intervention.status ===
+                currentStatus ===
                 "completed"
             ) {
 
@@ -1438,20 +1433,28 @@ document.addEventListener(
                 statusText;
 
 
-
-            /* DEPARTMENT */
+            /* =================================================
+               DEPARTMENT
+            ================================================= */
 
             department.textContent =
-                intervention.department
-                || "Municipal Services";
+                intervention.department ||
+                "Awaiting Assignment";
 
 
+            /* =================================================
+               PRIORITY
+            ================================================= */
 
-            /* PRIORITY */
+            const priorityValue =
+                String(
+                    intervention.priority ||
+                    "MEDIUM"
+                ).toUpperCase();
+
 
             priority.textContent =
-                intervention.priority
-                || "MEDIUM";
+                priorityValue;
 
 
             priority.className =
@@ -1459,7 +1462,7 @@ document.addEventListener(
 
 
             if (
-                intervention.priority ===
+                priorityValue ===
                 "LOW"
             ) {
 
@@ -1469,7 +1472,7 @@ document.addEventListener(
             }
 
             else if (
-                intervention.priority ===
+                priorityValue ===
                 "MEDIUM"
             ) {
 
@@ -1478,211 +1481,422 @@ document.addEventListener(
 
             }
 
+            else if (
+                priorityValue ===
+                "HIGH"
+            ) {
+
+                priority.className =
+                    "priority-high";
+
+            }
+
+            else if (
+                priorityValue ===
+                "CRITICAL"
+            ) {
+
+                priority.className =
+                    "priority-critical";
+
+            }
 
 
-            /* LOCATION */
+            /* =================================================
+               LOCATION
+            ================================================= */
 
             location.textContent =
-                intervention.address
-                || "Location not provided";
+                intervention.address ||
+                "Location not provided";
 
 
+            /* =================================================
+               REAL DEPENDENCY INFORMATION
+            ================================================= */
 
-            /* AI EXPLANATION */
-
-            aiExplanation.textContent =
-                intervention.ai_explanation
-                || "AI analysis is not available.";
-
-
-
-            /* ROOT CAUSE */
-
-          /* =================================================
-   ML ROOT CAUSE
-================================================= */
-
-let detectedRootCause =
-    intervention.root_cause ||
-    "Analysis pending";
-
-
-const dependencies =
-    Array.isArray(
-        intervention.dependencies
-    )
-        ? intervention.dependencies
-        : [];
-
-
-/*
- * Find upstream dependency.
- */
-
-const upstreamDependencies =
-    dependencies.filter(
-        function (dependency) {
-
-            const direction =
-                String(
-                    dependency.direction ||
-                    ""
-                ).toLowerCase();
-
-            return (
-                direction.includes("upstream") ||
-                direction.includes("cause")
-            );
-        }
-    );
-
-
-if (
-    upstreamDependencies.length > 0
-) {
-
-    upstreamDependencies.sort(
-        function (a, b) {
-
-            return (
-                Number(
-                    b.score || 0
+            const dependencies =
+                Array.isArray(
+                    intervention.dependencies
                 )
-                -
+                    ? intervention.dependencies
+                    : [];
+
+
+            const dependencyScore =
                 Number(
-                    a.score || 0
-                )
-            );
-
-        }
-    );
+                    intervention.dependency_score ||
+                    0
+                );
 
 
-    const strongest =
-        upstreamDependencies[0];
+            const dependencyAnalyzed =
+                intervention.dependency_analyzed ===
+                true;
 
 
-    detectedRootCause =
-        strongest.title ||
-        strongest.problem_title ||
-        strongest.problem_a ||
-        detectedRootCause;
+            /* =================================================
+               AI ANALYSIS
+            ================================================= */
 
-}
-
-
-/*
- * Do not allow the current report title
- * to be displayed as the root cause.
- */
-
-if (
-    detectedRootCause ===
-    intervention.problem_title
-) {
-
-    if (
-        intervention.root_cause &&
-        intervention.root_cause !==
-        intervention.problem_title
-    ) {
-
-        detectedRootCause =
-            intervention.root_cause;
-
-    }
-
-    else {
-
-        detectedRootCause =
-            "Upstream cause identified by ML analysis";
-
-    }
-
-}
+            let aiText =
+                intervention.ai_explanation ||
+                "";
 
 
-rootCause.textContent =
-    detectedRootCause;
-
-
-            /* CASCADING EFFECTS */
-
-            const effects =
-                intervention.cascading_effects
-                || [];
-
+            /*
+             * Use the backend AI explanation
+             * when it exists.
+             */
 
             if (
-                effects.length > 0
+                aiText.trim() !== ""
+            ) {
+
+                aiExplanation.textContent =
+                    aiText;
+
+            }
+
+
+            /*
+             * If backend explanation does not exist,
+             * describe the actual dependency analysis.
+             */
+
+            else if (
+                dependencyAnalyzed
+            ) {
+
+                if (
+                    dependencies.length > 0
+                ) {
+
+                    aiExplanation.textContent =
+                        "UrbanNexus dependency analysis " +
+                        "identified " +
+                        dependencies.length +
+                        " connected urban problem(s). " +
+                        "Overall dependency score: " +
+                        dependencyScore.toFixed(1) +
+                        "%.";
+
+                }
+
+                else {
+
+                    aiExplanation.textContent =
+                        "UrbanNexus analyzed this problem " +
+                        "against the available urban problem " +
+                        "records, but no strong dependency " +
+                        "was identified.";
+
+                }
+
+            }
+
+
+            /*
+             * Analysis has not been executed yet.
+             */
+
+            else {
+
+                aiExplanation.textContent =
+                    "Dependency analysis has not yet been " +
+                    "completed for this problem.";
+
+            }
+
+
+            /* =================================================
+               ROOT CAUSE
+            ================================================= */
+
+            let detectedRootCause =
+                "";
+
+
+            /*
+             * Find ACTUAL upstream dependencies.
+             */
+
+            const upstreamDependencies =
+                dependencies.filter(
+                    function (dependency) {
+
+                        return String(
+                            dependency.direction ||
+                            ""
+                        ).toUpperCase() ===
+                        "UPSTREAM";
+
+                    }
+                );
+
+
+            /*
+             * Sort by strongest dependency.
+             */
+
+            upstreamDependencies.sort(
+                function (a, b) {
+
+                    return Number(
+                        b.score || 0
+                    )
+                    -
+                    Number(
+                        a.score || 0
+                    );
+
+                }
+            );
+
+
+            /*
+             * Strongest upstream problem
+             * becomes the detected root cause.
+             */
+
+            if (
+                upstreamDependencies.length > 0
+            ) {
+
+                const strongestUpstream =
+                    upstreamDependencies[0];
+
+
+                detectedRootCause =
+                    strongestUpstream.title ||
+                    strongestUpstream.problem_title ||
+                    strongestUpstream.problem_a ||
+                    "";
+
+            }
+
+
+            /*
+             * Backend root cause fallback.
+             */
+
+            if (
+                !detectedRootCause &&
+                intervention.root_cause
+            ) {
+
+                detectedRootCause =
+                    intervention.root_cause;
+
+            }
+
+
+            /*
+             * Prevent the current problem
+             * from being displayed as its own root cause.
+             */
+
+            if (
+                detectedRootCause &&
+                detectedRootCause ===
+                intervention.problem_title
+            ) {
+
+                detectedRootCause =
+                    "";
+
+            }
+
+
+            /*
+             * Final root-cause display.
+             */
+
+            if (
+                detectedRootCause
+            ) {
+
+                rootCause.textContent =
+                    detectedRootCause;
+
+            }
+
+            else if (
+                dependencyAnalyzed
+            ) {
+
+                rootCause.textContent =
+                    "No strong upstream cause identified";
+
+            }
+
+            else {
+
+                rootCause.textContent =
+                    "Dependency analysis pending";
+
+            }
+
+
+            /* =================================================
+               CASCADING EFFECTS
+            ================================================= */
+
+            /*
+             * IMPORTANT:
+             *
+             * We DO NOT use:
+             *
+             * intervention.cascading_effects
+             *
+             * because that can contain old
+             * theoretical/rule-based effects.
+             *
+             * Instead, we use the actual
+             * dependency records.
+             */
+
+            const downstreamDependencies =
+                dependencies.filter(
+                    function (dependency) {
+
+                        return String(
+                            dependency.direction ||
+                            ""
+                        ).toUpperCase() ===
+                        "DOWNSTREAM";
+
+                    }
+                );
+
+
+            /*
+             * Extract actual downstream
+             * problem titles.
+             */
+
+            const downstreamEffects =
+                downstreamDependencies
+                    .map(
+                        function (dependency) {
+
+                            return (
+                                dependency.title ||
+                                dependency.problem_title ||
+                                ""
+                            );
+
+                        }
+                    )
+                    .filter(
+                        function (value) {
+
+                            return (
+                                value.trim() !== ""
+                            );
+
+                        }
+                    )
+                    .filter(
+                        function (
+                            value,
+                            index,
+                            array
+                        ) {
+
+                            return (
+                                array.indexOf(
+                                    value
+                                ) === index
+                            );
+
+                        }
+                    )
+                    .slice(
+                        0,
+                        6
+                    );
+
+
+            /* =================================================
+               DISPLAY CASCADING EFFECTS
+            ================================================= */
+
+            if (
+                downstreamEffects.length > 0
             ) {
 
                 cascadingTitle.textContent =
-                    effects.length
-                    +
-                    " downstream effect"
-                    +
+                    downstreamEffects.length +
+                    " downstream effect" +
                     (
-                        effects.length === 1
-                        ? ""
-                        : "s"
-                    )
-                    +
+                        downstreamEffects.length === 1
+                            ? ""
+                            : "s"
+                    ) +
                     " identified";
 
 
                 cascadingEffects.textContent =
-                    effects.join(
+                    downstreamEffects.join(
                         " → "
                     );
 
             }
 
-            else {
+            else if (
+                dependencyAnalyzed
+            ) {
 
                 cascadingTitle.textContent =
                     "No cascading effects";
 
 
                 cascadingEffects.textContent =
-                    "No downstream effects identified.";
+                    "No actual downstream effects identified.";
+
+            }
+
+            else {
+
+                cascadingTitle.textContent =
+                    "Dependency analysis pending";
+
+
+                cascadingEffects.textContent =
+                    "Downstream effects will appear after dependency analysis.";
 
             }
 
 
-
-            /* UPDATE */
+            /* =================================================
+               UPDATE INFORMATION
+            ================================================= */
 
             updateDate.textContent =
                 intervention.created_at
-                ? (
-                    "Report created "
-                    +
-                    formatDate(
-                        intervention.created_at
+                    ? (
+                        "Report created " +
+                        formatDate(
+                            intervention.created_at
+                        )
                     )
-                )
-                : "Report information";
+                    : "Report information";
 
 
             updateText.textContent =
-                "Current status: "
-                +
+                "Current status: " +
                 (
-                    intervention.original_status
-                    || "Submitted"
-                )
-                +
-                ". Progress: "
-                +
-                interventionProgress
-                +
+                    intervention.original_status ||
+                    "Submitted"
+                ) +
+                ". Progress: " +
+                interventionProgress +
                 "%.";
 
 
-
             /* =================================================
-               UPDATE PROGRESS TIMELINE
+               UPDATE TIMELINE
             ================================================= */
 
             updateTimeline(
@@ -1690,7 +1904,6 @@ rootCause.textContent =
             );
 
         }
-
 
 
         /* =====================================================
@@ -1749,11 +1962,13 @@ rootCause.textContent =
 
             const progress =
                 Number(
-                    intervention.progress || 0
+                    intervention.progress ||
+                    0
                 );
 
 
-            let completedStages = 1;
+            let completedStages =
+                1;
 
 
             if (
@@ -1765,7 +1980,8 @@ rootCause.textContent =
                     progress >= 75
                 ) {
 
-                    completedStages = 3;
+                    completedStages =
+                        3;
 
                 }
 
@@ -1773,13 +1989,15 @@ rootCause.textContent =
                     progress >= 40
                 ) {
 
-                    completedStages = 2;
+                    completedStages =
+                        2;
 
                 }
 
                 else {
 
-                    completedStages = 1;
+                    completedStages =
+                        1;
 
                 }
 
@@ -1790,19 +2008,22 @@ rootCause.textContent =
                 "completed"
             ) {
 
-                completedStages = 5;
+                completedStages =
+                    5;
 
             }
 
             else {
 
-                completedStages = 1;
+                completedStages =
+                    1;
 
             }
 
 
-
-            /* RESET */
+            /* =================================================
+               RESET
+            ================================================= */
 
             stages.forEach(
                 function (stage) {
@@ -1810,6 +2031,7 @@ rootCause.textContent =
                     if (!stage) {
                         return;
                     }
+
 
                     stage.classList.remove(
                         "done",
@@ -1827,6 +2049,7 @@ rootCause.textContent =
                         return;
                     }
 
+
                     line.classList.remove(
                         "completed"
                     );
@@ -1835,8 +2058,9 @@ rootCause.textContent =
             );
 
 
-
-            /* APPLY */
+            /* =================================================
+               APPLY STAGE STATUS
+            ================================================= */
 
             stages.forEach(
                 function (
@@ -1875,6 +2099,10 @@ rootCause.textContent =
             );
 
 
+            /* =================================================
+               APPLY LINE STATUS
+            ================================================= */
+
             lines.forEach(
                 function (
                     line,
@@ -1901,7 +2129,9 @@ rootCause.textContent =
             );
 
 
-            /* CURRENT STAGE TEXT */
+            /* =================================================
+               CURRENT STAGE TEXT
+            ================================================= */
 
             const progressDate =
                 document.getElementById(
@@ -1929,8 +2159,10 @@ rootCause.textContent =
                 progressDate.textContent =
                     "Completed";
 
+
                 verificationDate.textContent =
                     "Verified";
+
 
                 completedDate.textContent =
                     "Completed";
@@ -1945,8 +2177,10 @@ rootCause.textContent =
                 progressDate.textContent =
                     "Current";
 
+
                 verificationDate.textContent =
                     "Pending";
+
 
                 completedDate.textContent =
                     "Pending";
@@ -1958,8 +2192,10 @@ rootCause.textContent =
                 progressDate.textContent =
                     "Pending";
 
+
                 verificationDate.textContent =
                     "Pending";
+
 
                 completedDate.textContent =
                     "Pending";
@@ -1969,17 +2205,16 @@ rootCause.textContent =
         }
 
 
-
         /* =====================================================
-           FILTER
+           FILTER INTERVENTIONS
         ===================================================== */
 
         function filterInterventions() {
 
             const search =
                 (
-                    searchInput.value
-                    || ""
+                    searchInput.value ||
+                    ""
                 )
                     .toLowerCase()
                     .trim();
@@ -1993,7 +2228,8 @@ rootCause.textContent =
                 departmentFilter.value;
 
 
-            let visibleCount = 0;
+            let visibleCount =
+                0;
 
 
             items.forEach(
@@ -2001,9 +2237,10 @@ rootCause.textContent =
 
                     const text =
                         (
-                            item.dataset.search
-                            || ""
-                        ).toLowerCase();
+                            item.dataset.search ||
+                            ""
+                        )
+                            .toLowerCase();
 
 
                     const itemStatus =
@@ -2037,20 +2274,20 @@ rootCause.textContent =
 
 
                     const visible =
-                        matchesSearch
-                        &&
-                        matchesStatus
-                        &&
+                        matchesSearch &&
+                        matchesStatus &&
                         matchesDepartment;
 
 
                     item.style.display =
                         visible
-                        ? "grid"
-                        : "none";
+                            ? "grid"
+                            : "none";
 
 
-                    if (visible) {
+                    if (
+                        visible
+                    ) {
 
                         visibleCount++;
 
@@ -2061,18 +2298,15 @@ rootCause.textContent =
 
 
             count.textContent =
-                visibleCount
-                +
-                " intervention"
-                +
+                visibleCount +
+                " intervention" +
                 (
                     visibleCount === 1
-                    ? ""
-                    : "s"
+                        ? ""
+                        : "s"
                 );
 
         }
-
 
 
         /* =====================================================
@@ -2097,7 +2331,6 @@ rootCause.textContent =
         );
 
 
-
         /* =====================================================
            CARD CLICK
         ===================================================== */
@@ -2108,7 +2341,6 @@ rootCause.textContent =
                 item.addEventListener(
                     "click",
                     function () {
-
 
                         items.forEach(
                             function (other) {
@@ -2143,7 +2375,6 @@ rootCause.textContent =
         );
 
 
-
         /* =====================================================
            LOAD FIRST REAL INTERVENTION
         ===================================================== */
@@ -2159,7 +2390,6 @@ rootCause.textContent =
         }
 
 
-
         /* =====================================================
            INITIAL FILTER
         ===================================================== */
@@ -2171,20 +2401,41 @@ rootCause.textContent =
 );
 
 </script>
+
+
+<!-- =========================================================
+     REAL PROGRESS BAR
+========================================================= -->
+
 <script>
-document.addEventListener("DOMContentLoaded", function () {
 
-    document
-        .querySelectorAll(".progress-fill")
-        .forEach(function (bar) {
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
 
-            const progress =
-                Number(bar.dataset.progress || 0);
+        document
+            .querySelectorAll(
+                ".progress-fill"
+            )
+            .forEach(
+                function (bar) {
 
-            bar.style.width =
-                progress + "%";
-        });
+                    const progress =
+                        Number(
+                            bar.dataset.progress ||
+                            0
+                        );
 
-});
+
+                    bar.style.width =
+                        progress + "%";
+
+                }
+            );
+
+    }
+);
+
 </script>
+
 {% endblock %}
